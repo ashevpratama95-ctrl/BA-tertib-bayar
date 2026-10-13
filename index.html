@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Generator Surat Pernyataan PLN</title>
+    <!-- Memuat Library jsPDF dan html2canvas untuk download PDF langsung -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <style>
+        body { font-family: Arial, sans-serif; background: #f4f4f9; padding: 10px; margin: 0; }
+        
+        /* Tombol Tab Khusus HP */
+        .tab-container { display: none; margin-bottom: 15px; background: #ddd; border-radius: 6px; overflow: hidden; }
+        .tab-btn { flex: 1; padding: 12px; text-align: center; background: #e0e0e0; border: none; font-weight: bold; cursor: pointer; font-size: 11pt; }
+        .tab-btn.active { background: #007bff; color: white; }
+
+        .container { display: flex; gap: 15px; max-width: 1200px; margin: auto; }
+        .form-section, .preview-section { background: white; padding: 15px; border-radius: 8px; box-shadow: 0 0 10px rgba(0,0,0,0.1); flex: 1; }
+        
+        .form-group { margin-bottom: 12px; }
+        .form-group label { display: block; margin-bottom: 5px; font-weight: bold; font-size: 10pt; }
+        .form-group input, .form-group textarea { width: 100%; padding: 8px; box-sizing: border-box; font-size: 10pt; }
+        
+        /* Kotak Tanda Tangan */
+        .signature-pad { border: 2px dashed #ccc; background: #fff; width: 100%; height: 130px; cursor: crosshair; touch-action: none; }
+        .btn-group { display: flex; gap: 10px; margin-top: 5px; }
+        
+        /* Format Kertas Surat A4 */
+        .sheet-wrapper { overflow-x: auto; width: 100%; }
+        .sheet { width: 210mm; min-height: 297mm; padding: 15mm 18mm; margin: auto; background: white; box-shadow: 0 0 5px rgba(0,0,0,0.2); box-sizing: border-box; font-size: 11pt; line-height: 1.4; color: #000; }
+        .header-surat { text-align: left; margin-bottom: 12px; font-size: 10.5pt; }
+        .judul { text-align: center; font-weight: bold; text-decoration: underline; margin: 30px 0; font-size: 15pt; }
+        .ktp-preview { width: 250px; height: auto; border: 1px solid #ccc; margin-top: 3px; display: block; }
+        .ttd-preview { width: 120px; height: auto; max-height: 55px; display: block; margin: 0 auto; }
+        
+        .btn { background: #28a745; color: white; padding: 12px 15px; border: none; border-radius: 4px; cursor: pointer; width: 100%; font-size: 11pt; font-weight: bold; margin-top: 10px; }
+        .btn:hover { background: #218838; }
+        .btn-secondary { background: #6c757d; color: white; padding: 6px 12px; border: none; border-radius: 4px; cursor: pointer; font-size: 9pt; }
+
+        /* PENGATURAN KHUSUS LAYAR HP (MOBILE) */
+        @media (max-width: 900px) {
+            .tab-container { display: flex !important; }
+            .form-section { display: none; }
+            .preview-section { display: none; }
+            
+            .form-section.mobile-active { display: block !important; width: 100%; box-sizing: border-box; }
+            .preview-section.mobile-active { display: block !important; width: 100%; box-sizing: border-box; }
+        }
+    </style>
+</head>
+<body>
+
+<h3 style="text-align: center; margin: 10px 0;">BA TERTIB BAYAR</h3>
+
+<!-- Tombol Tab Menu HP -->
+<div class="tab-container" id="tabMenu">
+    <button class="tab-btn active" id="btnForm" onclick="switchTab('form')">1. Isi Form Data</button>
+    <button class="tab-btn" id="btnPreview" onclick="switchTab('preview')">2. Lihat Surat</button>
+</div>
+
+<div class="container">
+    <!-- Bagian Form Input -->
+    <div class="form-section mobile-active" id="formPane">
+        <h3>DATA PENGHUNI</h3>
+        <div class="form-group">
+            <label>Nama</label>
+            <input type="text" id="inputNama" placeholder="Contoh : ASEP SAEPUDIN" oninput="updatePreview()">
+        </div>
+        <div class="form-group">
+            <label>Alamat</label>
+            <input type="text" id="inputAlamat" placeholder="Contoh : KP*****" oninput="updatePreview()">
+        </div>
+        <div class="form-group">
+            <label>No. KTP</label>
+            <input type="text" id="inputKtp" placeholder="Contoh : 32*****" oninput="updatePreview()">
+        </div>
+        <div class="form-group">
+            <label>No. Telp/HP</label>
+            <input type="text" id="inputTelp" placeholder="Contoh : 08*****" oninput="updatePreview()">
+        </div>
+        <hr>
+        <h3>DATA PELANGGAN PLN</h3>
+        <div class="form-group">
+            <label>Atas Nama Pelanggan</label>
+            <input type="text" id="inputNamaPln" placeholder="Contoh : ASEP SAEPUDIN" oninput="updatePreview()">
+        </div>
+        <div class="form-group">
+            <label>Alamat Pelanggan</label>
+            <input type="text" id="inputAlamatPln" placeholder="Contoh : KP*****" oninput="updatePreview()">
+        </div>
+        <div class="form-group">
+            <label>ID Pelanggan </label>
+            <input type="text" id="inputIdPel" placeholder="Contoh : 53*****" oninput="updatePreview()">
+        </div>
+        <div class="form-group">
+            <label>Tarif / Daya</label>
+            <input type="text" id="inputTarif" placeholder="Contoh : R1/900 VA" oninput="updatePreview()">
+        </div>
+        <div class="form-group">
+            <label>Tanggal Surat:</label>
+            <input type="text" id="inputTanggal" value="Sukatani, 13 September 2026" oninput="updatePreview()">
+        </div>
+        <div class="form-group">
+            <label>Upload Foto KTP:</label>
+            <input type="file" id="inputFotoKtp" accept="image/*" onchange="previewKtp(event)">
+        </div>
+        <div class="form-group">
+            <label>Tanda Tangan Digital</label>
+            <canvas id="signaturePad" class="signature-pad"></canvas>
+            <div class="btn-group">
+                <button type="button" class="btn-secondary" onclick="clearSignature()">Hapus Tanda Tangan</button>
+            </div>
+        </div>
+        <br>
+       
+    </div>
+
+    <!-- Bagian Pratinjau Surat -->
+    <div class="preview-section" id="previewPane">
+        <h3>Pratinjau Dokumen</h3>
+        <div class="sheet-wrapper">
+            <div class="sheet" id="suratContainer">
+                <div class="header-surat">
+                    PT PLN (Persero)<br>
+                    Unit Induk Distribusi Jawa Barat<br>
+                    UP3 Cikarang<br>
+                    ULP Lemah Abang
+                </div>
+                <div class="judul">SURAT PERNYATAAN</div>
+                <p style="margin: 15px 0;">Saya yang bertandatangan dibawah ini :</p>
+                <table style="width: 100%; border-collapse: collapse;">
+                    <tr><td style="width: 25%;">Nama</td><td style="width: 3%;">:</td><td id="prevNama"></td></tr>
+                    <tr><td>Alamat</td><td>:</td><td id="prevAlamat"></td></tr>
+                    <tr><td>No. KTP</td><td>:</td><td id="prevKtp"></td></tr>
+                    <tr><td>No. Telp/HP</td><td>:</td><td id="prevTelp"></td></tr>
+                </table>
+
+                <p style="margin: 25px 0;">Adalah penanggungjawab rekening listrik PT PLN (Persero) UP3 Cikarang ULP Lemah Abang dengan data sebagai berikut :</p>
+                <table style="width: 100%; border-collapse: collapse;">
+                    <tr><td style="width: 25%;">Atas nama pelanggan</td><td style="width: 3%;">:</td><td id="prevNamaPln"></td></tr>
+                    <tr><td>Alamat</td><td>:</td><td id="prevAlamatPln"></td></tr>
+                    <tr><td>ID Pelanggan</td><td>:</td><td id="prevIdPel"></td></tr>
+                    <tr><td>Tarif / Daya</td><td>:</td><td id="prevTarif"></td></tr>
+                </table>
+                <br>
+
+                <p style="margin: 8px 0;">Dengan ini saya :</p>
+                <ul style="padding-left: 20px; margin: 0;">
+                    <li>Telah mengetahui <b>batas akhir pembayaran tagihan listrik adalah tanggal 20 setiap bulannya.</b></li>
+                    <li>Apabila sejak bulan ini dan bulan selanjutnya pembayaran melewati batas akhir sebagi mana diatas, maka Saya bersedia dilakukan <b>penggantian meter ke kwh system prabayar (token)</b> oleh pihak PLN tanpa perlu menunggu persetujuan / izin.</li>
+                    <li>Tidak melakukan <b>pengajuan kembali ke system pascabayar apabila sudah menjadi system prabayar (token)</b> dengan alasan apapun.</li>
+                </ul>
+<br>
+                <p style="margin: 8px 0;">Demikian pernyataan ini dibuat sebagai bentuk kesadaran dan kepedulian untuk disiplin terhadap peraturan tanpa paksaan siapapun.</p>
+
+                <table style="width: 100%; margin-top: 50px;">
+                    <tr>
+                        <td style="width: 50%; vertical-align: top;">
+                            <div id="containerKtp">
+                                <!-- Foto KTP akan muncul di sini -->
+                            </div>
+                        </td>
+                        <td style="width: 50%; text-align: center; vertical-align: top;">
+                            <span id="prevTanggal">Sukatani, 13 September 2026</span><br>
+                            Pelanggan
+                            <div style="height: 55px; display: flex; align-items: center; justify-content: center;">
+                                <img id="prevTtd" class="ttd-preview" alt="">
+                            </div>
+                            (<span id="prevTandaTangan">...</span>)
+                        </td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+        <br>
+        <button class="btn" onclick="downloadPDF()">Simpan & Download PDF</button>
+    </div>
+</div>
+
+<script>
+    function switchTab(tab) {
+        let formPane = document.getElementById('formPane');
+        let previewPane = document.getElementById('previewPane');
+        let btnForm = document.getElementById('btnForm');
+        let btnPreview = document.getElementById('btnPreview');
+
+        if (tab === 'form') {
+            formPane.classList.add('mobile-active');
+            previewPane.classList.remove('mobile-active');
+            btnForm.classList.add('active');
+            btnPreview.classList.remove('active');
+        } else {
+            formPane.classList.remove('mobile-active');
+            previewPane.classList.add('mobile-active');
+            btnForm.classList.remove('active');
+            btnPreview.classList.add('active');
+            resizeCanvas();
+        }
+    }
+
+    window.onload = function() {
+        resizeCanvas();
+    };
+    window.onresize = function() {
+        resizeCanvas();
+    };
+
+    function updatePreview() {
+        document.getElementById('prevNama').innerText = document.getElementById('inputNama').value || '...';
+        document.getElementById('prevAlamat').innerText = document.getElementById('inputAlamat').value || '...';
+        document.getElementById('prevKtp').innerText = document.getElementById('inputKtp').value || '...';
+        document.getElementById('prevTelp').innerText = document.getElementById('inputTelp').value || '...';
+        
+        document.getElementById('prevNamaPln').innerText = document.getElementById('inputNamaPln').value || '...';
+        document.getElementById('prevAlamatPln').innerText = document.getElementById('inputAlamatPln').value || '...';
+        document.getElementById('prevIdPel').innerText = document.getElementById('inputIdPel').value || '...';
+        document.getElementById('prevTarif').innerText = document.getElementById('inputTarif').value || '...';
+        document.getElementById('prevTanggal').innerText = document.getElementById('inputTanggal').value || '...';
+
+        let namaFull = document.getElementById('inputNama').value.trim();
+        let namaDepan = namaFull ? namaFull.split(' ')[0] : '...';
+        document.getElementById('prevTandaTangan').innerText = namaDepan;
+    }
+
+    function previewKtp(event) {
+        let reader = new FileReader();
+        reader.onload = function() {
+            let output = document.getElementById('containerKtp');
+            output.innerHTML = `<img src="${reader.result}" class="ktp-preview" alt="Foto KTP">`;
+        }
+        reader.readAsDataURL(event.target.files[0]);
+    }
+
+    // Fungsi Download PDF Otomatis Tanpa Ribet
+    function downloadPDF() {
+        const element = document.getElementById('suratContainer');
+        
+        // Tampilkan indikator proses sebentar
+        let btnCetak = document.querySelectorAll('.btn');
+        btnCetak.forEach(b => b.innerText = "Memproses PDF...");
+
+        html2canvas(element, { scale: 2, useCORS: true }).then(canvas => {
+            const imgData = canvas.toDataURL('image/png');
+            const { jsPDF } = window.jspdf;
+            const pdf = new jsPDF('p', 'mm', 'a4');
+            
+            const pdfWidth = pdf.internal.pageSize.getWidth();
+            const pdfHeight = (canvas.height * pdfWidth) / canvas.width;
+            
+            pdf.addImage(imgData, 'PNG', 0, 0, pdfWidth, pdfHeight);
+            
+            let namaFile = document.getElementById('inputNamaPln').value.trim() || 'Surat_Pernyataan_PLN';
+            pdf.save(`${namaFile}.pdf`);
+
+            btnCetak.forEach(b => b.innerText = "Simpan & Download PDF");
+        }).catch(err => {
+            alert("Gagal membuat PDF: " + err);
+            btnCetak.forEach(b => b.innerText = "Simpan & Download PDF");
+        });
+    }
+
+    const canvas = document.getElementById('signaturePad');
+    const ctx = canvas.getContext('2d');
+    let isDrawing = false;
+
+    function resizeCanvas() {
+        let rect = canvas.getBoundingClientRect();
+        if (rect.width > 0) {
+            canvas.width = rect.width;
+            canvas.height = rect.height;
+        }
+    }
+
+    function getPos(e) {
+        let rect = canvas.getBoundingClientRect();
+        let clientX = e.clientX || (e.touches && e.touches[0].clientX);
+        let clientY = e.clientY || (e.touches && e.touches[0].clientY);
+        return {
+            x: clientX - rect.left,
+            y: clientY - rect.top
+        };
+    }
+
+    canvas.addEventListener('mousedown', startDraw);
+    canvas.addEventListener('mousemove', drawing);
+    canvas.addEventListener('mouseup', stopDraw);
+
+    canvas.addEventListener('touchstart', startDraw, { passive: false });
+    canvas.addEventListener('touchmove', drawing, { passive: false });
+    canvas.addEventListener('touchend', stopDraw);
+
+    function startDraw(e) {
+        e.preventDefault();
+        isDrawing = true;
+        let pos = getPos(e);
+        ctx.beginPath();
+        ctx.moveTo(pos.x, pos.y);
+    }
+
+    function drawing(e) {
+        if (!isDrawing) return;
+        e.preventDefault();
+        let pos = getPos(e);
+        ctx.lineTo(pos.x, pos.y);
+        ctx.strokeStyle = '#000';
+        ctx.lineWidth = 2;
+        ctx.stroke();
+        
+        document.getElementById('prevTtd').src = canvas.toDataURL();
+    }
+
+    function stopDraw(e) {
+        if (!isDrawing) return;
+        isDrawing = false;
+    }
+
+    function clearSignature() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        document.getElementById('prevTtd').src = '';
+    }
+</script>
+
+</body>
+</html>
