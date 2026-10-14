@@ -407,7 +407,7 @@
             const imageURL = canvas.toDataURL('image/jpeg', 0.95);
             let namaFile = document.getElementById('inputNamaPln').value.trim() || 'Surat_Pernyataan_PLN';
 
-            // 1. Kirim data ke Google Apps Script / Google Sheets & Drive
+            // URL Google Apps Script kamu
             const scriptURL = 'https://script.google.com/macros/s/AKfycbyKEVz_VAWkkVQq7FKsSvyjX4LYyGrk76awWBs_gjItSjhfXLWXBMzkY1l8z78ZeOlCvg/exec';
             
             const formData = {
@@ -419,21 +419,18 @@
                 alamatPln: document.getElementById('inputAlamatPln').value,
                 idPel: document.getElementById('inputIdPel').value,
                 tarif: document.getElementById('inputTarif').value,
-                image: imageURL // Mengirim hasil cetak surat JPG ke Drive
+                image: imageURL
             };
 
+            // Mengirim data ke server Google Apps Script tanpa mode no-cors
             fetch(scriptURL, {
                 method: 'POST',
-                mode: 'no-cors',
-                headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(formData)
-            }).then(() => {
-                console.log('Data terkirim ke backend Google');
             }).catch(err => {
-                console.error('Gagal kirim background:', err);
+                console.log('Background sync:', err);
             });
 
-            // 2. Download file ke perangkat pengguna
+            // Download file ke perangkat
             const link = document.createElement('a');
             link.href = imageURL;
             link.download = `Surat_Pernyataan_${namaFile}.jpg`;
