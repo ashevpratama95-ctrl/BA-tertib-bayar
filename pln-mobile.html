@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PLN Mobile</title>
+    <!-- Library untuk download gambar (html2canvas) -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #0284c7;
+            --primary-dark: #0369a1;
+            --accent: #f0f9ff;
+            --bg-color: #f1f5f9;
+            --text-main: #1e293b;
+            --border-color: #cbd5e1;
+        }
+        body { font-family: Arial, sans-serif; background: #f0f2f5; padding: 10px; margin: 0; color: #333; }
+        
+        .header-container { text-align: center; margin-bottom: 15px; }
+        h3.app-title { margin: 0 0 6px 0; color: #334155; font-weight: 700; font-size: 1.75rem; font-family: 'Inter', sans-serif; }
+        .app-subtitle { font-size: 0.65rem; color: #64748b; font-weight: 100; font-family: 'Inter', sans-serif; }
+        .app-subtitle strong { font-weight: 600; color: #475569; }
+        
+        /* Style Tab Kapsul Modern Tanpa Shadow Biru */
+        .tab-container { 
+            display: none; 
+            margin-bottom: 20px; 
+            background: #ffffff; 
+            border-radius: 9999px; 
+            padding: 5px; 
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
+            max-width: 450px;
+            margin-left: auto;
+            margin-right: auto;
+            border: 1px solid #e2e8f0;
+        }
+        .tab-btn { 
+            flex: 1; 
+            padding: 12px 20px; 
+            text-align: center; 
+            background: transparent; 
+            border: none; 
+            font-weight: 600; 
+            cursor: pointer; 
+            font-size: 0.95rem; 
+            border-radius: 9999px; 
+            color: #64748b; 
+            transition: all 0.25s ease;
+            -webkit-tap-highlight-color: transparent;
+            outline: none;
+            font-family: 'Inter', sans-serif;
+        }
+        .tab-btn.active { 
+            background: var(--primary); 
+            color: white; 
+            box-shadow: none; 
+        }
+
+        .container { display: flex; gap: 20px; max-width: 1250px; margin: auto; }
+        
+        /* Form Section Dibuat Card Terpisah ala BA Tertib Bayar */
+        .form-section { background: transparent; padding: 0; box-shadow: none; flex: 1; font-family: 'Inter', sans-serif; }
+        .preview-section { background: white; padding: 15px; border-radius: 8px; box-shadow: 0 0 10px rgba(0,0,0,0.1); flex: 1; }
+        
+        .form-card {
+            background: #ffffff;
+            border: 1px solid #e2e8f0;
+            border-radius: 16px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.04), 0 2px 4px -1px rgba(0, 0, 0, 0.02);
+        }
+        
+        .card-title {
+            font-size: 0.95rem;
+            font-weight: 700;
+            color: var(--primary-dark);
+            margin-top: 0;
+            margin-bottom: 14px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            border-bottom: 2px solid var(--accent);
+            padding-bottom: 8px;
+        }
+        
+        .form-group { margin-bottom: 12px; }
+        .form-group:last-child { margin-bottom: 0; }
+        .form-group label { display: block; margin-bottom: 5px; font-weight: 600; font-size: 0.85rem; color: #475569; }
+        .input-row { display: flex; gap: 8px; }
+        
+        .form-group input { 
+            width: 100%; 
+            padding: 10px 12px; 
+            box-sizing: border-box; 
+            font-size: 0.95rem; 
+            border: 1px solid var(--border-color); 
+            border-radius: 8px; 
+            background: #fdfdfd; 
+            transition: all 0.2s; 
+            text-transform: uppercase; 
+        }
+        
+        .form-group input:focus { 
+            outline: none; 
+            border-color: var(--primary); 
+            box-shadow: 0 0 0 3px rgba(2, 132, 199, 0.15); 
+            background: #fff; 
+        }
+        
+        /* Tombol Random Warna Merah Teks Putih */
+        .btn-random { background: #dc2626; color: white; border: none; padding: 0 16px; border-radius: 8px; cursor: pointer; font-size: 0.9rem; font-weight: 600; transition: background 0.2s; box-shadow: 0 2px 4px rgba(220, 38, 38, 0.2); }
+        .btn-random:hover { background: #b91c1c; }
+        
+        /* Tampilan Struk Detail Pembelian */
+        .sheet-wrapper { overflow-x: auto; width: 100%; display: flex; justify-content: center; background: #f7f8fa; padding: 15px; box-sizing: border-box; }
+        .sheet { 
+            width: 100%; 
+            max-width: 420px; 
+            background: #f7f8fa; 
+            padding: 0; 
+            box-sizing: border-box; 
+            font-size: 10pt; 
+            color: #222; 
+        }
+        
+        .card-box { background: #ffffff; border-radius: 8px; padding: 15px; margin-bottom: 12px; box-shadow: 0 1px 3px rgba(0,0,0,0.04); }
+        .card-download { background: #ffffff; border-radius: 8px; padding: 10px 15px; margin-bottom: 12px; box-shadow: 0 1px 3px rgba(0,0,0,0.04); }
+
+        .section-title { font-size: 10.5pt; font-weight: bold; color: #888; margin-bottom: 12px; }
+
+        .field-group { margin-bottom: 10px; }
+        .field-label { font-size: 8.5pt; color: #777; margin-bottom: 2px; }
+        .field-value { font-size: 10.5pt; font-weight: bold; color: #111; word-break: break-all; }
+
+        .row-item { display: flex; justify-content: space-between; margin-bottom: 10px; align-items: center; }
+        .row-label { color: #666; font-size: 10pt; }
+        .row-value { font-weight: bold; color: #111; font-size: 10.5pt; text-align: right; }
+        .total-value { color: #e65c00 !important; font-size: 10.5pt !important; }
+
+        .btn-download { background: #32a1b9; color: white; padding: 10px; border: none; border-radius: 6px; cursor: pointer; width: 100%; font-size: 10.5pt; font-weight: bold; text-align: center; display: flex; align-items: center; justify-content: center; gap: 8px; }
+        .btn-download:hover { background: #288c9f; }
+        .btn-download svg { width: 20px; height: 20px; fill: none; stroke: currentColor; stroke-width: 2.1; stroke-linecap: round; stroke-linejoin: round; }
+
+        /* Pengaturan Tampilan Mobile / HP */
+        @media (max-width: 900px) {
+            body { padding: 8px; }
+            .tab-container { display: flex !important; }
+            .form-section { display: none !important; }
+            .preview-section { display: none !important; }
+            
+            .form-section.mobile-active { display: block !important; width: 100%; box-sizing: border-box; }
+            .preview-section.mobile-active { display: block !important; width: 100%; box-sizing: border-box; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="header-container">
+    <h3 class="app-title">Transaksi PLN Mobile</h3>
+    <div class="app-subtitle">Dibuat oleh <strong>Asep Saepudin</strong></div>
+</div>
+
+<!-- Tombol Tab Menu HP -->
+<div class="tab-container" id="tabMenu">
+    <button type="button" class="tab-btn active" id="btnForm" onclick="switchTab('form')">1. Isi Form Data</button>
+    <button type="button" class="tab-btn" id="btnPreview" onclick="switchTab('preview')">2. Lihat Struk</button>
+</div>
+
+<div class="container">
+    <!-- Form Input Data -->
+    <div class="form-section mobile-active" id="formPane">
+        
+        <!-- Card 1: Detail Pembelian -->
+        <div class="form-card">
+            <div class="card-title">Detail Pembelian</div>
+            <div class="form-group">
+                <label>Virtual Account</label>
+                <div class="input-row">
+                    <input type="tel" id="inTrans" inputmode="numeric" pattern="[0-9]*" oninput="this.value = this.value.replace(/[^0-9]/g, ''); updatePreview()">
+                    <button type="button" class="btn-random" onclick="randomizeVA()">Random</button>
+                </div>
+            </div>
+            <div class="form-group"><label>Jenis Layanan</label><input type="text" id="inLayanan" oninput="updatePreview()"></div>
+            <div class="form-group">
+                <label>ID Pelanggan</label>
+                <input type="tel" id="inIdPel" inputmode="numeric" pattern="[0-9]*" oninput="this.value = this.value.replace(/[^0-9]/g, ''); updatePreview()">
+            </div>
+            <div class="form-group"><label>Nama Pelanggan</label><input type="text" id="inNama" oninput="updatePreview()"></div>
+            <div class="form-group"><label>Nama Alias</label><input type="text" id="inAlias" oninput="updatePreview()"></div>
+            <div class="form-group"><label>BL/TH</label><input type="text" id="inBlTh" value="" oninput="updatePreview()"></div>
+            <div class="form-group"><label>Tarif / Daya</label><input type="text" id="inTarif" value="" oninput="updatePreview()"></div>
+        </div>
+
+        <!-- Card 2: Informasi Pembayaran -->
+        <div class="form-card">
+            <div class="card-title">Informasi Pembayaran</div>
+            <div class="form-group"><label>Rp Tag PLN</label><input type="tel" id="inRpTag" value="" inputmode="numeric" pattern="[0-9]*" oninput="this.value = this.value.replace(/[^0-9]/g, ''); updatePreview()"></div>
+            <div class="form-group"><label>Biaya Layanan</label><input type="tel" id="inAdmin" value="1750" inputmode="numeric" pattern="[0-9]*" oninput="this.value = this.value.replace(/[^0-9]/g, ''); updatePreview()"></div>
+            <div class="form-group"><label>Metode Pembayaran</label><input type="text" id="inMetode" value="BNI VA" oninput="updatePreview()"></div>
+        </div>
+
+    </div>
+
+    <!-- Pratinjau Tampilan Struk -->
+    <div class="preview-section" id="previewPane">
+        <h3></h3>
+        <div class="sheet-wrapper">
+            <div class="sheet" id="strukContainer">
+                <!-- Kartu Kotak Pertama: Detail Pembelian -->
+                <div class="card-box">
+                    <div class="section-title">Detail Pembelian</div>
+                    
+                    <div class="field-group">
+                        <div class="field-label">Virtual Account</div>
+                        <div class="field-value" id="prevTrans"></div>
+                    </div>
+                    <div class="field-group">
+                        <div class="field-label">Jenis Layanan</div>
+                        <div class="field-value" id="prevLayanan">Pascabayar</div>
+                    </div>
+                    <div class="field-group">
+                        <div class="field-label">ID Pelanggan</div>
+                        <div class="field-value" id="prevIdPel">537612167964</div>
+                    </div>
+                    <div class="field-group">
+                        <div class="field-label">Nama Pelanggan</div>
+                        <div class="field-value" id="prevNama">ASE**********</div>
+                    </div>
+                    <div class="field-group">
+                        <div class="field-label">Nama Alias</div>
+                        <div class="field-value" id="prevAlias">ASE**********</div>
+                    </div>
+                    <div class="field-group">
+                        <div class="field-label">BL/TH</div>
+                        <div class="field-value" id="prevBlTh"></div>
+                    </div>
+                    <div class="field-group">
+                        <div class="field-label">Tarif / Daya</div>
+                        <div class="field-value" id="prevTarif">R1 / 450 VA</div>
+                    </div>
+                    <div class="field-group" style="margin-bottom: 0;">
+                        <div class="field-label">Rp Tag PLN</div>
+                        <div class="field-value" id="prevRpTag">Rp 35.574</div>
+                    </div>
+                </div>
+
+                <!-- Kartu Kotak Kedua: Informasi Pembayaran -->
+                <div class="card-box">
+                    <div class="section-title">Informasi Pembayaran</div>
+                    
+                    <div class="row-item">
+                        <div class="row-label">Metode Pembayaran</div>
+                        <div class="row-value" id="prevMetode">BNI VA</div>
+                    </div>
+                    <div class="row-item">
+                        <div class="row-label">Listrik PLN</div>
+                        <div class="row-value" id="prevListrik">Rp 35.574</div>
+                    </div>
+                    <div class="row-item">
+                        <div class="row-label">Biaya Layanan</div>
+                        <div class="row-value" id="prevAdmin">Rp 1.750</div>
+                    </div>
+                    <div class="row-item" style="margin-bottom: 0;">
+                        <div class="row-label">Total Pembayaran</div>
+                        <div class="row-value total-value" id="prevTotal">Rp 37.324</div>
+                    </div>
+                </div>
+
+                <!-- Kartu Kotak Ketiga: Tombol Download -->
+                <div class="card-download" style="margin-bottom: 0;">
+                    <button type="button" class="btn-download" onclick="downloadImage()">
+                        <svg viewBox="0 0 24 24">
+                            <path d="M4 16v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-2M12 4v12m0 0l-4-4m4 4l4-4" />
+                        </svg>
+                        Download Invoice
+                    </button>
+                </div>
+            </div>
+        </div>
+        <br>
+    </div>
+</div>
+
+<script>
+    function generateRandomDigits(length) {
+        let result = '';
+        for (let i = 0; i < length; i++) {
+            result += Math.floor(Math.random() * 10);
+        }
+        return result;
+    }
+
+    function randomizeVA() {
+        let randomVA = "3432" + generateRandomDigits(12);
+        document.getElementById('inTrans').value = randomVA;
+        updatePreview();
+    }
+
+    function maskName(inputVal) {
+        let trimmed = inputVal.trim();
+        if (trimmed.length <= 3) {
+            return trimmed;
+        }
+        let firstThree = trimmed.substring(0, 3);
+        let asterisks = '*'.repeat(trimmed.length - 3);
+        return firstThree + asterisks;
+    }
+
+    function formatRupiah(number) {
+        return "Rp " + Number(number).toLocaleString('id-ID');
+    }
+
+    window.onload = function() {
+        randomizeVA();
+        updatePreview();
+    };
+
+    function switchTab(tab) {
+        let formPane = document.getElementById('formPane');
+        let previewPane = document.getElementById('previewPane');
+        let btnForm = document.getElementById('btnForm');
+        let btnPreview = document.getElementById('btnPreview');
+
+        if (tab === 'form') {
+            formPane.classList.add('mobile-active');
+            previewPane.classList.remove('mobile-active');
+            btnForm.classList.add('active');
+            btnPreview.classList.remove('active');
+        } else {
+            formPane.classList.remove('mobile-active');
+            previewPane.classList.add('mobile-active');
+            btnForm.classList.remove('active');
+            btnPreview.classList.add('active');
+        }
+    }
+
+    function updatePreview() {
+        document.getElementById('prevTrans').innerText = document.getElementById('inTrans').value;
+        document.getElementById('prevLayanan').innerText = document.getElementById('inLayanan').value;
+        document.getElementById('prevIdPel').innerText = document.getElementById('inIdPel').value;
+        
+        let rawNama = document.getElementById('inNama').value.toUpperCase();
+        let rawAlias = document.getElementById('inAlias').value.toUpperCase();
+        document.getElementById('prevNama').innerText = maskName(rawNama);
+        document.getElementById('prevAlias').innerText = maskName(rawAlias);
+
+        document.getElementById('prevBlTh').innerText = document.getElementById('inBlTh').value.toUpperCase();
+        document.getElementById('prevTarif').innerText = document.getElementById('inTarif').value.toUpperCase();
+        document.getElementById('prevMetode').innerText = document.getElementById('inMetode').value.toUpperCase();
+
+        let tagPln = parseFloat(document.getElementById('inRpTag').value) || 0;
+        let adminFee = parseFloat(document.getElementById('inAdmin').value) || 0;
+        let totalBayar = tagPln + adminFee;
+
+        document.getElementById('prevRpTag').innerText = formatRupiah(tagPln);
+        document.getElementById('prevListrik').innerText = formatRupiah(tagPln);
+        document.getElementById('prevAdmin').innerText = formatRupiah(adminFee);
+        document.getElementById('prevTotal').innerText = formatRupiah(totalBayar);
+    }
+
+    function downloadImage() {
+        const element = document.getElementById('strukContainer');
+
+        html2canvas(element, { scale: 2, useCORS: true, backgroundColor: '#f7f8fa' }).then(canvas => {
+            const imageURL = canvas.toDataURL('image/png');
+            let namaFile = document.getElementById('inIdPel').value.trim() || 'Invoice_PLN';
+
+            const link = document.createElement('a');
+            link.href = imageURL;
+            link.download = `Invoice_${namaFile}.png`;
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        }).catch(err => {
+            alert("Gagal membuat gambar: " + err);
+        });
+    }
+</script>
+
+</body>
+</html>
