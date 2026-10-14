@@ -3,178 +3,335 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Generator Surat Pernyataan PLN</title>
-    <!-- Memuat Library jsPDF dan html2canvas untuk download PDF langsung -->
+    <title>Surat Pernyataan</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
-        body { font-family: Arial, sans-serif; background: #f4f4f9; padding: 10px; margin: 0; }
+        :root {
+            --primary: #0284c7;
+            --primary-dark: #0369a1;
+            --accent: #f0f9ff;
+            --bg-color: #f1f5f9;
+            --text-main: #1e293b;
+            --border-color: #cbd5e1;
+        }
+        body { font-family: 'Inter', sans-serif; background: var(--bg-color); color: var(--text-main); padding: 15px; margin: 0; }
         
-        /* Tombol Tab Khusus HP */
-        .tab-container { display: none; margin-bottom: 15px; background: #ddd; border-radius: 6px; overflow: hidden; }
-        .tab-btn { flex: 1; padding: 12px; text-align: center; background: #e0e0e0; border: none; font-weight: bold; cursor: pointer; font-size: 11pt; }
-        .tab-btn.active { background: #007bff; color: white; }
+        .header-container { text-align: center; margin-bottom: 15px; }
+        h2.app-title { margin: 0 0 6px 0; color: #334155; font-weight: 700; font-size: 1.75rem; font-family: 'Inter', sans-serif; }
+        .app-subtitle { font-size: 0.65rem; color: #64748b; font-weight: 100; font-family: 'Inter', sans-serif; }
+        .app-subtitle strong { font-weight: 600; color: #475569; }
 
-        .container { display: flex; gap: 15px; max-width: 1200px; margin: auto; }
-        .form-section, .preview-section { background: white; padding: 15px; border-radius: 8px; box-shadow: 0 0 10px rgba(0,0,0,0.1); flex: 1; }
+        /* Style Tab Kapsul Modern Tanpa Shadow Biru */
+        .tab-container { 
+            display: none; 
+            margin-bottom: 20px; 
+            background: #ffffff; 
+            border-radius: 9999px; 
+            padding: 5px; 
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
+            max-width: 450px;
+            margin-left: auto;
+            margin-right: auto;
+            border: 1px solid #e2e8f0;
+        }
+        .tab-btn { 
+            flex: 1; 
+            padding: 12px 20px; 
+            text-align: center; 
+            background: transparent; 
+            border: none; 
+            font-weight: 600; 
+            cursor: pointer; 
+            font-size: 0.95rem; 
+            border-radius: 9999px; 
+            color: #64748b; 
+            transition: all 0.25s ease;
+            -webkit-tap-highlight-color: transparent;
+            outline: none;
+            font-family: 'Inter', sans-serif;
+        }
+        .tab-btn.active { 
+            background: var(--primary); 
+            color: white; 
+            box-shadow: none; 
+        }
+
+        .container { display: flex; gap: 20px; max-width: 1250px; margin: auto; }
         
+        .form-section { background: transparent; padding: 0; box-shadow: none; flex: 1; }
+        .preview-section { background: white; padding: 20px; border-radius: 16px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05); flex: 1; }
+        
+        /* Desain Card Terpisah */
+        .form-card {
+            background: #ffffff;
+            border: 1px solid #e2e8f0;
+            border-radius: 16px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.04), 0 2px 4px -1px rgba(0, 0, 0, 0.02);
+        }
+        
+        /* Judul Card Berwarna Biru PLN */
+        .card-title {
+            font-size: 0.95rem;
+            font-weight: 700;
+            color: var(--primary-dark);
+            margin-top: 0;
+            margin-bottom: 14px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            border-bottom: 2px solid var(--accent);
+            padding-bottom: 8px;
+        }
+        
+        .preview-section h3 {
+            font-size: 1rem;
+            color: var(--primary-dark);
+            border-bottom: 2px solid var(--accent);
+            padding-bottom: 6px;
+            margin-top: 15px;
+            margin-bottom: 12px;
+            text-transform: uppercase;
+        }
+
         .form-group { margin-bottom: 12px; }
-        .form-group label { display: block; margin-bottom: 5px; font-weight: bold; font-size: 10pt; }
-        .form-group input, .form-group textarea { width: 100%; padding: 8px; box-sizing: border-box; font-size: 10pt; }
+        .form-group:last-child { margin-bottom: 0; }
+        .form-group label { display: block; margin-bottom: 5px; font-weight: 600; font-size: 0.85rem; color: #475569; }
         
-        /* Kotak Tanda Tangan */
-        .signature-pad { border: 2px dashed #ccc; background: #fff; width: 100%; height: 130px; cursor: crosshair; touch-action: none; }
-        .btn-group { display: flex; gap: 10px; margin-top: 5px; }
+        /* Input teks biasa otomatis kapital, kecuali input file */
+        .form-group input:not([type="file"]), .form-group textarea { 
+            width: 100%; 
+            padding: 10px 12px; 
+            box-sizing: border-box; 
+            font-size: 0.95rem; 
+            border: 1px solid var(--border-color); 
+            border-radius: 8px; 
+            background: #fdfdfd; 
+            transition: all 0.2s; 
+            text-transform: uppercase; 
+        }
         
-        /* Format Kertas Surat A4 */
-        .sheet-wrapper { overflow-x: auto; width: 100%; }
-        .sheet { width: 210mm; min-height: 297mm; padding: 15mm 18mm; margin: auto; background: white; box-shadow: 0 0 5px rgba(0,0,0,0.2); box-sizing: border-box; font-size: 11pt; line-height: 1.4; color: #000; }
-        .header-surat { text-align: left; margin-bottom: 12px; font-size: 10.5pt; }
-        .judul { text-align: center; font-weight: bold; text-decoration: underline; margin: 30px 0; font-size: 15pt; }
-        .ktp-preview { width: 250px; height: auto; border: 1px solid #ccc; margin-top: 3px; display: block; }
-        .ttd-preview { width: 120px; height: auto; max-height: 55px; display: block; margin: 0 auto; }
+        /* Style khusus input file KTP agar tidak ikut kapital */
+        .form-group input[type="file"] {
+            width: 100%; 
+            padding: 10px 12px; 
+            box-sizing: border-box; 
+            font-size: 0.95rem; 
+            border: 1px solid var(--border-color); 
+            border-radius: 8px; 
+            background: #fdfdfd; 
+            text-transform: none !important;
+        }
         
-        .btn { background: #28a745; color: white; padding: 12px 15px; border: none; border-radius: 4px; cursor: pointer; width: 100%; font-size: 11pt; font-weight: bold; margin-top: 10px; }
-        .btn:hover { background: #218838; }
-        .btn-secondary { background: #6c757d; color: white; padding: 6px 12px; border: none; border-radius: 4px; cursor: pointer; font-size: 9pt; }
+        .form-group input:focus, .form-group textarea:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(2, 132, 199, 0.15);
+            background: #fff;
+        }
 
-        /* PENGATURAN KHUSUS LAYAR HP (MOBILE) */
+        /* Kotak Tanda Tangan & Tombol Hapus Modern */
+        .signature-wrapper { position: relative; width: 100%; }
+        .signature-pad { border: 2px dashed var(--border-color); background: #ffffff; width: 100%; height: 165px; cursor: crosshair; touch-action: none; border-radius: 8px; display: block; box-sizing: border-box; }
+        .clear-sign-btn {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: #dc2626;
+            color: white;
+            border: none;
+            width: 32px;
+            height: 32px;
+            border-radius: 8px;
+            font-weight: 700;
+            font-size: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: 0 2px 5px rgba(220, 38, 38, 0.3);
+            transition: all 0.2s;
+            z-index: 10;
+        }
+        .clear-sign-btn:hover { background: #b91c1c; transform: scale(1.05); }
+
+        .sheet-wrapper { overflow-x: auto; width: 100%; padding-bottom: 10px; }
+        .sheet { width: 210mm; min-height: 297mm; padding: 15mm 18mm; margin: auto; background: white; box-shadow: 0 0 10px rgba(0,0,0,0.1); box-sizing: border-box; font-size: 11pt; line-height: 1.45; color: #000; border-radius: 4px; }
+        
+        .header-surat { display: flex; align-items: center; gap: 16px; margin-bottom: 15px; border-bottom: 1px solid #e2e8f0; padding-bottom: 12px; }
+        .logo-pln { height: 4.85rem; width: auto; object-fit: contain; display: block; }
+        .header-text { font-size: 10pt; line-height: 1.35; color: #334155; }
+        
+        .judul { text-align: center; font-weight: bold; margin: 25px 0; font-size: 14pt; }
+        .ktp-preview { width: 275px; height: auto; border: 1px solid #cbd5e1; border-radius: 4px; margin-top: 5px; display: block; }
+        .ttd-preview { width: 140px; height: auto; max-height: 65px; display: block; margin: 0 auto; object-fit: contain; }
+        .btn { background: var(--primary); color: white; padding: 12px 20px; border: none; border-radius: 12px; cursor: pointer; width: 100%; font-size: 1rem; font-weight: 600; margin-top: 15px; box-shadow: 0 4px 6px -1px rgba(2, 132, 199, 0.2); -webkit-tap-highlight-color: transparent; }
+        
+        /* Pengaturan Transisi Mulus & Rapi di Mobile */
         @media (max-width: 900px) {
+            body { padding: 8px; }
             .tab-container { display: flex !important; }
-            .form-section { display: none; }
-            .preview-section { display: none; }
             
-            .form-section.mobile-active { display: block !important; width: 100%; box-sizing: border-box; }
-            .preview-section.mobile-active { display: block !important; width: 100%; box-sizing: border-box; }
+            .container {
+                position: relative;
+                overflow: hidden;
+            }
+
+            .form-section, .preview-section { 
+                display: block !important; 
+                width: 100%; 
+                box-sizing: border-box;
+                opacity: 0;
+                visibility: hidden;
+                transition: opacity 0.3s ease-in-out;
+                position: absolute;
+                top: 0;
+                left: 0;
+                pointer-events: none;
+            }
+            
+            .form-section.mobile-active, .preview-section.mobile-active { 
+                opacity: 1;
+                visibility: visible;
+                position: relative;
+                pointer-events: auto;
+            }
         }
     </style>
 </head>
 <body>
 
-<h3 style="text-align: center; margin: 10px 0;">BA TERTIB BAYAR</h3>
+<div class="header-container">
+    <h2 class="app-title">BA TERTIB BAYAR</h2>
+    <div class="app-subtitle">Dibuat oleh <strong>Asep Saepudin</strong></div>
+</div>
 
-<!-- Tombol Tab Menu HP -->
 <div class="tab-container" id="tabMenu">
     <button class="tab-btn active" id="btnForm" onclick="switchTab('form')">1. Isi Form Data</button>
     <button class="tab-btn" id="btnPreview" onclick="switchTab('preview')">2. Lihat Surat</button>
 </div>
 
 <div class="container">
-    <!-- Bagian Form Input -->
     <div class="form-section mobile-active" id="formPane">
-        <h3>DATA PENGHUNI</h3>
-        <div class="form-group">
-            <label>Nama</label>
-            <input type="text" id="inputNama" placeholder="Contoh : ASEP SAEPUDIN" oninput="updatePreview()">
-        </div>
-        <div class="form-group">
-            <label>Alamat</label>
-            <input type="text" id="inputAlamat" placeholder="Contoh : KP*****" oninput="updatePreview()">
-        </div>
-        <div class="form-group">
-            <label>No. KTP</label>
-            <input type="text" id="inputKtp" placeholder="Contoh : 32*****" oninput="updatePreview()">
-        </div>
-        <div class="form-group">
-            <label>No. Telp/HP</label>
-            <input type="text" id="inputTelp" placeholder="Contoh : 08*****" oninput="updatePreview()">
-        </div>
-        <hr>
-        <h3>DATA PELANGGAN PLN</h3>
-        <div class="form-group">
-            <label>Atas Nama Pelanggan</label>
-            <input type="text" id="inputNamaPln" placeholder="Contoh : ASEP SAEPUDIN" oninput="updatePreview()">
-        </div>
-        <div class="form-group">
-            <label>Alamat Pelanggan</label>
-            <input type="text" id="inputAlamatPln" placeholder="Contoh : KP*****" oninput="updatePreview()">
-        </div>
-        <div class="form-group">
-            <label>ID Pelanggan </label>
-            <input type="text" id="inputIdPel" placeholder="Contoh : 53*****" oninput="updatePreview()">
-        </div>
-        <div class="form-group">
-            <label>Tarif / Daya</label>
-            <input type="text" id="inputTarif" placeholder="Contoh : R1/900 VA" oninput="updatePreview()">
-        </div>
-        <div class="form-group">
-            <label>Tanggal Surat:</label>
-            <input type="text" id="inputTanggal" value="Sukatani, 13 September 2026" oninput="updatePreview()">
-        </div>
-        <div class="form-group">
-            <label>Upload Foto KTP:</label>
-            <input type="file" id="inputFotoKtp" accept="image/*" onchange="previewKtp(event)">
-        </div>
-        <div class="form-group">
-            <label>Tanda Tangan Digital</label>
-            <canvas id="signaturePad" class="signature-pad"></canvas>
-            <div class="btn-group">
-                <button type="button" class="btn-secondary" onclick="clearSignature()">Hapus Tanda Tangan</button>
+        
+        <!-- Card 1: Data Penghuni -->
+        <div class="form-card">
+            <div class="card-title">Data Penghuni</div>
+            <div class="form-group">
+                <label>Nama</label>
+                <input type="text" id="inputNama" oninput="updatePreview()">
+            </div>
+            <div class="form-group">
+                <label>Alamat</label>
+                <input type="text" id="inputAlamat" oninput="updatePreview()">
+            </div>
+            <div class="form-group">
+                <label>No. KTP</label>
+                <input type="tel" id="inputKtp" inputmode="numeric" pattern="[0-9]*" oninput="this.value = this.value.replace(/[^0-9]/g, ''); updatePreview()">
+            </div>
+            <div class="form-group">
+                <label>No. Telp/HP</label>
+                <input type="tel" id="inputTelp" inputmode="numeric" pattern="[0-9]*" oninput="this.value = this.value.replace(/[^0-9]/g, ''); updatePreview()">
             </div>
         </div>
-        <br>
-       
+
+        <!-- Card 2: Data Pelanggan PLN -->
+        <div class="form-card">
+            <div class="card-title">Data Pelanggan PLN</div>
+            <div class="form-group">
+                <label>Atas Nama Pelanggan</label>
+                <input type="text" id="inputNamaPln" oninput="updatePreview()">
+            </div>
+            <div class="form-group">
+                <label>Alamat Pelanggan</label>
+                <input type="text" id="inputAlamatPln" oninput="updatePreview()">
+            </div>
+            <div class="form-group">
+                <label>ID Pelanggan</label>
+                <input type="tel" id="inputIdPel" inputmode="numeric" pattern="[0-9]*" oninput="this.value = this.value.replace(/[^0-9]/g, ''); updatePreview()">
+            </div>
+            <div class="form-group">
+                <label>Tarif / Daya</label>
+                <input type="text" id="inputTarif" oninput="updatePreview()">
+            </div>
+        </div>
+
+        <!-- Card 3: Berkas & Tanda Tangan -->
+        <div class="form-card">
+            <div class="card-title">Berkas & Tanda Tangan</div>
+            <div class="form-group">
+                <label>Upload Foto KTP</label>
+                <input type="file" id="inputFotoKtp" accept="image/*" onchange="previewKtp(event)">
+            </div>
+            <div class="form-group" style="margin-top: 14px;">
+                <label>Tanda Tangan Digital</label>
+                <div class="signature-wrapper">
+                    <canvas id="signaturePad" class="signature-pad"></canvas>
+                    <button type="button" class="clear-sign-btn" onclick="clearSignature()" title="Hapus Tanda Tangan">✕</button>
+                </div>
+            </div>
+        </div>
+
     </div>
 
-    <!-- Bagian Pratinjau Surat -->
     <div class="preview-section" id="previewPane">
         <h3>Pratinjau Dokumen</h3>
         <div class="sheet-wrapper">
             <div class="sheet" id="suratContainer">
                 <div class="header-surat">
-                    PT PLN (Persero)<br>
-                    Unit Induk Distribusi Jawa Barat<br>
-                    UP3 Cikarang<br>
-                    ULP Lemah Abang
+                    <img src="https://i.ibb.co.com/XfkR6wrZ/Logo-PLN.png" class="logo-pln" alt="Logo PLN" crossorigin="anonymous">
+                    <div class="header-text">
+                        <strong>PT PLN (Persero)</strong><br>
+                        Unit Induk Distribusi Jawa Barat<br>
+                        UP3 Cikarang<br>
+                        ULP Lemah Abang
+                    </div>
                 </div>
                 <div class="judul">SURAT PERNYATAAN</div>
                 <p style="margin: 15px 0;">Saya yang bertandatangan dibawah ini :</p>
                 <table style="width: 100%; border-collapse: collapse;">
-                    <tr><td style="width: 25%;">Nama</td><td style="width: 3%;">:</td><td id="prevNama"></td></tr>
-                    <tr><td>Alamat</td><td>:</td><td id="prevAlamat"></td></tr>
-                    <tr><td>No. KTP</td><td>:</td><td id="prevKtp"></td></tr>
-                    <tr><td>No. Telp/HP</td><td>:</td><td id="prevTelp"></td></tr>
+                    <tr><td style="width: 25%; padding: 4px 0;">Nama</td><td style="width: 3%;">:</td><td id="prevNama"></td></tr>
+                    <tr><td style="padding: 4px 0;">Alamat</td><td>:</td><td id="prevAlamat"></td></tr>
+                    <tr><td style="padding: 4px 0;">No. KTP</td><td>:</td><td id="prevKtp"></td></tr>
+                    <tr><td style="padding: 4px 0;">No. Telp/HP</td><td>:</td><td id="prevTelp"></td></tr>
                 </table>
 
-                <p style="margin: 25px 0;">Adalah penanggungjawab rekening listrik PT PLN (Persero) UP3 Cikarang ULP Lemah Abang dengan data sebagai berikut :</p>
+                <p style="margin: 20px 0 10px 0;">Adalah penanggungjawab rekening listrik PT PLN (Persero) UP3 Cikarang ULP Lemah Abang dengan data sebagai berikut :</p>
                 <table style="width: 100%; border-collapse: collapse;">
-                    <tr><td style="width: 25%;">Atas nama pelanggan</td><td style="width: 3%;">:</td><td id="prevNamaPln"></td></tr>
-                    <tr><td>Alamat</td><td>:</td><td id="prevAlamatPln"></td></tr>
-                    <tr><td>ID Pelanggan</td><td>:</td><td id="prevIdPel"></td></tr>
-                    <tr><td>Tarif / Daya</td><td>:</td><td id="prevTarif"></td></tr>
+                    <tr><td style="width: 25%; padding: 4px 0;">Atas nama pelanggan</td><td style="width: 3%;">:</td><td id="prevNamaPln"></td></tr>
+                    <tr><td style="padding: 4px 0;">Alamat</td><td>:</td><td id="prevAlamatPln"></td></tr>
+                    <tr><td style="padding: 4px 0;">ID Pelanggan</td><td>:</td><td id="inputIdPelPrev"></td></tr>
+                    <tr><td style="padding: 4px 0;">Tarif / Daya</td><td>:</td><td id="prevTarif"></td></tr>
                 </table>
-                <br>
 
-                <p style="margin: 8px 0;">Dengan ini saya :</p>
-                <ul style="padding-left: 20px; margin: 0;">
+                <p style="margin: 15px 0 8px 0;">Dengan ini saya menyatakan :</p>
+                <ul style="padding-left: 20px; margin: 0; line-height: 1.6;">
                     <li>Telah mengetahui <b>batas akhir pembayaran tagihan listrik adalah tanggal 20 setiap bulannya.</b></li>
-                    <li>Apabila sejak bulan ini dan bulan selanjutnya pembayaran melewati batas akhir sebagi mana diatas, maka Saya bersedia dilakukan <b>penggantian meter ke kwh system prabayar (token)</b> oleh pihak PLN tanpa perlu menunggu persetujuan / izin.</li>
+                    <li>Apabila sejak bulan ini dan bulan selanjutnya pembayaran melewati batas akhir sebagaimana diatas, maka Saya bersedia dilakukan <b>penggantian meter ke kwh system prabayar (token)</b> oleh pihak PLN tanpa perlu menunggu persetujuan / izin.</li>
                     <li>Tidak melakukan <b>pengajuan kembali ke system pascabayar apabila sudah menjadi system prabayar (token)</b> dengan alasan apapun.</li>
                 </ul>
-<br>
-                <p style="margin: 8px 0;">Demikian pernyataan ini dibuat sebagai bentuk kesadaran dan kepedulian untuk disiplin terhadap peraturan tanpa paksaan siapapun.</p>
 
-                <table style="width: 100%; margin-top: 50px;">
+                <p style="margin: 15px 0 10px 0;">Demikian pernyataan ini dibuat sebagai bentuk kesadaran dan kepedulian untuk disiplin terhadap peraturan tanpa paksaan siapapun.</p>
+
+                <table style="width: 100%; margin-top: 40px;">
                     <tr>
                         <td style="width: 50%; vertical-align: top;">
-                            <div id="containerKtp">
-                                <!-- Foto KTP akan muncul di sini -->
-                            </div>
+                            <div id="containerKtp"></div>
                         </td>
                         <td style="width: 50%; text-align: center; vertical-align: top;">
-                            <span id="prevTanggal">Sukatani, 13 September 2026</span><br>
+                            <span id="prevTanggal">Bekasi, 14 Oktober 2026</span><br>
                             Pelanggan
-                            <div style="height: 55px; display: flex; align-items: center; justify-content: center;">
+                            <div style="height: 70px; display: flex; align-items: center; justify-content: center; margin: 5px 0;">
                                 <img id="prevTtd" class="ttd-preview" alt="">
                             </div>
-                            (<span id="prevTandaTangan">...</span>)
+                            <strong>(<span id="prevTandaTangan">...</span>)</strong>
                         </td>
                     </tr>
                 </table>
             </div>
         </div>
-        <br>
-        <button class="btn" onclick="downloadPDF()">Simpan & Download PDF</button>
+        <button class="btn" onclick="downloadImage()">Simpan & Download Gambar (JPG)</button>
     </div>
 </div>
 
@@ -199,28 +356,31 @@
         }
     }
 
-    window.onload = function() {
+    window.onload = function() { 
         resizeCanvas();
+        setOtomatisTanggal();
     };
-    window.onresize = function() {
-        resizeCanvas();
-    };
+    window.onresize = function() { resizeCanvas(); };
+
+    function setOtomatisTanggal() {
+        const options = { timeZone: 'Asia/Jakarta', day: 'numeric', month: 'long', year: 'numeric' };
+        const today = new Date().toLocaleDateString('id-ID', options);
+        document.getElementById('prevTanggal').innerText = `Bekasi, ${today}`;
+    }
 
     function updatePreview() {
-        document.getElementById('prevNama').innerText = document.getElementById('inputNama').value || '...';
-        document.getElementById('prevAlamat').innerText = document.getElementById('inputAlamat').value || '...';
+        document.getElementById('prevNama').innerText = document.getElementById('inputNama').value.toUpperCase() || '...';
+        document.getElementById('prevAlamat').innerText = document.getElementById('inputAlamat').value.toUpperCase() || '...';
         document.getElementById('prevKtp').innerText = document.getElementById('inputKtp').value || '...';
         document.getElementById('prevTelp').innerText = document.getElementById('inputTelp').value || '...';
         
-        document.getElementById('prevNamaPln').innerText = document.getElementById('inputNamaPln').value || '...';
-        document.getElementById('prevAlamatPln').innerText = document.getElementById('inputAlamatPln').value || '...';
-        document.getElementById('prevIdPel').innerText = document.getElementById('inputIdPel').value || '...';
-        document.getElementById('prevTarif').innerText = document.getElementById('inputTarif').value || '...';
-        document.getElementById('prevTanggal').innerText = document.getElementById('inputTanggal').value || '...';
+        document.getElementById('prevNamaPln').innerText = document.getElementById('inputNamaPln').value.toUpperCase() || '...';
+        document.getElementById('prevAlamatPln').innerText = document.getElementById('inputAlamatPln').value.toUpperCase() || '...';
+        document.getElementById('inputIdPelPrev').innerText = document.getElementById('inputIdPel').value || '...';
+        document.getElementById('prevTarif').innerText = document.getElementById('inputTarif').value.toUpperCase() || '...';
 
         let namaFull = document.getElementById('inputNama').value.trim();
-        let namaDepan = namaFull ? namaFull.split(' ')[0] : '...';
-        document.getElementById('prevTandaTangan').innerText = namaDepan;
+        document.getElementById('prevTandaTangan').innerText = namaFull ? namaFull.toUpperCase() : '...';
     }
 
     function previewKtp(event) {
@@ -232,31 +392,26 @@
         reader.readAsDataURL(event.target.files[0]);
     }
 
-    // Fungsi Download PDF Otomatis Tanpa Ribet
-    function downloadPDF() {
+    function downloadImage() {
         const element = document.getElementById('suratContainer');
-        
-        // Tampilkan indikator proses sebentar
         let btnCetak = document.querySelectorAll('.btn');
-        btnCetak.forEach(b => b.innerText = "Memproses PDF...");
+        btnCetak.forEach(b => b.innerText = "Memproses Gambar...");
 
-        html2canvas(element, { scale: 2, useCORS: true }).then(canvas => {
-            const imgData = canvas.toDataURL('image/png');
-            const { jsPDF } = window.jspdf;
-            const pdf = new jsPDF('p', 'mm', 'a4');
-            
-            const pdfWidth = pdf.internal.pageSize.getWidth();
-            const pdfHeight = (canvas.height * pdfWidth) / canvas.width;
-            
-            pdf.addImage(imgData, 'PNG', 0, 0, pdfWidth, pdfHeight);
-            
+        html2canvas(element, { scale: 2, useCORS: true, backgroundColor: '#ffffff' }).then(canvas => {
+            const imageURL = canvas.toDataURL('image/jpeg', 0.95);
             let namaFile = document.getElementById('inputNamaPln').value.trim() || 'Surat_Pernyataan_PLN';
-            pdf.save(`${namaFile}.pdf`);
 
-            btnCetak.forEach(b => b.innerText = "Simpan & Download PDF");
+            const link = document.createElement('a');
+            link.href = imageURL;
+            link.download = `Surat_Pernyataan_${namaFile}.jpg`;
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+
+            btnCetak.forEach(b => b.innerText = "Simpan & Download Gambar (JPG)");
         }).catch(err => {
-            alert("Gagal membuat PDF: " + err);
-            btnCetak.forEach(b => b.innerText = "Simpan & Download PDF");
+            alert("Gagal membuat gambar: " + err);
+            btnCetak.forEach(b => b.innerText = "Simpan & Download Gambar (JPG)");
         });
     }
 
@@ -276,16 +431,12 @@
         let rect = canvas.getBoundingClientRect();
         let clientX = e.clientX || (e.touches && e.touches[0].clientX);
         let clientY = e.clientY || (e.touches && e.touches[0].clientY);
-        return {
-            x: clientX - rect.left,
-            y: clientY - rect.top
-        };
+        return { x: clientX - rect.left, y: clientY - rect.top };
     }
 
     canvas.addEventListener('mousedown', startDraw);
     canvas.addEventListener('mousemove', drawing);
     canvas.addEventListener('mouseup', stopDraw);
-
     canvas.addEventListener('touchstart', startDraw, { passive: false });
     canvas.addEventListener('touchmove', drawing, { passive: false });
     canvas.addEventListener('touchend', stopDraw);
@@ -304,9 +455,8 @@
         let pos = getPos(e);
         ctx.lineTo(pos.x, pos.y);
         ctx.strokeStyle = '#000';
-        ctx.lineWidth = 2;
+        ctx.lineWidth = 2.5;
         ctx.stroke();
-        
         document.getElementById('prevTtd').src = canvas.toDataURL();
     }
 
