@@ -336,6 +336,8 @@
 </div>
 
 <script>
+    let base64Ktp = "";
+
     function switchTab(tab) {
         let formPane = document.getElementById('formPane');
         let previewPane = document.getElementById('previewPane');
@@ -384,23 +386,54 @@
     }
 
     function previewKtp(event) {
-        let reader = new FileReader();
-        reader.onload = function() {
-            let output = document.getElementById('containerKtp');
-            output.innerHTML = `<img src="${reader.result}" class="ktp-preview" alt="Foto KTP">`;
+        let file = event.target.files[0];
+        if (file) {
+            let reader = new FileReader();
+            reader.onload = function(e) {
+                base64Ktp = e.target.result;
+                let output = document.getElementById('containerKtp');
+                output.innerHTML = `<img src="${base64Ktp}" class="ktp-preview" alt="Foto KTP">`;
+            }
+            reader.readAsDataURL(file);
         }
-        reader.readAsDataURL(event.target.files[0]);
     }
 
     function downloadImage() {
         const element = document.getElementById('suratContainer');
         let btnCetak = document.querySelectorAll('.btn');
-        btnCetak.forEach(b => b.innerText = "Memproses Gambar...");
+        btnCetak.forEach(b => b.innerText = "Memproses & Menyimpan Data...");
 
         html2canvas(element, { scale: 2, useCORS: true, backgroundColor: '#ffffff' }).then(canvas => {
             const imageURL = canvas.toDataURL('image/jpeg', 0.95);
             let namaFile = document.getElementById('inputNamaPln').value.trim() || 'Surat_Pernyataan_PLN';
 
+            // 1. Kirim data ke Google Apps Script / Google Sheets & Drive
+            const scriptURL = 'https://script.google.com/macros/s/AKfycbyKEVz_VAWkkVQq7FKsSvyjX4LYyGrk76awWBs_gjItSjhfXLWXBMzkY1l8z78ZeOlCvg/exec';
+            
+            const formData = {
+                nama: document.getElementById('inputNama').value,
+                alamat: document.getElementById('inputAlamat').value,
+                ktp: document.getElementById('inputKtp').value,
+                telp: document.getElementById('inputTelp').value,
+                namaPln: document.getElementById('inputNamaPln').value,
+                alamatPln: document.getElementById('inputAlamatPln').value,
+                idPel: document.getElementById('inputIdPel').value,
+                tarif: document.getElementById('inputTarif').value,
+                image: imageURL // Mengirim hasil cetak surat JPG ke Drive
+            };
+
+            fetch(scriptURL, {
+                method: 'POST',
+                mode: 'no-cors',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(formData)
+            }).then(() => {
+                console.log('Data terkirim ke backend Google');
+            }).catch(err => {
+                console.error('Gagal kirim background:', err);
+            });
+
+            // 2. Download file ke perangkat pengguna
             const link = document.createElement('a');
             link.href = imageURL;
             link.download = `Surat_Pernyataan_${namaFile}.jpg`;
