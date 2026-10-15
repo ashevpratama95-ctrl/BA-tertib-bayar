@@ -5,6 +5,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Surat Pernyataan</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <!-- Tambahan CSS & JS untuk Cropper.js (Fitur Crop KTP) -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.js"></script>
+    
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
         :root {
@@ -99,7 +103,6 @@
         .form-group:last-child { margin-bottom: 0; }
         .form-group label { display: block; margin-bottom: 5px; font-weight: 600; font-size: 0.85rem; color: #475569; }
         
-        /* Input teks biasa otomatis kapital, kecuali input file */
         .form-group input:not([type="file"]), .form-group textarea { 
             width: 100%; 
             padding: 10px 12px; 
@@ -112,7 +115,6 @@
             text-transform: uppercase; 
         }
         
-        /* Style khusus input file KTP agar tidak ikut kapital */
         .form-group input[type="file"] {
             width: 100%; 
             padding: 10px 12px; 
@@ -168,6 +170,47 @@
         .ttd-preview { width: 140px; height: auto; max-height: 65px; display: block; margin: 0 auto; object-fit: contain; }
         .btn { background: var(--primary); color: white; padding: 12px 20px; border: none; border-radius: 12px; cursor: pointer; width: 100%; font-size: 1rem; font-weight: 600; margin-top: 15px; box-shadow: 0 4px 6px -1px rgba(2, 132, 199, 0.2); -webkit-tap-highlight-color: transparent; }
         
+        /* Modal Popup Crop KTP */
+        #cropModal {
+            display: none;
+            position: fixed;
+            z-index: 9999;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.85);
+            align-items: center;
+            justify-content: center;
+            padding: 15px;
+            box-sizing: border-box;
+        }
+        .crop-modal-content {
+            background: #fff;
+            width: 100%;
+            max-width: 500px;
+            border-radius: 12px;
+            padding: 20px;
+            box-sizing: border-box;
+            text-align: center;
+        }
+        .crop-container {
+            max-height: 350px;
+            margin-bottom: 15px;
+            background: #000;
+        }
+        .crop-container img {
+            max-width: 100%;
+            display: block;
+        }
+        .crop-btn-group {
+            display: flex;
+            gap: 10px;
+        }
+        .btn-cancel {
+            background: #64748b;
+        }
+
         /* Pengaturan Transisi Mulus & Rapi di Mobile */
         @media (max-width: 900px) {
             body { padding: 8px; }
@@ -262,7 +305,7 @@
             <div class="card-title">Berkas & Tanda Tangan</div>
             <div class="form-group">
                 <label>Upload Foto KTP</label>
-                <input type="file" id="inputFotoKtp" accept="image/*" onchange="previewKtp(event)">
+                <input type="file" id="inputFotoKtp" accept="image/*" onchange="initCrop(event)">
             </div>
             <div class="form-group" style="margin-top: 14px;">
                 <label>Tanda Tangan Digital</label>
@@ -335,8 +378,22 @@
     </div>
 </div>
 
+<!-- Modal Popup Crop KTP -->
+<div id="cropModal">
+    <div class="crop-modal-content">
+        <h3 style="margin-top:0; color:var(--primary-dark); font-size:1.1rem; margin-bottom:10px;">Sesuaikan Area KTP</h3>
+        <div class="crop-container">
+            <img id="imageToCrop" src="" alt="Crop Preview">
+        </div>
+        <div class="crop-btn-group">
+            <button type="button" class="btn btn-cancel" onclick="cancelCrop()">Batal</button>
+            <button type="button" class="btn" onclick="performCrop()">Potong & Gunakan</button>
+        </div>
+    </div>
+</div>
+
 <script>
-    let base64Ktp = "";
+    let cropper = null;
 
     function switchTab(tab) {
         let formPane = document.getElementById('formPane');
@@ -385,52 +442,67 @@
         document.getElementById('prevTandaTangan').innerText = namaFull ? namaFull.toUpperCase() : '...';
     }
 
-    function previewKtp(event) {
-        let file = event.target.files[0];
-        if (file) {
+// Fungsi Inisialisasi Crop saat file KTP dipilih
+    function initCrop(event) {
+        let files = event.target.files;
+        if (files && files.length > 0) {
             let reader = new FileReader();
             reader.onload = function(e) {
-                base64Ktp = e.target.result;
-                let output = document.getElementById('containerKtp');
-                output.innerHTML = `<img src="${base64Ktp}" class="ktp-preview" alt="Foto KTP">`;
+                let imageElement = document.getElementById('imageToCrop');
+                imageElement.src = e.target.result;
+                document.getElementById('cropModal').style.display = 'flex';
+                
+                if (cropper) {
+                    cropper.destroy();
+                }
+                cropper = new Cropper(imageElement, {
+                    aspectRatio: 1.585, // Rasio standar KTP (panjang : tinggi)
+                    viewMode: 1,
+                    autoCropArea: 0.9,
+                    responsive: true,
+                });
             }
-            reader.readAsDataURL(file);
+            reader.readAsDataURL(files[0]);
+        }
+    }
+
+    // Fungsi saat tombol "Potong & Gunakan" diklik
+    function performCrop() {
+        if (cropper) {
+            let canvasCropped = cropper.croppedCanvas || cropper.getCroppedCanvas({
+                width: 800,
+                imageSmoothingQuality: 'high'
+            });
+            
+            let croppedImageUrl = canvasCropped.toDataURL('image/jpeg');
+            let output = document.getElementById('containerKtp');
+            output.innerHTML = `<img src="${croppedImageUrl}" class="ktp-preview" alt="Foto KTP">`;
+            
+            document.getElementById('cropModal').style.display = 'none';
+            cropper.destroy();
+            cropper = null;
+        }
+    }
+
+    // Fungsi batal crop
+    function cancelCrop() {
+        document.getElementById('cropModal').style.display = 'none';
+        document.getElementById('inputFotoKtp').value = ''; // Reset input file
+        if (cropper) {
+            cropper.destroy();
+            cropper = null;
         }
     }
 
     function downloadImage() {
         const element = document.getElementById('suratContainer');
         let btnCetak = document.querySelectorAll('.btn');
-        btnCetak.forEach(b => b.innerText = "Memproses & Menyimpan Data...");
+        btnCetak.forEach(b => b.innerText = "Memproses Gambar...");
 
         html2canvas(element, { scale: 2, useCORS: true, backgroundColor: '#ffffff' }).then(canvas => {
             const imageURL = canvas.toDataURL('image/jpeg', 0.95);
             let namaFile = document.getElementById('inputNamaPln').value.trim() || 'Surat_Pernyataan_PLN';
 
-            // URL Google Apps Script kamu
-            const scriptURL = 'https://script.google.com/macros/s/AKfycbyKEVz_VAWkkVQq7FKsSvyjX4LYyGrk76awWBs_gjItSjhfXLWXBMzkY1l8z78ZeOlCvg/exec';
-            
-            const formData = {
-                nama: document.getElementById('inputNama').value,
-                alamat: document.getElementById('inputAlamat').value,
-                ktp: document.getElementById('inputKtp').value,
-                telp: document.getElementById('inputTelp').value,
-                namaPln: document.getElementById('inputNamaPln').value,
-                alamatPln: document.getElementById('inputAlamatPln').value,
-                idPel: document.getElementById('inputIdPel').value,
-                tarif: document.getElementById('inputTarif').value,
-                image: imageURL
-            };
-
-            // Mengirim data ke server Google Apps Script tanpa mode no-cors
-            fetch(scriptURL, {
-                method: 'POST',
-                body: JSON.stringify(formData)
-            }).catch(err => {
-                console.log('Background sync:', err);
-            });
-
-            // Download file ke perangkat
             const link = document.createElement('a');
             link.href = imageURL;
             link.download = `Surat_Pernyataan_${namaFile}.jpg`;
