@@ -3,9 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Surat Pernyataan</title>
+    <title>Surat Pernyataan - PLN ULP Lemah Abang</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
-    <!-- Tambahan CSS & JS untuk Cropper.js (Fitur Crop KTP) -->
+    <!-- CSS & JS untuk Cropper.js -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.js"></script>
     
@@ -14,164 +14,357 @@
         :root {
             --primary: #0284c7;
             --primary-dark: #0369a1;
-            --accent: #f0f9ff;
-            --bg-color: #f1f5f9;
+            --primary-hover: #0ea5e9;
+            --accent: #e0f2fe;
+            --bg-color: #f8fafc;
             --text-main: #1e293b;
             --border-color: #cbd5e1;
+            /* Shadow card diperjelas sedikit agar kontras dengan background */
+            --shadow-subtle: 0 4px 12px -2px rgba(0, 0, 0, 0.06), 0 2px 6px -1px rgba(0, 0, 0, 0.03);
+            --shadow-card: 0 10px 15px -3px rgba(0, 0, 0, 0.04), 0 4px 6px -2px rgba(0, 0, 0, 0.02);
         }
-        body { font-family: 'Inter', sans-serif; background: var(--bg-color); color: var(--text-main); padding: 15px; margin: 0; }
         
-        .header-container { text-align: center; margin-bottom: 15px; }
-        h2.app-title { margin: 0 0 6px 0; color: #334155; font-weight: 700; font-size: 1.75rem; font-family: 'Inter', sans-serif; }
-        .app-subtitle { font-size: 0.65rem; color: #64748b; font-weight: 100; font-family: 'Inter', sans-serif; }
-        .app-subtitle strong { font-weight: 600; color: #475569; }
-
-        /* Style Tab Kapsul Modern Tanpa Shadow Biru */
-        .tab-container { 
-            display: none; 
-            margin-bottom: 20px; 
-            background: #ffffff; 
-            border-radius: 9999px; 
-            padding: 5px; 
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
-            max-width: 450px;
-            margin-left: auto;
-            margin-right: auto;
-            border: 1px solid #e2e8f0;
+        body { 
+            font-family: 'Inter', sans-serif; 
+            background: var(--bg-color); 
+            color: var(--text-main); 
+            padding: 16px; 
+            margin: 0; 
+            -webkit-font-smoothing: antialiased;
         }
-        .tab-btn { 
-            flex: 1; 
-            padding: 12px 20px; 
+        
+        /* Header Modern Card */
+        .header-container { 
             text-align: center; 
-            background: transparent; 
-            border: none; 
-            font-weight: 600; 
-            cursor: pointer; 
-            font-size: 0.95rem; 
-            border-radius: 9999px; 
-            color: #64748b; 
-            transition: all 0.25s ease;
-            -webkit-tap-highlight-color: transparent;
-            outline: none;
-            font-family: 'Inter', sans-serif;
+            margin: auto;
+            margin-bottom: 24px; 
+            max-width: 1200px;
+            background: #ffffff;
+            border: 1px solid var(--border-color);
+            border-radius: 20px;
+            padding: 22px 20px;
+            box-shadow: var(--shadow-subtle);
         }
-        .tab-btn.active { 
-            background: var(--primary); 
-            color: white; 
-            box-shadow: none; 
+        .header-badge {
+            display: inline-block;
+            color: #0f172a;
+            font-size: 0.78rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 6px;
+        }
+        h2.app-title { 
+            margin: 0 0 12px 0; 
+            color: #0f172a; 
+            font-weight: 700; 
+            font-size: 1.65rem; 
+            letter-spacing: -0.5px;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 10px;
+        }
+        .app-subtitle { 
+            font-size: 0.8rem; 
+            color: #64748b; 
+            font-weight: 400; 
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+        }
+        /* Badge spesial khusus nama pembuat dengan warna biru selaras */
+        .creator-badge {
+            background: var(--accent);
+            color: var(--primary);
+            font-weight: 600;
+            padding: 4px 12px;
+            border-radius: 20px;
+            border: 1px solid #7dd3fc;
+            display: inline-block;
         }
 
-        .container { display: flex; gap: 20px; max-width: 1250px; margin: auto; }
+        .container { 
+            display: flex; 
+            gap: 24px; 
+            max-width: 1200px; 
+            margin: auto; 
+        }
         
         .form-section { background: transparent; padding: 0; box-shadow: none; flex: 1; }
-        .preview-section { background: white; padding: 20px; border-radius: 16px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05); flex: 1; }
-        
-        /* Desain Card Terpisah */
-        .form-card {
-            background: #ffffff;
-            border: 1px solid #e2e8f0;
-            border-radius: 16px;
-            padding: 20px;
-            margin-bottom: 20px;
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.04), 0 2px 4px -1px rgba(0, 0, 0, 0.02);
+        .preview-section { 
+            background: white; 
+            padding: 24px; 
+            border-radius: 20px; 
+            box-shadow: var(--shadow-card); 
+            flex: 1; 
+            border: 1px solid var(--border-color);
         }
         
-        /* Judul Card Berwarna Biru PLN */
+        /* Desain Card Modern dengan Shadow Lebih Terlihat */
+        .form-card {
+            background: #ffffff;
+            border: 1px solid var(--border-color);
+            border-radius: 20px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: var(--shadow-subtle);
+        }
+        
         .card-title {
-            font-size: 0.95rem;
+            font-size: 0.88rem;
             font-weight: 700;
-            color: var(--primary-dark);
+            color: var(--primary);
             margin-top: 0;
-            margin-bottom: 14px;
+            margin-bottom: 16px;
             text-transform: uppercase;
-            letter-spacing: 0.5px;
-            border-bottom: 2px solid var(--accent);
+            letter-spacing: 0.8px;
+            border-bottom: 1.5px solid var(--primary);
             padding-bottom: 8px;
         }
         
         .preview-section h3 {
-            font-size: 1rem;
-            color: var(--primary-dark);
-            border-bottom: 2px solid var(--accent);
-            padding-bottom: 6px;
-            margin-top: 15px;
-            margin-bottom: 12px;
+            font-size: 0.95rem;
+            color: var(--primary);
+            border-bottom: 1.5px solid var(--primary);
+            padding-bottom: 8px;
+            margin-top: 0;
+            margin-bottom: 16px;
             text-transform: uppercase;
+            letter-spacing: 0.5px;
         }
 
-        .form-group { margin-bottom: 12px; }
+        .form-group { margin-bottom: 14px; }
         .form-group:last-child { margin-bottom: 0; }
-        .form-group label { display: block; margin-bottom: 5px; font-weight: 600; font-size: 0.85rem; color: #475569; }
+        .form-group label { display: block; margin-bottom: 6px; font-weight: 600; font-size: 0.82rem; color: #475569; }
         
-        .form-group input:not([type="file"]), .form-group textarea { 
+        /* Wrapper Input dengan Tombol Hapus (✕) di Dalamnya */
+        .input-clear-wrapper {
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
+        .input-clear-wrapper input {
             width: 100%; 
-            padding: 10px 12px; 
+            padding: 12px 36px 12px 14px;
             box-sizing: border-box; 
             font-size: 0.95rem; 
-            border: 1px solid var(--border-color); 
-            border-radius: 8px; 
-            background: #fdfdfd; 
-            transition: all 0.2s; 
+            border: 1.5px solid var(--border-color); 
+            border-radius: 12px; 
+            background: #fcfcfc; 
+            transition: border-color 0.2s ease, background 0.2s ease; 
             text-transform: uppercase; 
+            color: #0f172a;
+            box-shadow: none !important;
         }
-        
-        .form-group input[type="file"] {
-            width: 100%; 
-            padding: 10px 12px; 
-            box-sizing: border-box; 
-            font-size: 0.95rem; 
-            border: 1px solid var(--border-color); 
-            border-radius: 8px; 
-            background: #fdfdfd; 
-            text-transform: none !important;
-        }
-        
-        .form-group input:focus, .form-group textarea:focus {
+        .input-clear-wrapper input:focus {
             outline: none;
             border-color: var(--primary);
-            box-shadow: 0 0 0 3px rgba(2, 132, 199, 0.15);
             background: #fff;
+            box-shadow: none !important;
         }
 
-        /* Kotak Tanda Tangan & Tombol Hapus Modern */
-        .signature-wrapper { position: relative; width: 100%; }
-        .signature-pad { border: 2px dashed var(--border-color); background: #ffffff; width: 100%; height: 165px; cursor: crosshair; touch-action: none; border-radius: 8px; display: block; box-sizing: border-box; }
-        .clear-sign-btn {
+        /* Tombol Hapus (✕) Warna Abu-abu untuk Input & KTP */
+        .input-clear-btn, .clear-btn {
             position: absolute;
-            top: 10px;
-            right: 10px;
-            background: #dc2626;
+            right: 12px;
+            background: #94a3b8;
             color: white;
             border: none;
-            width: 32px;
-            height: 32px;
-            border-radius: 8px;
+            width: 22px;
+            height: 22px;
+            border-radius: 50%;
             font-weight: 700;
-            font-size: 16px;
-            display: flex;
+            font-size: 11px;
+            display: none;
             align-items: center;
             justify-content: center;
             cursor: pointer;
-            box-shadow: 0 2px 5px rgba(220, 38, 38, 0.3);
-            transition: all 0.2s;
+            transition: background 0.2s;
+            -webkit-tap-highlight-color: transparent;
+            box-shadow: none !important;
             z-index: 10;
         }
-        .clear-sign-btn:hover { background: #b91c1c; transform: scale(1.05); }
+        .input-clear-btn:hover, .clear-btn:hover { background: #64748b; }
+
+        /* Tombol Khusus Berwarna Merah untuk Popup (Modal) */
+        .custom-modal .clear-btn {
+            background: #ef4444;
+            display: flex;
+        }
+        .custom-modal .clear-btn:hover {
+            background: #dc2626;
+        }
+
+        /* Khusus tombol hapus di KTP & Tanda Tangan diposisikan di pojok kanan atas kotak */
+        .clear-btn {
+            top: 10px;
+            right: 10px;
+        }
+
+        /* Kotak Upload KTP Minimalis */
+        .upload-ktp-wrapper {
+            position: relative;
+            border: 2px dashed var(--border-color);
+            background: #ffffff;
+            border-radius: 12px;
+            padding: 16px;
+            text-align: center;
+            cursor: pointer;
+            transition: border-color 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 110px;
+            box-sizing: border-box;
+        }
+        .upload-ktp-wrapper:hover { border-color: var(--primary); }
+        
+        .upload-ktp-content {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 4px;
+            pointer-events: none;
+            width: 100%;
+        }
+        .upload-ktp-icon { font-size: 22px; color: var(--primary); }
+        .upload-ktp-text { font-size: 0.85rem; font-weight: 600; color: #475569; }
+        .upload-ktp-subtext { font-size: 0.73rem; color: #94a3b8; }
+
+        .ktp-box-preview {
+            max-width: 100%;
+            max-height: 130px;
+            border-radius: 8px;
+            object-fit: contain;
+            display: none;
+        }
+
+        /* Pilihan Daya Grid Versi Soft */
+        .tarif-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 8px;
+        }
+        .tarif-btn {
+            background: #f8fafc;
+            border: 1.5px solid var(--border-color);
+            padding: 11px 6px;
+            border-radius: 12px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: #475569;
+            cursor: pointer;
+            text-align: center;
+            transition: all 0.2s ease;
+            -webkit-tap-highlight-color: transparent;
+            box-shadow: none !important;
+        }
+        .tarif-btn:hover {
+            border-color: #7dd3fc;
+            color: var(--primary-dark);
+            background: #f0f9ff;
+        }
+        .tarif-btn.selected {
+            background: #e0f2fe;
+            border: 2px solid #7dd3fc;
+            color: #0369a1;
+            box-shadow: none !important;
+        }
+
+        @media (max-width: 600px) {
+            .tarif-grid { grid-template-columns: repeat(2, 1fr); }
+        }
+
+        /* Kotak Tanda Tangan */
+        .signature-wrapper { position: relative; width: 100%; }
+        .signature-pad { 
+            border: 2px dashed var(--border-color); 
+            background: #ffffff; 
+            width: 100%; 
+            height: 165px; 
+            cursor: crosshair; 
+            touch-action: none; 
+            border-radius: 12px; 
+            display: block; 
+            box-sizing: border-box; 
+            transition: border-color 0.2s;
+            box-shadow: none !important;
+        }
+        .signature-pad:hover { border-color: var(--primary); }
 
         .sheet-wrapper { overflow-x: auto; width: 100%; padding-bottom: 10px; }
-        .sheet { width: 210mm; min-height: 297mm; padding: 15mm 18mm; margin: auto; background: white; box-shadow: 0 0 10px rgba(0,0,0,0.1); box-sizing: border-box; font-size: 11pt; line-height: 1.45; color: #000; border-radius: 4px; }
+        .sheet { width: 210mm; min-height: 297mm; padding: 15mm 18mm; margin: auto; background: white; box-shadow: 0 0 20px rgba(0,0,0,0.06); box-sizing: border-box; font-size: 11pt; line-height: 1.45; color: #000; border-radius: 8px; }
         
         .header-surat { display: flex; align-items: center; gap: 16px; margin-bottom: 15px; border-bottom: 1px solid #e2e8f0; padding-bottom: 12px; }
         .logo-pln { height: 4.85rem; width: auto; object-fit: contain; display: block; }
         .header-text { font-size: 10pt; line-height: 1.35; color: #334155; }
         
-        .judul { text-align: center; font-weight: bold; margin: 25px 0; font-size: 14pt; }
+        .judul { text-align: center; font-weight: bold; margin: 25px 0; font-size: 14pt; letter-spacing: 0.5px; }
         .ktp-preview { width: 275px; height: auto; border: 1px solid #cbd5e1; border-radius: 4px; margin-top: 5px; display: block; }
         .ttd-preview { width: 140px; height: auto; max-height: 65px; display: block; margin: 0 auto; object-fit: contain; }
-        .btn { background: var(--primary); color: white; padding: 12px 20px; border: none; border-radius: 12px; cursor: pointer; width: 100%; font-size: 1rem; font-weight: 600; margin-top: 15px; box-shadow: 0 4px 6px -1px rgba(2, 132, 199, 0.2); -webkit-tap-highlight-color: transparent; }
         
-        /* Modal Popup Crop KTP */
-        #cropModal {
+        /* Tombol Utama Versi Soft */
+        .btn { 
+            background: #e0f2fe; 
+            color: #0369a1; 
+            border: 2px solid #7dd3fc; 
+            padding: 14px 20px; 
+            border-radius: 14px; 
+            cursor: pointer; 
+            width: 100%; 
+            font-size: 0.95rem; 
+            font-weight: 600; 
+            margin-top: 15px; 
+            transition: all 0.2s ease;
+            -webkit-tap-highlight-color: transparent;
+            letter-spacing: 0.3px;
+            box-shadow: none !important;
+        }
+        .btn:hover { 
+            background: var(--primary); 
+            color: white; 
+            border-color: var(--primary); 
+        }
+
+        /* Tombol Sekunder Versi Soft (Abu-abu) */
+        .btn-secondary { 
+            background: #f1f5f9; 
+            color: #334155; 
+            border: 2px solid #94a3b8; 
+            box-shadow: none !important; 
+        }
+        .btn-secondary:hover { 
+            background: #64748b; 
+            color: white; 
+            border-color: #64748b; 
+        }
+
+        /* Tombol Bahaya/Reset Versi Soft (Merah) */
+        .btn-danger { 
+            background: #fee2e2; 
+            color: #b91c1c; 
+            border: 2px solid #fca5a5; 
+            box-shadow: none !important; 
+        }
+        .btn-danger:hover { 
+            background: #ef4444; 
+            color: white; 
+            border-color: #ef4444; 
+        }
+
+        .button-group {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 25px;
+        }
+        .button-group .btn {
+            margin-top: 0;
+            flex: 1;
+        }
+        
+        /* Modal Popup Umum */
+        .custom-modal {
             display: none;
             position: fixed;
             z-index: 9999;
@@ -179,42 +372,55 @@
             top: 0;
             width: 100%;
             height: 100%;
-            background-color: rgba(0, 0, 0, 0.85);
+            background-color: rgba(15, 23, 42, 0.75);
+            backdrop-filter: blur(4px);
             align-items: center;
             justify-content: center;
-            padding: 15px;
+            padding: 16px;
             box-sizing: border-box;
+            animation: fadeIn 0.25s ease;
         }
-        .crop-modal-content {
+        .modal-content {
             background: #fff;
             width: 100%;
-            max-width: 500px;
-            border-radius: 12px;
-            padding: 20px;
+            max-width: 400px;
+            border-radius: 20px;
+            padding: 24px;
             box-sizing: border-box;
             text-align: center;
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+            animation: scaleUp 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+            position: relative;
         }
         .crop-container {
-            max-height: 350px;
-            margin-bottom: 15px;
+            max-height: 320px;
+            margin-bottom: 16px;
             background: #000;
+            border-radius: 12px;
+            overflow: hidden;
         }
         .crop-container img {
             max-width: 100%;
             display: block;
         }
-        .crop-btn-group {
+        .modal-btn-group {
             display: flex;
-            gap: 10px;
+            gap: 12px;
+            margin-top: 20px;
         }
-        .btn-cancel {
-            background: #64748b;
+        .modal-btn-group .btn {
+            margin-top: 0;
+            flex: 1;
+            padding: 12px 20px;
+            font-size: 0.95rem;
+            border-radius: 12px;
         }
 
-        /* Pengaturan Transisi Mulus & Rapi di Mobile */
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        @keyframes scaleUp { from { transform: scale(0.95); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+
         @media (max-width: 900px) {
-            body { padding: 8px; }
-            .tab-container { display: flex !important; }
+            body { padding: 10px; }
             
             .container {
                 position: relative;
@@ -227,11 +433,12 @@
                 box-sizing: border-box;
                 opacity: 0;
                 visibility: hidden;
-                transition: opacity 0.3s ease-in-out;
+                transition: opacity 0.3s cubic-bezier(0.4, 0, 0.2, 1), transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
                 position: absolute;
                 top: 0;
                 left: 0;
                 pointer-events: none;
+                transform: translateY(10px);
             }
             
             .form-section.mobile-active, .preview-section.mobile-active { 
@@ -239,6 +446,7 @@
                 visibility: visible;
                 position: relative;
                 pointer-events: auto;
+                transform: translateY(0);
             }
         }
     </style>
@@ -246,13 +454,12 @@
 <body>
 
 <div class="header-container">
+    <div class="header-badge">ULP LEMAHABANG</div>
     <h2 class="app-title">BA TERTIB BAYAR</h2>
-    <div class="app-subtitle">Dibuat oleh <strong>Asep Saepudin</strong></div>
-</div>
-
-<div class="tab-container" id="tabMenu">
-    <button class="tab-btn active" id="btnForm" onclick="switchTab('form')">1. Isi Form Data</button>
-    <button class="tab-btn" id="btnPreview" onclick="switchTab('preview')">2. Lihat Surat</button>
+    <div class="app-subtitle">
+        <span>Dibuat oleh</span>
+        <span class="creator-badge">Asep Saepudin</span>
+    </div>
 </div>
 
 <div class="container">
@@ -262,20 +469,32 @@
         <div class="form-card">
             <div class="card-title">Data Penghuni</div>
             <div class="form-group">
-                <label>Nama</label>
-                <input type="text" id="inputNama" oninput="updatePreview()">
+                <label>👤 Nama</label>
+                <div class="input-clear-wrapper">
+                    <input type="text" id="inputNama" oninput="handleInputChange(this); updatePreview()">
+                    <button type="button" class="input-clear-btn" onclick="clearInput('inputNama')">✕</button>
+                </div>
             </div>
             <div class="form-group">
-                <label>Alamat</label>
-                <input type="text" id="inputAlamat" oninput="updatePreview()">
+                <label>🏠 Alamat</label>
+                <div class="input-clear-wrapper">
+                    <input type="text" id="inputAlamat" oninput="handleInputChange(this); updatePreview()">
+                    <button type="button" class="input-clear-btn" onclick="clearInput('inputAlamat')">✕</button>
+                </div>
             </div>
             <div class="form-group">
-                <label>No. KTP</label>
-                <input type="tel" id="inputKtp" inputmode="numeric" pattern="[0-9]*" oninput="this.value = this.value.replace(/[^0-9]/g, ''); updatePreview()">
+                <label>🪪 No. KTP</label>
+                <div class="input-clear-wrapper">
+                    <input type="tel" id="inputKtp" inputmode="numeric" pattern="[0-9]*" oninput="this.value = this.value.replace(/[^0-9]/g, ''); handleInputChange(this); updatePreview()">
+                    <button type="button" class="input-clear-btn" onclick="clearInput('inputKtp')">✕</button>
+                </div>
             </div>
             <div class="form-group">
-                <label>No. Telp/HP</label>
-                <input type="tel" id="inputTelp" inputmode="numeric" pattern="[0-9]*" oninput="this.value = this.value.replace(/[^0-9]/g, ''); updatePreview()">
+                <label>☎️ No. Telp</label>
+                <div class="input-clear-wrapper">
+                    <input type="tel" id="inputTelp" inputmode="numeric" pattern="[0-9]*" oninput="this.value = this.value.replace(/[^0-9]/g, ''); handleInputChange(this); updatePreview()">
+                    <button type="button" class="input-clear-btn" onclick="clearInput('inputTelp')">✕</button>
+                </div>
             </div>
         </div>
 
@@ -283,20 +502,41 @@
         <div class="form-card">
             <div class="card-title">Data Pelanggan PLN</div>
             <div class="form-group">
-                <label>Atas Nama Pelanggan</label>
-                <input type="text" id="inputNamaPln" oninput="updatePreview()">
+                <label>👤 Atas Nama Pelanggan</label>
+                <div class="input-clear-wrapper">
+                    <input type="text" id="inputNamaPln" oninput="handleInputChange(this); updatePreview()">
+                    <button type="button" class="input-clear-btn" onclick="clearInput('inputNamaPln')">✕</button>
+                </div>
             </div>
             <div class="form-group">
-                <label>Alamat Pelanggan</label>
-                <input type="text" id="inputAlamatPln" oninput="updatePreview()">
+                <label>🏠 Alamat Pelanggan</label>
+                <div class="input-clear-wrapper">
+                    <input type="text" id="inputAlamatPln" oninput="handleInputChange(this); updatePreview()">
+                    <button type="button" class="input-clear-btn" onclick="clearInput('inputAlamatPln')">✕</button>
+                </div>
             </div>
             <div class="form-group">
-                <label>ID Pelanggan</label>
-                <input type="tel" id="inputIdPel" inputmode="numeric" pattern="[0-9]*" oninput="this.value = this.value.replace(/[^0-9]/g, ''); updatePreview()">
+                <label>⚡ ID Pelanggan</label>
+                <div class="input-clear-wrapper">
+                    <input type="tel" id="inputIdPel" inputmode="numeric" pattern="[0-9]*" oninput="this.value = this.value.replace(/[^0-9]/g, ''); handleInputChange(this); updatePreview()">
+                    <button type="button" class="input-clear-btn" onclick="clearInput('inputIdPel')">✕</button>
+                </div>
             </div>
             <div class="form-group">
-                <label>Tarif / Daya</label>
-                <input type="text" id="inputTarif" oninput="updatePreview()">
+                <label>💡 Tarif / Daya</label>
+                <input type="hidden" id="inputTarif" value="">
+                <div class="tarif-grid">
+                    <button type="button" class="tarif-btn" onclick="selectTarif('R1 / 450 VA', this)">R1 / 450</button>
+                    <button type="button" class="tarif-btn" onclick="selectTarif('R1 / 900 VA', this)">R1 / 900</button>
+                    <button type="button" class="tarif-btn" onclick="selectTarif('R1M / 900 VA', this)">R1M / 900</button>
+                    <button type="button" class="tarif-btn" onclick="selectTarif('R1 / 1300 VA', this)">R1 / 1300</button>
+                    <button type="button" class="tarif-btn" onclick="selectTarif('R1 / 2200 VA', this)">R1 / 2200</button>
+                    <button type="button" class="tarif-btn" onclick="selectTarif('R2 / 3500 VA', this)">R2 / 3500</button>
+                    <button type="button" class="tarif-btn" onclick="selectTarif('R2 / 4400 VA', this)">R2 / 4400</button>
+                    <button type="button" class="tarif-btn" onclick="selectTarif('R2 / 5500 VA', this)">R2 / 5500</button>
+                    <button type="button" class="tarif-btn" onclick="selectTarif('R3 / 7700 VA', this)">R3 / 7700</button>
+                    <button type="button" class="tarif-btn" onclick="selectTarif('R3 / 11000 VA', this)">R3 / 11000</button>
+                </div>
             </div>
         </div>
 
@@ -304,16 +544,32 @@
         <div class="form-card">
             <div class="card-title">Berkas & Tanda Tangan</div>
             <div class="form-group">
-                <label>Upload Foto KTP</label>
-                <input type="file" id="inputFotoKtp" accept="image/*" onchange="initCrop(event)">
+                <label>📁 Upload berkas KTP</label>
+                <div class="upload-ktp-wrapper" id="uploadKtpBox" onclick="openSourceModal()">
+                    <button type="button" id="clearKtpBtn" class="clear-btn" onclick="clearKtp(event)" title="Hapus Foto KTP">✕</button>
+                    <div class="upload-ktp-content" id="uploadKtpContent">
+                        <div class="upload-ktp-icon"></div>
+                        <div class="upload-ktp-text">ketuk untuk ambil berkas</div>
+                        <div class="upload-ktp-subtext">Kamera atau Galeri</div>
+                    </div>
+                    <img id="ktpBoxPreview" class="ktp-box-preview" alt="Preview KTP">
+                </div>
+                <input type="file" id="inputKamera" accept="image/*" capture="environment" style="display:none;" onchange="initCrop(event)">
+                <input type="file" id="inputGaleri" accept="image/*" style="display:none;" onchange="initCrop(event)">
             </div>
-            <div class="form-group" style="margin-top: 14px;">
-                <label>Tanda Tangan Digital</label>
+            <div class="form-group" style="margin-top: 16px;">
+                <label>✍️ Tanda Tangan Digital</label>
                 <div class="signature-wrapper">
                     <canvas id="signaturePad" class="signature-pad"></canvas>
-                    <button type="button" class="clear-sign-btn" onclick="clearSignature()" title="Hapus Tanda Tangan">✕</button>
+                    <button type="button" class="clear-btn" id="clearSignBtn" style="display: none;" onclick="clearSignature()" title="Hapus Tanda Tangan">✕</button>
                 </div>
             </div>
+        </div>
+
+        <!-- 2 Tombol Bersebelahan di Bawah Form -->
+        <div class="button-group">
+            <button class="btn btn-danger" onclick="openResetModal()">Reset Data</button>
+            <button class="btn" onclick="switchTab('preview')">Lihat Surat</button>
         </div>
 
     </div>
@@ -363,7 +619,7 @@
                             <div id="containerKtp"></div>
                         </td>
                         <td style="width: 50%; text-align: center; vertical-align: top;">
-                            <span id="prevTanggal">Bekasi, 14 Oktober 2026</span><br>
+                            <span id="prevTanggal">Bekasi, 16 Oktober 2026</span><br>
                             Pelanggan
                             <div style="height: 70px; display: flex; align-items: center; justify-content: center; margin: 5px 0;">
                                 <img id="prevTtd" class="ttd-preview" alt="">
@@ -374,20 +630,51 @@
                 </table>
             </div>
         </div>
-        <button class="btn" onclick="downloadImage()">Simpan & Download Gambar (JPG)</button>
+
+        <!-- 2 Tombol Bersebelahan di Bawah Halaman Surat -->
+        <div class="button-group" style="margin-top: 20px;">
+            <button class="btn btn-secondary" onclick="switchTab('form')">Kembali</button>
+            <button class="btn" onclick="downloadImage()">Download (JPG)</button>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Popup Pilihan Sumber Foto KTP -->
+<div id="sourceModal" class="custom-modal">
+    <div class="modal-content">
+        <button type="button" class="clear-btn" onclick="closeSourceModal()" title="Tutup">✕</button>
+        <h3 style="margin-top:0; color:#0f172a; font-size:1.1rem; margin-bottom:8px;">Pilih Sumber Foto</h3>
+        <p style="color:#64748b; font-size:0.9rem; margin-bottom:20px;">Mau ambil foto KTP dari mana nih?</p>
+        <div class="modal-btn-group" style="margin-top: 0;">
+            <button type="button" class="btn" onclick="triggerKamera()">📷 Kamera</button>
+            <button type="button" class="btn" onclick="triggerGaleri()">🖼️ Galeri</button>
+        </div>
     </div>
 </div>
 
 <!-- Modal Popup Crop KTP -->
-<div id="cropModal">
-    <div class="crop-modal-content">
-        <h3 style="margin-top:0; color:var(--primary-dark); font-size:1.1rem; margin-bottom:10px;">Sesuaikan Area KTP</h3>
+<div id="cropModal" class="custom-modal">
+    <div class="modal-content" style="max-width: 450px;">
+        <button type="button" class="clear-btn" onclick="cancelCrop()" title="Tutup">✕</button>
+        <h3 style="margin-top:0; color:var(--primary-dark); font-size:1.1rem; margin-bottom:12px;">Sesuaikan Area KTP</h3>
         <div class="crop-container">
             <img id="imageToCrop" src="" alt="Crop Preview">
         </div>
-        <div class="crop-btn-group">
-            <button type="button" class="btn btn-cancel" onclick="cancelCrop()">Batal</button>
-            <button type="button" class="btn" onclick="performCrop()">Potong & Gunakan</button>
+        <div class="modal-btn-group">
+            <button type="button" class="btn btn-secondary" onclick="cancelCrop()">Kembali</button>
+            <button type="button" class="btn" onclick="performCrop()">Simpan</button>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Popup Konfirmasi Reset Data -->
+<div id="resetModal" class="custom-modal">
+    <div class="modal-content">
+        <h3 style="margin-top:0; color:#0f172a; font-size:1.1rem; margin-bottom:8px;">Konfirmasi Reset</h3>
+        <p style="color:#64748b; font-size:0.9rem; margin-bottom:20px;">Yakin ingin mereset semua data?</p>
+        <div class="modal-btn-group" style="margin-top: 0;">
+            <button type="button" class="btn btn-secondary" onclick="closeResetModal()">Kembali</button>
+            <button type="button" class="btn btn-danger" onclick="confirmResetData()">Ya, Reset</button>
         </div>
     </div>
 </div>
@@ -398,26 +685,22 @@
     function switchTab(tab) {
         let formPane = document.getElementById('formPane');
         let previewPane = document.getElementById('previewPane');
-        let btnForm = document.getElementById('btnForm');
-        let btnPreview = document.getElementById('btnPreview');
 
         if (tab === 'form') {
             formPane.classList.add('mobile-active');
             previewPane.classList.remove('mobile-active');
-            btnForm.classList.add('active');
-            btnPreview.classList.remove('active');
         } else {
             formPane.classList.remove('mobile-active');
             previewPane.classList.add('mobile-active');
-            btnForm.classList.remove('active');
-            btnPreview.classList.add('active');
             resizeCanvas();
+            window.scrollTo({ top: 0, behavior: 'smooth' });
         }
     }
 
     window.onload = function() { 
         resizeCanvas();
         setOtomatisTanggal();
+        checkAllInputsOnLoad();
     };
     window.onresize = function() { resizeCanvas(); };
 
@@ -425,6 +708,14 @@
         const options = { timeZone: 'Asia/Jakarta', day: 'numeric', month: 'long', year: 'numeric' };
         const today = new Date().toLocaleDateString('id-ID', options);
         document.getElementById('prevTanggal').innerText = `Bekasi, ${today}`;
+    }
+
+    function selectTarif(value, btnElement) {
+        document.getElementById('inputTarif').value = value;
+        let buttons = document.querySelectorAll('.tarif-btn');
+        buttons.forEach(b => b.classList.remove('selected'));
+        btnElement.classList.add('selected');
+        updatePreview();
     }
 
     function updatePreview() {
@@ -436,13 +727,81 @@
         document.getElementById('prevNamaPln').innerText = document.getElementById('inputNamaPln').value.toUpperCase() || '...';
         document.getElementById('prevAlamatPln').innerText = document.getElementById('inputAlamatPln').value.toUpperCase() || '...';
         document.getElementById('inputIdPelPrev').innerText = document.getElementById('inputIdPel').value || '...';
-        document.getElementById('prevTarif').innerText = document.getElementById('inputTarif').value.toUpperCase() || '...';
+        document.getElementById('prevTarif').innerText = document.getElementById('inputTarif').value || '...';
 
         let namaFull = document.getElementById('inputNama').value.trim();
         document.getElementById('prevTandaTangan').innerText = namaFull ? namaFull.toUpperCase() : '...';
     }
 
-// Fungsi Inisialisasi Crop saat file KTP dipilih
+    function handleInputChange(inputElement) {
+        let clearBtn = inputElement.nextElementSibling;
+        if (inputElement.value.trim().length > 0) {
+            clearBtn.style.display = 'flex';
+        } else {
+            clearBtn.style.display = 'none';
+        }
+    }
+
+    function clearInput(inputId) {
+        let inputElement = document.getElementById(inputId);
+        inputElement.value = '';
+        inputElement.nextElementSibling.style.display = 'none';
+        inputElement.focus();
+        updatePreview();
+    }
+
+    function checkAllInputsOnLoad() {
+        let inputs = document.querySelectorAll('.input-clear-wrapper input');
+        inputs.forEach(inp => {
+            if (inp.value.trim().length > 0) {
+                inp.nextElementSibling.style.display = 'flex';
+            }
+        });
+    }
+
+    function openSourceModal() {
+        document.getElementById('sourceModal').style.display = 'flex';
+    }
+
+    function closeSourceModal() {
+        document.getElementById('sourceModal').style.display = 'none';
+    }
+
+    function triggerKamera() {
+        closeSourceModal();
+        document.getElementById('inputKamera').click();
+    }
+
+    function triggerGaleri() {
+        closeSourceModal();
+        document.getElementById('inputGaleri').click();
+    }
+
+    function openResetModal() {
+        document.getElementById('resetModal').style.display = 'flex';
+    }
+
+    function closeResetModal() {
+        document.getElementById('resetModal').style.display = 'none';
+    }
+
+    function confirmResetData() {
+        let inputs = document.querySelectorAll('.input-clear-wrapper input');
+        inputs.forEach(inp => {
+            inp.value = '';
+            inp.nextElementSibling.style.display = 'none';
+        });
+
+        document.getElementById('inputTarif').value = '';
+        clearKtpInternal();
+
+        document.querySelectorAll('.tarif-btn').forEach(b => b.classList.remove('selected'));
+
+        clearSignature();
+        updatePreview();
+        closeResetModal();
+    }
+
     function initCrop(event) {
         let files = event.target.files;
         if (files && files.length > 0) {
@@ -456,7 +815,7 @@
                     cropper.destroy();
                 }
                 cropper = new Cropper(imageElement, {
-                    aspectRatio: 1.585, // Rasio standar KTP (panjang : tinggi)
+                    aspectRatio: 1.585,
                     viewMode: 1,
                     autoCropArea: 0.9,
                     responsive: true,
@@ -466,7 +825,6 @@
         }
     }
 
-    // Fungsi saat tombol "Potong & Gunakan" diklik
     function performCrop() {
         if (cropper) {
             let canvasCropped = cropper.croppedCanvas || cropper.getCroppedCanvas({
@@ -475,8 +833,16 @@
             });
             
             let croppedImageUrl = canvasCropped.toDataURL('image/jpeg');
+            
             let output = document.getElementById('containerKtp');
             output.innerHTML = `<img src="${croppedImageUrl}" class="ktp-preview" alt="Foto KTP">`;
+            
+            let boxPreview = document.getElementById('ktpBoxPreview');
+            boxPreview.src = croppedImageUrl;
+            boxPreview.style.display = 'block';
+
+            document.getElementById('uploadKtpContent').style.display = 'none';
+            document.getElementById('clearKtpBtn').style.display = 'flex';
             
             document.getElementById('cropModal').style.display = 'none';
             cropper.destroy();
@@ -484,20 +850,37 @@
         }
     }
 
-    // Fungsi batal crop
     function cancelCrop() {
         document.getElementById('cropModal').style.display = 'none';
-        document.getElementById('inputFotoKtp').value = ''; // Reset input file
+        document.getElementById('inputKamera').value = ''; 
+        document.getElementById('inputGaleri').value = ''; 
         if (cropper) {
             cropper.destroy();
             cropper = null;
         }
     }
 
+    function clearKtp(event) {
+        event.stopPropagation();
+        clearKtpInternal();
+    }
+
+    function clearKtpInternal() {
+        document.getElementById('inputKamera').value = '';
+        document.getElementById('inputGaleri').value = '';
+        document.getElementById('containerKtp').innerHTML = '';
+        document.getElementById('ktpBoxPreview').style.display = 'none';
+        document.getElementById('ktpBoxPreview').src = '';
+        document.getElementById('uploadKtpContent').style.display = 'flex';
+        document.getElementById('clearKtpBtn').style.display = 'none';
+    }
+
     function downloadImage() {
         const element = document.getElementById('suratContainer');
         let btnCetak = document.querySelectorAll('.btn');
-        btnCetak.forEach(b => b.innerText = "Memproses Gambar...");
+        btnCetak.forEach(b => {
+            if(b.innerText.includes("Download")) b.innerText = "Memproses...";
+        });
 
         html2canvas(element, { scale: 2, useCORS: true, backgroundColor: '#ffffff' }).then(canvas => {
             const imageURL = canvas.toDataURL('image/jpeg', 0.95);
@@ -510,10 +893,14 @@
             link.click();
             document.body.removeChild(link);
 
-            btnCetak.forEach(b => b.innerText = "Simpan & Download Gambar (JPG)");
+            btnCetak.forEach(b => {
+                if(b.innerText.includes("Memproses")) b.innerText = "Download (JPG)";
+            });
         }).catch(err => {
             alert("Gagal membuat gambar: " + err);
-            btnCetak.forEach(b => b.innerText = "Simpan & Download Gambar (JPG)");
+            btnCetak.forEach(b => {
+                if(b.innerText.includes("Memproses")) b.innerText = "Download (JPG)";
+            });
         });
     }
 
@@ -560,6 +947,7 @@
         ctx.lineWidth = 2.5;
         ctx.stroke();
         document.getElementById('prevTtd').src = canvas.toDataURL();
+        document.getElementById('clearSignBtn').style.display = 'flex';
     }
 
     function stopDraw(e) {
@@ -570,6 +958,7 @@
     function clearSignature() {
         ctx.clearRect(0, 0, canvas.width, canvas.height);
         document.getElementById('prevTtd').src = '';
+        document.getElementById('clearSignBtn').style.display = 'none';
     }
 </script>
 
