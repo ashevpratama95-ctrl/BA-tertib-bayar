@@ -1,966 +1,2327 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Surat Pernyataan - PLN ULP Lemah Abang</title>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
-    <!-- CSS & JS untuk Cropper.js -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.css">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.js"></script>
-    
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <style>
-        :root {
-            --primary: #0284c7;
-            --primary-dark: #0369a1;
-            --primary-hover: #0ea5e9;
-            --accent: #e0f2fe;
-            --bg-color: #f8fafc;
-            --text-main: #1e293b;
-            --border-color: #cbd5e1;
-            /* Shadow card diperjelas sedikit agar kontras dengan background */
-            --shadow-subtle: 0 4px 12px -2px rgba(0, 0, 0, 0.06), 0 2px 6px -1px rgba(0, 0, 0, 0.03);
-            --shadow-card: 0 10px 15px -3px rgba(0, 0, 0, 0.04), 0 4px 6px -2px rgba(0, 0, 0, 0.02);
-        }
-        
-        body { 
-            font-family: 'Inter', sans-serif; 
-            background: var(--bg-color); 
-            color: var(--text-main); 
-            padding: 16px; 
-            margin: 0; 
-            -webkit-font-smoothing: antialiased;
-        }
-        
-        /* Header Modern Card */
-        .header-container { 
-            text-align: center; 
-            margin: auto;
-            margin-bottom: 24px; 
-            max-width: 1200px;
-            background: #ffffff;
-            border: 1px solid var(--border-color);
-            border-radius: 20px;
-            padding: 22px 20px;
-            box-shadow: var(--shadow-subtle);
-        }
-        .header-badge {
-            display: inline-block;
-            color: #0f172a;
-            font-size: 0.78rem;
-            font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            margin-bottom: 6px;
-        }
-        h2.app-title { 
-            margin: 0 0 12px 0; 
-            color: #0f172a; 
-            font-weight: 700; 
-            font-size: 1.65rem; 
-            letter-spacing: -0.5px;
-            border-bottom: 1px solid var(--border-color);
-            padding-bottom: 10px;
-        }
-        .app-subtitle { 
-            font-size: 0.8rem; 
-            color: #64748b; 
-            font-weight: 400; 
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 6px;
-        }
-        /* Badge spesial khusus nama pembuat dengan warna biru selaras */
-        .creator-badge {
-            background: var(--accent);
-            color: var(--primary);
-            font-weight: 600;
-            padding: 4px 12px;
-            border-radius: 20px;
-            border: 1px solid #7dd3fc;
-            display: inline-block;
-        }
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#0756a8">
+  <title>BA Tertib Bayar | PLN ULP Lemah Abang</title>
 
-        .container { 
-            display: flex; 
-            gap: 24px; 
-            max-width: 1200px; 
-            margin: auto; 
-        }
-        
-        .form-section { background: transparent; padding: 0; box-shadow: none; flex: 1; }
-        .preview-section { 
-            background: white; 
-            padding: 24px; 
-            border-radius: 20px; 
-            box-shadow: var(--shadow-card); 
-            flex: 1; 
-            border: 1px solid var(--border-color);
-        }
-        
-        /* Desain Card Modern dengan Shadow Lebih Terlihat */
-        .form-card {
-            background: #ffffff;
-            border: 1px solid var(--border-color);
-            border-radius: 20px;
-            padding: 20px;
-            margin-bottom: 20px;
-            box-shadow: var(--shadow-subtle);
-        }
-        
-        .card-title {
-            font-size: 0.88rem;
-            font-weight: 700;
-            color: var(--primary);
-            margin-top: 0;
-            margin-bottom: 16px;
-            text-transform: uppercase;
-            letter-spacing: 0.8px;
-            border-bottom: 1.5px solid var(--primary);
-            padding-bottom: 8px;
-        }
-        
-        .preview-section h3 {
-            font-size: 0.95rem;
-            color: var(--primary);
-            border-bottom: 1.5px solid var(--primary);
-            padding-bottom: 8px;
-            margin-top: 0;
-            margin-bottom: 16px;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-        }
+  <!-- LIBRARY EKSTERNAL -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.6.2/cropper.min.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.6.2/cropper.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
 
-        .form-group { margin-bottom: 14px; }
-        .form-group:last-child { margin-bottom: 0; }
-        .form-group label { display: block; margin-bottom: 6px; font-weight: 600; font-size: 0.82rem; color: #475569; }
-        
-        /* Wrapper Input dengan Tombol Hapus (✕) di Dalamnya */
-        .input-clear-wrapper {
-            position: relative;
-            display: flex;
-            align-items: center;
-        }
-        .input-clear-wrapper input {
-            width: 100%; 
-            padding: 12px 36px 12px 14px;
-            box-sizing: border-box; 
-            font-size: 0.95rem; 
-            border: 1.5px solid var(--border-color); 
-            border-radius: 12px; 
-            background: #fcfcfc; 
-            transition: border-color 0.2s ease, background 0.2s ease; 
-            text-transform: uppercase; 
-            color: #0f172a;
-            box-shadow: none !important;
-        }
-        .input-clear-wrapper input:focus {
-            outline: none;
-            border-color: var(--primary);
-            background: #fff;
-            box-shadow: none !important;
-        }
+  <style>
+    /* ============================================================ */
+    /* CSS: RESET & VARIABEL                                        */
+    /* ============================================================ */
+    * {
+      -webkit-tap-highlight-color: transparent !important;
+      box-sizing: border-box;
+    }
 
-        /* Tombol Hapus (✕) Warna Abu-abu untuk Input & KTP */
-        .input-clear-btn, .clear-btn {
-            position: absolute;
-            right: 12px;
-            background: #94a3b8;
-            color: white;
-            border: none;
-            width: 22px;
-            height: 22px;
-            border-radius: 50%;
-            font-weight: 700;
-            font-size: 11px;
-            display: none;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            transition: background 0.2s;
-            -webkit-tap-highlight-color: transparent;
-            box-shadow: none !important;
-            z-index: 10;
-        }
-        .input-clear-btn:hover, .clear-btn:hover { background: #64748b; }
+    button:focus,
+    button:active {
+      outline: none !important;
+      box-shadow: none !important;
+    }
 
-        /* Tombol Khusus Berwarna Merah untuk Popup (Modal) */
-        .custom-modal .clear-btn {
-            background: #ef4444;
-            display: flex;
-        }
-        .custom-modal .clear-btn:hover {
-            background: #dc2626;
-        }
+    :root {
+      --blue: #0756a8;
+      --blue-dark: #06417e;
+      --blue-light: #eaf4ff;
+      --green: #10b981;
+      --bg: #f3f6fb;
+      --white: #fff;
+      --text: #172b4d;
+      --muted: #718096;
+      --border: #e1e8f0;
+      --radius: 18px;
+      --shadow: 0 8px 24px rgba(37, 99, 235, 0.08);
+    }
 
-        /* Khusus tombol hapus di KTP & Tanda Tangan diposisikan di pojok kanan atas kotak */
-        .clear-btn {
-            top: 10px;
-            right: 10px;
-        }
+    /* ============================================================ */
+    /* CSS: BODY & ELEMEN DASAR                                     */
+    /* ============================================================ */
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--text);
+      font-family: Inter, Arial, sans-serif;
+      font-size: 14px;
+      -webkit-font-smoothing: antialiased;
+    }
 
-        /* Kotak Upload KTP Minimalis */
-        .upload-ktp-wrapper {
-            position: relative;
-            border: 2px dashed var(--border-color);
-            background: #ffffff;
-            border-radius: 12px;
-            padding: 16px;
-            text-align: center;
-            cursor: pointer;
-            transition: border-color 0.2s;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            min-height: 110px;
-            box-sizing: border-box;
-        }
-        .upload-ktp-wrapper:hover { border-color: var(--primary); }
-        
-        .upload-ktp-content {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            gap: 4px;
-            pointer-events: none;
-            width: 100%;
-        }
-        .upload-ktp-icon { font-size: 22px; color: var(--primary); }
-        .upload-ktp-text { font-size: 0.85rem; font-weight: 600; color: #475569; }
-        .upload-ktp-subtext { font-size: 0.73rem; color: #94a3b8; }
+    button,
+    input {
+      font: inherit;
+    }
 
-        .ktp-box-preview {
-            max-width: 100%;
-            max-height: 130px;
-            border-radius: 8px;
-            object-fit: contain;
-            display: none;
-        }
+    button {
+      cursor: pointer;
+      transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    }
 
-        /* Pilihan Daya Grid Versi Soft */
-        .tarif-grid {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 8px;
-        }
-        .tarif-btn {
-            background: #f8fafc;
-            border: 1.5px solid var(--border-color);
-            padding: 11px 6px;
-            border-radius: 12px;
-            font-size: 0.8rem;
-            font-weight: 600;
-            color: #475569;
-            cursor: pointer;
-            text-align: center;
-            transition: all 0.2s ease;
-            -webkit-tap-highlight-color: transparent;
-            box-shadow: none !important;
-        }
-        .tarif-btn:hover {
-            border-color: #7dd3fc;
-            color: var(--primary-dark);
-            background: #f0f9ff;
-        }
-        .tarif-btn.selected {
-            background: #e0f2fe;
-            border: 2px solid #7dd3fc;
-            color: #0369a1;
-            box-shadow: none !important;
-        }
+    button:active {
+      transform: scale(0.96);
+    }
 
-        @media (max-width: 600px) {
-            .tarif-grid { grid-template-columns: repeat(2, 1fr); }
-        }
+    button:focus-visible,
+    input:focus-visible {
+      outline: 3px solid #8cc9ff;
+      outline-offset: 2px;
+    }
 
-        /* Kotak Tanda Tangan */
-        .signature-wrapper { position: relative; width: 100%; }
-        .signature-pad { 
-            border: 2px dashed var(--border-color); 
-            background: #ffffff; 
-            width: 100%; 
-            height: 165px; 
-            cursor: crosshair; 
-            touch-action: none; 
-            border-radius: 12px; 
-            display: block; 
-            box-sizing: border-box; 
-            transition: border-color 0.2s;
-            box-shadow: none !important;
-        }
-        .signature-pad:hover { border-color: var(--primary); }
+    /* ============================================================ */
+    /* CSS: HEADER                                                  */
+    /* ============================================================ */
+    .topbar {
+      background: linear-gradient(115deg, #063d79, #0756a8 65%, #087fc1);
+      color: #fff;
+      padding: 22px 24px 30px;
+    }
 
-        .sheet-wrapper { overflow-x: auto; width: 100%; padding-bottom: 10px; }
-        .sheet { width: 210mm; min-height: 297mm; padding: 15mm 18mm; margin: auto; background: white; box-shadow: 0 0 20px rgba(0,0,0,0.06); box-sizing: border-box; font-size: 11pt; line-height: 1.45; color: #000; border-radius: 8px; }
-        
-        .header-surat { display: flex; align-items: center; gap: 16px; margin-bottom: 15px; border-bottom: 1px solid #e2e8f0; padding-bottom: 12px; }
-        .logo-pln { height: 4.85rem; width: auto; object-fit: contain; display: block; }
-        .header-text { font-size: 10pt; line-height: 1.35; color: #334155; }
-        
-        .judul { text-align: center; font-weight: bold; margin: 25px 0; font-size: 14pt; letter-spacing: 0.5px; }
-        .ktp-preview { width: 275px; height: auto; border: 1px solid #cbd5e1; border-radius: 4px; margin-top: 5px; display: block; }
-        .ttd-preview { width: 140px; height: auto; max-height: 65px; display: block; margin: 0 auto; object-fit: contain; }
-        
-        /* Tombol Utama Versi Soft */
-        .btn { 
-            background: #e0f2fe; 
-            color: #0369a1; 
-            border: 2px solid #7dd3fc; 
-            padding: 14px 20px; 
-            border-radius: 14px; 
-            cursor: pointer; 
-            width: 100%; 
-            font-size: 0.95rem; 
-            font-weight: 600; 
-            margin-top: 15px; 
-            transition: all 0.2s ease;
-            -webkit-tap-highlight-color: transparent;
-            letter-spacing: 0.3px;
-            box-shadow: none !important;
-        }
-        .btn:hover { 
-            background: var(--primary); 
-            color: white; 
-            border-color: var(--primary); 
-        }
+    .topbar-inner,
+    .workspace {
+      max-width: 1440px;
+      margin: auto;
+    }
 
-        /* Tombol Sekunder Versi Soft (Abu-abu) */
-        .btn-secondary { 
-            background: #f1f5f9; 
-            color: #334155; 
-            border: 2px solid #94a3b8; 
-            box-shadow: none !important; 
-        }
-        .btn-secondary:hover { 
-            background: #64748b; 
-            color: white; 
-            border-color: #64748b; 
-        }
+    .brand {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 15px;
+    }
 
-        /* Tombol Bahaya/Reset Versi Soft (Merah) */
-        .btn-danger { 
-            background: #fee2e2; 
-            color: #b91c1c; 
-            border: 2px solid #fca5a5; 
-            box-shadow: none !important; 
-        }
-        .btn-danger:hover { 
-            background: #ef4444; 
-            color: white; 
-            border-color: #ef4444; 
-        }
+    .brand-mark {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: transparent;
+      border: none;
+      height: 75px;
+      width: auto;
+      flex-shrink: 0;
+    }
 
-        .button-group {
-            display: flex;
-            gap: 12px;
-            margin-bottom: 25px;
-        }
-        .button-group .btn {
-            margin-top: 0;
-            flex: 1;
-        }
-        
-        /* Modal Popup Umum */
-        .custom-modal {
-            display: none;
-            position: fixed;
-            z-index: 9999;
-            left: 0;
-            top: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(15, 23, 42, 0.75);
-            backdrop-filter: blur(4px);
-            align-items: center;
-            justify-content: center;
-            padding: 16px;
-            box-sizing: border-box;
-            animation: fadeIn 0.25s ease;
-        }
-        .modal-content {
-            background: #fff;
-            width: 100%;
-            max-width: 400px;
-            border-radius: 20px;
-            padding: 24px;
-            box-sizing: border-box;
-            text-align: center;
-            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
-            animation: scaleUp 0.25s cubic-bezier(0.16, 1, 0.3, 1);
-            position: relative;
-        }
-        .crop-container {
-            max-height: 320px;
-            margin-bottom: 16px;
-            background: #000;
-            border-radius: 12px;
-            overflow: hidden;
-        }
-        .crop-container img {
-            max-width: 100%;
-            display: block;
-        }
-        .modal-btn-group {
-            display: flex;
-            gap: 12px;
-            margin-top: 20px;
-        }
-        .modal-btn-group .btn {
-            margin-top: 0;
-            flex: 1;
-            padding: 12px 20px;
-            font-size: 0.95rem;
-            border-radius: 12px;
-        }
+    .brand-mark img {
+      height: 150%;
+      width: auto;
+      object-fit: contain;
+      display: block;
+      border-radius: 6px;
+    }
 
-        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-        @keyframes scaleUp { from { transform: scale(0.95); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+    .brand-text {
+      text-align: right;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+    }
 
-        @media (max-width: 900px) {
-            body { padding: 10px; }
-            
-            .container {
-                position: relative;
-                overflow: hidden;
-            }
+    .brand-title {
+      font-size: clamp(22px, 4vw, 32px);
+      font-weight: 800;
+      color: #fff;
+      margin: 0;
+      line-height: 1.1;
+      letter-spacing: 1px;
+      text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    }
 
-            .form-section, .preview-section { 
-                display: block !important; 
-                width: 100%; 
-                box-sizing: border-box;
-                opacity: 0;
-                visibility: hidden;
-                transition: opacity 0.3s cubic-bezier(0.4, 0, 0.2, 1), transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-                position: absolute;
-                top: 0;
-                left: 0;
-                pointer-events: none;
-                transform: translateY(10px);
-            }
-            
-            .form-section.mobile-active, .preview-section.mobile-active { 
-                opacity: 1;
-                visibility: visible;
-                position: relative;
-                pointer-events: auto;
-                transform: translateY(0);
-            }
-        }
-    </style>
+    .brand-sub {
+      font-size: 10px;
+      font-weight: 600;
+      color: #a9d9ff;
+      margin: 5px 0 10px;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+    }
+
+    .user-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(255, 255, 255, 0.15);
+      border: 1px solid rgba(255, 255, 255, 0.25);
+      padding: 4px 10px 4px 4px;
+      border-radius: 50px;
+      backdrop-filter: blur(4px);
+    }
+
+    .user-avatar {
+      width: 28px;
+      height: 28px;
+      background: #fff;
+      color: var(--blue-dark);
+      border-radius: 50%;
+      display: grid;
+      place-items: center;
+      overflow: hidden;
+      border: 0.7px solid #a9d9ff;
+    }
+
+    .user-avatar img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .user-info {
+      line-height: 1.1;
+      text-align: left;
+    }
+
+    .user-info .role {
+      font-size: 7px;
+      text-transform: uppercase;
+      font-weight: 700;
+      color: #a9d9ff;
+      letter-spacing: 0.5px;
+    }
+
+    .user-info .name {
+      font-size: 10px;
+      font-weight: 700;
+      color: #fff;
+    }
+
+    /* ============================================================ */
+    /* CSS: LAYOUT UTAMA                                            */
+    /* ============================================================ */
+    .workspace {
+      padding: 0 24px 36px;
+      margin-top: -13px;
+    }
+
+    .layout {
+      display: grid;
+      grid-template-columns: minmax(340px, 0.88fr) minmax(0, 1.12fr);
+      gap: 22px;
+      align-items: start;
+    }
+
+    .form-column,
+    .preview-column {
+      min-width: 0;
+    }
+
+    .panel {
+      background: #fff;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      overflow: hidden;
+      margin-bottom: 16px;
+    }
+
+    .panel-head {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 19px 20px 15px;
+      border-bottom: 1px solid #edf1f6;
+    }
+
+    .panel-icon {
+      width: 42px;
+      height: 42px;
+      flex-shrink: 0;
+      border-radius: 12px;
+      background: #f8fafc;
+      display: grid;
+      place-items: center;
+      border: 1.5px solid var(--border);
+    }
+
+    .panel-icon svg {
+      width: 28px;
+      height: 28px;
+      filter: drop-shadow(0 2px 2px rgba(0, 0, 0, 0.05));
+    }
+
+    /* Khusus Ikon PLN (KWh Meter) */
+    .panel-icon .ikon-pln {
+      width: 26px !important;
+      height: 26px !important;
+    }
+
+    .panel-title {
+      font-size: 13px;
+      font-weight: 800;
+    }
+
+    .panel-desc {
+      font-size: 11px;
+      color: var(--muted);
+      margin-top: 4px;
+      line-height: 1.5;
+    }
+
+    .panel-body {
+      padding: 19px 20px 21px;
+    }
+
+    .field {
+      margin-bottom: 17px;
+    }
+
+    .field:last-child {
+      margin-bottom: 0;
+    }
+
+    .field label {
+      display: block;
+      font-size: 11px;
+      font-weight: 700;
+      color: #455b76;
+      margin-bottom: 8px;
+    }
+
+    /* ============================================================ */
+    /* CSS: FORM INPUT & TOMBOL CLEAR                               */
+    /* ============================================================ */
+    .input-wrap {
+      position: relative;
+    }
+
+    .input-wrap input {
+      width: 100%;
+      height: 45px;
+      border: 2px solid #dbe3ed;
+      background: #fbfcfe;
+      border-radius: 11px;
+      padding: 0 42px 0 13px;
+      color: #1d3557;
+      font-weight: 600;
+      transition: all 0.3s ease;
+    }
+
+    .input-wrap input:not([type="tel"]) {
+      text-transform: uppercase;
+    }
+
+    .input-wrap input::placeholder {
+      color: #a4afbf;
+      text-transform: none;
+      font-weight: 400;
+    }
+
+    .input-wrap input:focus {
+      outline: none;
+      border-color: #3889d4;
+      background: #fff;
+      box-shadow: 0 0 0 2.5px #dceeff;
+    }
+
+    .clear-input {
+      position: absolute;
+      right: 9px;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 26px;
+      height: 26px;
+      border: 0;
+      border-radius: 50%;
+      color: #718096;
+      background: #edf1f6;
+      display: none;
+      place-items: center;
+    }
+
+    .clear-input svg {
+      width: 14px;
+      height: 14px;
+      stroke-width: 3;
+    }
+
+    .clear-input.visible {
+      display: grid;
+    }
+
+    .clear-input:hover {
+      background: #cbd5e1;
+      color: #0f172a;
+    }
+
+    /* ============================================================ */
+    /* CSS: TARIF / DAYA                                            */
+    /* ============================================================ */
+    .tariff-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 8px;
+    }
+
+    .tariff {
+      min-height: 43px;
+      border: 1.5px solid #dce5ef;
+      background: #fff;
+      border-radius: 10px;
+      color: #536780;
+      font-size: 10px;
+      font-weight: 700;
+      padding: 8px 4px;
+    }
+
+    .tariff:hover {
+      border-color: #8abce9;
+      background: #f6fbff;
+    }
+
+    .tariff.selected {
+      color: var(--blue);
+      background: #eaf4ff;
+      border: 1.5px solid #3788d0;
+      box-shadow: inset 0 0 0 1px #3788d0;
+    }
+
+    /* ============================================================ */
+    /* CSS: UPLOAD BOX & FOTO KTP                                   */
+    /* ============================================================ */
+    .upload-box {
+      position: relative;
+      min-height: 140px;
+      border: 1.5px dashed #bdcfe1;
+      background: #f9fbfe;
+      border-radius: 13px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      padding: 20px;
+      cursor: pointer;
+      overflow: hidden;
+      transition: 0.2s;
+    }
+
+    .upload-box:hover {
+      border-color: #3988cf;
+      background: #f2f8ff;
+    }
+
+    .upload-icon {
+      margin-bottom: 8px;
+      display: flex;
+      justify-content: center;
+    }
+
+    .upload-icon svg {
+      width: 45px;
+      height: 45px;
+      margin-top: -10px;
+    }
+
+    .upload-title {
+      font-weight: 500;
+      font-size: 10px;
+      color: var(--muted);
+      margin-top: -10px;
+    }
+
+    .upload-preview {
+      display: none;
+      max-width: 100%;
+      max-height: 145px;
+      object-fit: contain;
+      border-radius: 8px;
+    }
+
+    .corner-clear {
+      display: none;
+      position: absolute;
+      right: 8px;
+      top: 8px;
+      z-index: 3;
+      width: 30px;
+      height: 30px;
+      border: 0;
+      border-radius: 50%;
+      background: #ef4444;
+      color: #fff;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .corner-clear svg {
+      width: 16px;
+      height: 16px;
+      stroke-width: 3;
+    }
+
+    /* ============================================================ */
+    /* CSS: TANDA TANGAN DIGITAL                                    */
+    /* ============================================================ */
+    .signature-wrap {
+      position: relative;
+    }
+
+    #signaturePad {
+      display: block;
+      width: 100%;
+      height: 145px;
+      background: #fff;
+      border: 1.5px dashed #bdcfe1;
+      border-radius: 12px;
+      touch-action: none;
+      cursor: crosshair;
+      transition: border-color 0.2s;
+    }
+
+    #signaturePad:hover {
+      border-color: #3988cf;
+    }
+
+    .signature-hint {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      margin-top: 8px;
+      font-size: 10px;
+      color: var(--muted);
+    }
+
+    .text-button {
+      border: 0;
+      background: transparent;
+      color: var(--muted);
+      font-size: 10px;
+      font-weight: 700;
+      padding: 5px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: color 0.2s;
+    }
+
+    .text-button:hover {
+      color: #ef4444;
+    }
+
+    /* ============================================================ */
+    /* CSS: TOMBOL UTAMA & AKSI                                     */
+    /* ============================================================ */
+    .primary,
+    .secondary {
+      min-height: 46px;
+      padding: 12px 16px;
+      border-radius: 11px;
+      font-size: 12px;
+      font-weight: 800;
+    }
+
+    .primary {
+      color: #fff;
+      background: var(--blue);
+      border: 1px solid var(--blue);
+      box-shadow: 0 3px 8px #0756a81c;
+    }
+
+    .primary:hover {
+      background: var(--blue-dark);
+    }
+
+    /* Tombol Simpan (Hijau Emerald) */
+    #downloadBtn {
+      background: #10b981 !important;
+      border-color: #10b981 !important;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+
+    #downloadBtn:hover {
+      background: #059669 !important;
+    }
+
+    .secondary {
+      color: #536780;
+      background: var(--bg);
+      border: 1px solid var(--border);
+      box-shadow: none;
+    }
+
+    .secondary:hover {
+      background: #e2e8f0;
+    }
+
+    .action-row {
+      display: flex;
+      gap: 10px;
+      align-items: stretch;
+    }
+
+    .btn-icon-svg {
+      width: 18px;
+      height: 18px;
+      stroke-width: 2.5;
+    }
+
+    .btn-reset {
+      width: 46px;
+      min-height: 46px;
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: #ef4444;
+      border: 1px solid #dc2626;
+      border-radius: 11px;
+      color: #ffffff;
+      padding: 0;
+    }
+
+    .btn-reset:hover {
+      background: #dc2626;
+    }
+
+    .btn-back-icon {
+      width: 46px;
+      min-height: 46px;
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: #f1f5f9;
+      border: 1px solid #e2e8f0;
+      border-radius: 11px;
+      color: #475569;
+      padding: 0;
+    }
+
+    .btn-back-icon:hover {
+      background: #e2e8f0;
+      color: #1e293b;
+    }
+
+    /* ============================================================ */
+    /* CSS: PRATINJAU & KERTAS SURAT                                */
+    /* ============================================================ */
+    .preview-panel {
+      position: sticky;
+      top: 14px;
+    }
+
+    .preview-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 19px 20px;
+      border-bottom: 1px solid #edf1f6;
+    }
+
+    .preview-top h2 {
+      font-size: 13px;
+      margin: 0;
+      font-weight: 800;
+    }
+
+    .paper-area {
+      padding: 20px;
+      background: #eef2f7;
+      overflow: auto;
+    }
+
+    .paper {
+      width: 794px;
+      min-height: 1123px;
+      padding: 60px 70px;
+      margin: 0 auto;
+      background: #fff;
+      color: #111;
+      box-shadow: 0 3px 18px #253b5318;
+      font-family: 'Inter', sans-serif;
+      font-size: 14px;
+      line-height: 1.5;
+      border-radius: 2px;
+    }
+
+    .letter-head {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+      padding-bottom: 12px;
+      border-bottom: 2px solid #222;
+    }
+
+    .letter-logo {
+      width: 75px;
+      height: auto;
+      object-fit: contain;
+    }
+
+    .letter-org {
+      font-size: 15px;
+      line-height: 1.6;
+    }
+
+    .letter-org strong {
+      font-size: 15px;
+    }
+
+    .letter-title {
+      text-align: center;
+      font-weight: bold;
+      font-size: 17px;
+      margin: 23px 0;
+    }
+
+    .paper p {
+      margin: 12px 0;
+    }
+
+    .paper table {
+      width: 100%;
+      border-collapse: collapse;
+      table-layout: fixed;
+    }
+
+    .paper td {
+      padding: 3px 0;
+      vertical-align: top;
+      overflow-wrap: anywhere;
+    }
+
+    .paper .label-col {
+      width: 27%;
+    }
+
+    .paper .colon-col {
+      width: 4%;
+    }
+
+    .paper ul {
+      padding-left: 21px;
+      margin: 7px 0;
+      line-height: 1.55;
+    }
+
+    .paper li {
+      padding-left: 2px;
+      margin-bottom: 5px;
+    }
+
+    .signature-table {
+      margin-top: 30px;
+    }
+
+    .ktp-output {
+      width: 260px;
+      max-width: 100%;
+      height: auto;
+      display: block;
+      border: 1px solid #bbb;
+    }
+
+    .paper-ttd {
+      height: 65px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 4px 0;
+    }
+
+    .paper-ttd img {
+      max-width: 140px;
+      max-height: 62px;
+      object-fit: contain;
+      display: none;
+    }
+
+    .signature-name {
+      font-weight: bold;
+      text-align: center;
+    }
+
+    .preview-actions {
+      display: flex;
+      gap: 10px;
+      padding: 16px 20px 20px;
+    }
+
+    .preview-actions .primary {
+      flex: 1;
+    }
+
+    .preview-note {
+      padding: 0 20px 18px;
+      color: #8a98aa;
+      font-size: 10px;
+      line-height: 1.6;
+    }
+
+    .mobile-nav {
+      display: none;
+    }
+
+    /* ============================================================ */
+    /* CSS: MODAL                                                   */
+    /* ============================================================ */
+    .modal {
+      display: none;
+      position: fixed;
+      inset: 0;
+      z-index: 1000;
+      background: rgba(15, 23, 42, 0.6);
+      backdrop-filter: blur(5px);
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    .modal.open {
+      display: flex;
+    }
+
+    .modal-card {
+      position: relative;
+      width: 100%;
+      max-width: 420px;
+      max-height: 90vh;
+      overflow: auto;
+      background: #fff;
+      border-radius: 24px;
+      padding: 32px 24px;
+      box-shadow: 0 25px 80px rgba(0, 0, 0, 0.2);
+      animation: popIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+    }
+
+    @keyframes popIn {
+      from {
+        transform: scale(0.85);
+        opacity: 0;
+      }
+      to {
+        transform: scale(1);
+        opacity: 1;
+      }
+    }
+
+    .modal-card h3 {
+      font-size: 20px;
+      font-weight: 800;
+      margin: 0 0 8px;
+      color: #0f172a;
+    }
+
+    .modal-card p {
+      font-size: 14px;
+      color: #64748b;
+      line-height: 1.5;
+      margin: 0 0 24px;
+    }
+
+    .modal-close {
+      position: absolute;
+      right: 16px;
+      top: 16px;
+      border: 0 !important;
+      width: 30px;
+      height: 30px;
+      border-radius: 50%;
+      background: #ef4444 !important;
+      color: #fff !important;
+      display: grid;
+      place-items: center;
+      padding: 0;
+    }
+
+    .modal-close svg {
+      width: 16px;
+      height: 16px;
+      stroke-width: 3;
+    }
+
+    .modal-options {
+      display: flex;
+      gap: 12px;
+    }
+
+    .modal-options .btn-tariff-style {
+      flex: 1;
+      height: 54px;
+      border-radius: 16px !important;
+      font-size: 14px !important;
+      font-weight: 800 !important;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      padding: 0 !important;
+    }
+
+    .btn-kamera {
+      background: #eff6ff !important;
+      color: #2563eb !important;
+      border: 2.2px solid #93c5fd !important;
+    }
+
+    .btn-galeri {
+      background: #ecfdf5 !important;
+      color: #10b981 !important;
+      border: 2.2px solid #6ee7b7 !important;
+    }
+
+    .btn-batal-reset {
+      flex: 1;
+      height: 54px;
+      border-radius: 16px;
+      font-size: 14px;
+      font-weight: 800;
+      background: #f1f5f9;
+      color: #475569;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border: 1.5px solid #e2e8f0;
+    }
+
+    .btn-yakin-reset {
+      flex: 1;
+      height: 54px;
+      border-radius: 16px;
+      font-size: 14px;
+      font-weight: 800;
+      background: #dc2626;
+      color: #ffffff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      border: 1.5px solid #b91c1c;
+    }
+
+    .crop-frame {
+      height: 320px;
+      overflow: hidden;
+      background: #111;
+      border-radius: 12px;
+      margin: 16px 0;
+    }
+
+    .crop-frame img {
+      display: block;
+      max-width: 100%;
+    }
+
+    .crop-tools {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 12px;
+    }
+
+    .crop-tools button {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      padding: 10px;
+      font-weight: 700;
+    }
+
+    /* Tombol Gunakan Foto (Full Width) */
+    .btn-apply-crop {
+      width: 100%;
+      height: 50px;
+      background: var(--blue);
+      color: #fff;
+      border: none;
+      border-radius: 11px;
+      font-size: 14px;
+      font-weight: 800;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-top: 10px;
+      transition: all 0.2s;
+      box-shadow: none;
+    }
+
+    .btn-apply-crop:hover {
+      background: var(--blue-dark);
+    }
+
+    .btn-apply-crop:active {
+      transform: scale(0.96);
+    }
+
+    /* ============================================================ */
+    /* CSS: TOAST (NOTIFIKASI TENGAH - HIJAU), FOOTER, ANIMASI       */
+    /* ============================================================ */
+    .toast {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%) scale(0.85);
+      background: var(--green);
+      color: #fff;
+      padding: 16px 26px;
+      border-radius: 14px;
+      font-size: 14px;
+      z-index: 2000;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.25s ease, transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      max-width: 85%;
+      text-align: center;
+      font-weight: 800;
+      line-height: 1.5;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+    }
+
+    .toast.show {
+      opacity: 1;
+      transform: translate(-50%, -50%) scale(1);
+    }
+
+    .toast svg {
+      width: 22px;
+      height: 22px;
+      flex-shrink: 0;
+    }
+
+    .footer {
+      text-align: center;
+      font-size: 10px;
+      color: #9aa8ba;
+      padding: 8px 0 18px;
+    }
+
+    .view-fade {
+      animation: fadeUp 0.4s ease forwards;
+    }
+
+    @keyframes fadeUp {
+      from {
+        opacity: 0;
+        transform: translateY(15px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    /* ============================================================ */
+    /* CSS: RESPONSIVE (TABLET & MOBILE)                            */
+    /* ============================================================ */
+    @media (max-width: 1000px) {
+      .workspace {
+        padding: 0 14px 25px;
+      }
+      .layout {
+        grid-template-columns: minmax(0, 1fr);
+      }
+      .preview-panel {
+        position: static;
+      }
+      .paper-area {
+        padding: 14px;
+      }
+      .topbar {
+        padding: 20px 18px 27px;
+      }
+    }
+
+    @media (max-width: 700px) {
+      body {
+        font-size: 13px;
+        overflow-x: hidden;
+      }
+      .topbar {
+        padding: 18px 15px 25px;
+      }
+      .brand-mark {
+        height: 60px;
+      }
+      .brand-title {
+        font-size: 24px;
+        letter-spacing: 0.5px;
+      }
+      .brand-sub {
+        font-size: 9px;
+        margin-top: 3px;
+        margin-bottom: 8px;
+      }
+      .workspace {
+        padding: 0 !important;
+        margin-top: -10px;
+      }
+
+      .mobile-nav {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        background: #ffffff;
+        padding: 4px;
+        border-radius: 14px;
+        margin-bottom: 13px;
+        position: relative;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+        margin-left: 10px;
+        margin-right: 10px;
+      }
+
+      .mobile-nav::before {
+        content: '';
+        position: absolute;
+        top: 4px;
+        bottom: 4px;
+        left: 4px;
+        width: calc(50% - 4px);
+        background: var(--blue);
+        border-radius: 10px;
+        transition: transform 0.4s cubic-bezier(0.25, 1, 0.5, 1);
+        z-index: 1;
+      }
+
+      .mobile-nav.show-preview::before {
+        transform: translateX(100%);
+      }
+
+      .mobile-nav button {
+        border: 0;
+        border-radius: 10px;
+        padding: 12px 6px;
+        background: transparent;
+        color: #64748b;
+        font-size: 11px;
+        font-weight: 800;
+        position: relative;
+        z-index: 2;
+        transition: color 0.3s ease;
+      }
+
+      .mobile-nav button.active {
+        color: #ffffff;
+      }
+
+      .layout-wrapper {
+        overflow: hidden;
+        width: calc(100% - 20px);
+        max-width: calc(100% - 20px);
+        position: relative;
+        margin: 0 10px;
+      }
+
+      .layout {
+        display: block;
+        width: 100%;
+        max-width: 100%;
+      }
+
+      .form-column,
+      .preview-column {
+        width: 100%;
+        max-width: 100%;
+        min-width: 0;
+        flex: none;
+        opacity: 1;
+      }
+
+      .form-column {
+        display: block !important;
+      }
+
+      .preview-column {
+        display: none !important;
+        overflow: hidden;
+        padding: 0;
+      }
+
+      .layout.show-preview .form-column {
+        display: none !important;
+      }
+
+      .layout.show-preview .preview-column {
+        display: block !important;
+      }
+
+      .preview-panel {
+        width: 100%;
+        max-width: 100%;
+        margin: 0 0 12px;
+      }
+
+      .paper-area {
+        padding: 10px !important;
+        background: #eef2f7;
+        display: flex;
+        justify-content: center;
+        align-items: flex-start;
+        overflow: hidden;
+        width: 100%;
+        max-width: 100%;
+        min-width: 0;
+        height: auto;
+      }
+
+      .paper {
+        width: 794px !important;
+        max-width: none !important;
+        min-height: 1123px !important;
+        height: auto !important;
+        padding: 60px 70px !important;
+        flex: 0 0 794px;
+        transform: scale(var(--paper-scale, 1)) !important;
+        transform-origin: top center !important;
+        margin: 0 !important;
+        background: #fff;
+        color: #111;
+        box-shadow: 0 3px 12px rgba(0, 0, 0, 0.08);
+        border-radius: 2px;
+      }
+
+      .panel {
+        border-radius: 15px;
+        margin-bottom: 12px;
+      }
+      .panel-head {
+        padding: 15px 15px 12px;
+      }
+      .panel-body {
+        padding: 15px;
+      }
+      .panel-icon {
+        width: 36px;
+        height: 36px;
+      }
+      .tariff-grid {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 7px;
+      }
+      .tariff {
+        font-size: 10px;
+        min-height: 42px;
+      }
+      .preview-top {
+        padding: 15px;
+      }
+      .preview-actions {
+        padding: 13px 14px;
+      }
+      .preview-note {
+        padding: 0 14px 14px;
+      }
+      .footer {
+        font-size: 9px;
+      }
+      .modal {
+        padding: 16px;
+      }
+      .modal-card {
+        border-radius: 20px;
+        padding: 24px 20px;
+      }
+
+      /* Toast di HP sedikit lebih kecil */
+      .toast {
+        padding: 14px 20px;
+        font-size: 13px;
+        border-radius: 12px;
+      }
+    }
+  </style>
 </head>
 <body>
 
-<div class="header-container">
-    <div class="header-badge">ULP LEMAHABANG</div>
-    <h2 class="app-title">BA TERTIB BAYAR</h2>
-    <div class="app-subtitle">
-        <span>Dibuat oleh</span>
-        <span class="creator-badge">Asep Saepudin</span>
+  <!-- HTML: HEADER -->
+  <header class="topbar">
+    <div class="topbar-inner">
+      <div class="brand">
+        <div class="brand-mark">
+          <img src="https://i.ibb.co.com/XfkR6wrZ/Logo-PLN.png" alt="Logo PLN" crossorigin="anonymous">
+        </div>
+        <div class="brand-text">
+          <h1 class="brand-title">ULP LEMAH ABANG</h1>
+          <p class="brand-sub">PT PLN (Persero) UP3 Cikarang</p>
+          <div class="user-badge">
+            <div class="user-avatar">
+              <img src="https://i.postimg.cc/R0YMVxZK/IMG-20261018-003418.png" alt="Foto Asep">
+            </div>
+            <div class="user-info">
+              <div class="role">CREATED BY</div>
+              <div class="name">ASEP SAEPUDIN</div>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
-</div>
+  </header>
 
-<div class="container">
-    <div class="form-section mobile-active" id="formPane">
-        
-        <!-- Card 1: Data Penghuni -->
-        <div class="form-card">
-            <div class="card-title">Data Penghuni</div>
-            <div class="form-group">
-                <label>👤 Nama</label>
-                <div class="input-clear-wrapper">
-                    <input type="text" id="inputNama" oninput="handleInputChange(this); updatePreview()">
-                    <button type="button" class="input-clear-btn" onclick="clearInput('inputNama')">✕</button>
-                </div>
-            </div>
-            <div class="form-group">
-                <label>🏠 Alamat</label>
-                <div class="input-clear-wrapper">
-                    <input type="text" id="inputAlamat" oninput="handleInputChange(this); updatePreview()">
-                    <button type="button" class="input-clear-btn" onclick="clearInput('inputAlamat')">✕</button>
-                </div>
-            </div>
-            <div class="form-group">
-                <label>🪪 No. KTP</label>
-                <div class="input-clear-wrapper">
-                    <input type="tel" id="inputKtp" inputmode="numeric" pattern="[0-9]*" oninput="this.value = this.value.replace(/[^0-9]/g, ''); handleInputChange(this); updatePreview()">
-                    <button type="button" class="input-clear-btn" onclick="clearInput('inputKtp')">✕</button>
-                </div>
-            </div>
-            <div class="form-group">
-                <label>☎️ No. Telp</label>
-                <div class="input-clear-wrapper">
-                    <input type="tel" id="inputTelp" inputmode="numeric" pattern="[0-9]*" oninput="this.value = this.value.replace(/[^0-9]/g, ''); handleInputChange(this); updatePreview()">
-                    <button type="button" class="input-clear-btn" onclick="clearInput('inputTelp')">✕</button>
-                </div>
-            </div>
-        </div>
+  <!-- HTML: KONTEN UTAMA -->
+  <main class="workspace">
 
-        <!-- Card 2: Data Pelanggan PLN -->
-        <div class="form-card">
-            <div class="card-title">Data Pelanggan PLN</div>
-            <div class="form-group">
-                <label>👤 Atas Nama Pelanggan</label>
-                <div class="input-clear-wrapper">
-                    <input type="text" id="inputNamaPln" oninput="handleInputChange(this); updatePreview()">
-                    <button type="button" class="input-clear-btn" onclick="clearInput('inputNamaPln')">✕</button>
-                </div>
-            </div>
-            <div class="form-group">
-                <label>🏠 Alamat Pelanggan</label>
-                <div class="input-clear-wrapper">
-                    <input type="text" id="inputAlamatPln" oninput="handleInputChange(this); updatePreview()">
-                    <button type="button" class="input-clear-btn" onclick="clearInput('inputAlamatPln')">✕</button>
-                </div>
-            </div>
-            <div class="form-group">
-                <label>⚡ ID Pelanggan</label>
-                <div class="input-clear-wrapper">
-                    <input type="tel" id="inputIdPel" inputmode="numeric" pattern="[0-9]*" oninput="this.value = this.value.replace(/[^0-9]/g, ''); handleInputChange(this); updatePreview()">
-                    <button type="button" class="input-clear-btn" onclick="clearInput('inputIdPel')">✕</button>
-                </div>
-            </div>
-            <div class="form-group">
-                <label>💡 Tarif / Daya</label>
-                <input type="hidden" id="inputTarif" value="">
-                <div class="tarif-grid">
-                    <button type="button" class="tarif-btn" onclick="selectTarif('R1 / 450 VA', this)">R1 / 450</button>
-                    <button type="button" class="tarif-btn" onclick="selectTarif('R1 / 900 VA', this)">R1 / 900</button>
-                    <button type="button" class="tarif-btn" onclick="selectTarif('R1M / 900 VA', this)">R1M / 900</button>
-                    <button type="button" class="tarif-btn" onclick="selectTarif('R1 / 1300 VA', this)">R1 / 1300</button>
-                    <button type="button" class="tarif-btn" onclick="selectTarif('R1 / 2200 VA', this)">R1 / 2200</button>
-                    <button type="button" class="tarif-btn" onclick="selectTarif('R2 / 3500 VA', this)">R2 / 3500</button>
-                    <button type="button" class="tarif-btn" onclick="selectTarif('R2 / 4400 VA', this)">R2 / 4400</button>
-                    <button type="button" class="tarif-btn" onclick="selectTarif('R2 / 5500 VA', this)">R2 / 5500</button>
-                    <button type="button" class="tarif-btn" onclick="selectTarif('R3 / 7700 VA', this)">R3 / 7700</button>
-                    <button type="button" class="tarif-btn" onclick="selectTarif('R3 / 11000 VA', this)">R3 / 11000</button>
-                </div>
-            </div>
-        </div>
+    <!-- Navigasi Mobile -->
+    <nav class="mobile-nav" id="mobileNav" aria-label="Navigasi aplikasi">
+      <button id="tabForm" class="active" onclick="switchTab('form')">Isi Form Data</button>
+      <button id="tabPreview" onclick="switchTab('preview')">Lihat Surat</button>
+    </nav>
 
-        <!-- Card 3: Berkas & Tanda Tangan -->
-        <div class="form-card">
-            <div class="card-title">Berkas & Tanda Tangan</div>
-            <div class="form-group">
-                <label>📁 Upload berkas KTP</label>
-                <div class="upload-ktp-wrapper" id="uploadKtpBox" onclick="openSourceModal()">
-                    <button type="button" id="clearKtpBtn" class="clear-btn" onclick="clearKtp(event)" title="Hapus Foto KTP">✕</button>
-                    <div class="upload-ktp-content" id="uploadKtpContent">
-                        <div class="upload-ktp-icon"></div>
-                        <div class="upload-ktp-text">ketuk untuk ambil berkas</div>
-                        <div class="upload-ktp-subtext">Kamera atau Galeri</div>
+    <div class="layout-wrapper">
+      <div class="layout" id="appLayout">
+
+        <!-- KOLOM FORM (KIRI) -->
+        <section class="form-column mobile-active view-fade" id="formPane">
+
+          <!-- Panel Data Penghuni -->
+          <div class="panel">
+            <div class="panel-head">
+              <div class="panel-icon">
+                <!-- Ikon User Warna -->
+                <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <!-- Bagian Kepala -->
+                  <circle cx="12" cy="8" r="4" fill="#3B82F6"/>
+                  <!-- Bagian Badan -->
+                  <path d="M12 14C7.58172 14 4 17.5817 4 22H20C20 17.5817 16.4183 14 12 14Z" fill="#3B82F6"/>
+                </svg>
+              </div>
+              <div>
+                <div class="panel-title">Data Penghuni</div>
+                <div class="panel-desc">Informasi data penanggung jawab surat</div>
+              </div>
+            </div>
+            <div class="panel-body">
+              <div class="field">
+                <label for="inputNama">Nama Lengkap</label>
+                <div class="input-wrap">
+                  <input id="inputNama" placeholder="Masukkan nama penghuni" autocomplete="name">
+                  <button class="clear-input" type="button" aria-label="Hapus nama">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+                      <line x1="18" y1="6" x2="6" y2="18"></line>
+                      <line x1="6" y1="6" x2="18" y2="18"></line>
+                    </svg>
+                  </button>
+                </div>
+              </div>
+              <div class="field">
+                <label for="inputAlamat">Alamat Tempat Tinggal</label>
+                <div class="input-wrap">
+                  <input id="inputAlamat" placeholder="Masukkan alamat lengkap" autocomplete="street-address">
+                  <button class="clear-input" type="button" aria-label="Hapus alamat">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+                      <line x1="18" y1="6" x2="6" y2="18"></line>
+                      <line x1="6" y1="6" x2="18" y2="18"></line>
+                    </svg>
+                  </button>
+                </div>
+              </div>
+              <div class="field">
+                <label for="inputKtp">NIK</label>
+                <div class="input-wrap">
+                  <input id="inputKtp" inputmode="numeric" maxlength="16" placeholder="Masukkan 16 digit nomor KTP">
+                  <button class="clear-input" type="button" aria-label="Hapus nomor KTP">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+                      <line x1="18" y1="6" x2="6" y2="18"></line>
+                      <line x1="6" y1="6" x2="18" y2="18"></line>
+                    </svg>
+                  </button>
+                </div>
+              </div>
+              <div class="field">
+                <label for="inputTelp">Nomor Telepon / WhatsApp</label>
+                <div class="input-wrap">
+                  <input id="inputTelp" type="tel" inputmode="tel" placeholder="Masukkan Nomor yang bisa dihubungi">
+                  <button class="clear-input" type="button" aria-label="Hapus nomor telepon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+                      <line x1="18" y1="6" x2="6" y2="18"></line>
+                      <line x1="6" y1="6" x2="18" y2="18"></line>
+                    </svg>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Panel Data Pelanggan PLN -->
+          <div class="panel">
+            <div class="panel-head">
+              <div class="panel-icon">
+                <!-- Ikon kWh PLN (Gradasi Hijau) -->
+                <svg class="ikon-pln" viewBox="10 10 28 28" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <rect x="12" y="12" width="24" height="24" rx="4" fill="url(#gradasi-hijau)" />
+                  <rect x="15" y="15" width="18" height="12" rx="2" fill="#F8FAFC" />
+                  <rect x="17" y="18" width="2" height="4" fill="#0F172A" />
+                  <rect x="20" y="18" width="2" height="4" fill="#0F172A" />
+                  <rect x="23" y="18" width="2" height="4" fill="#0F172A" />
+                  <rect x="26" y="18" width="2" height="4" fill="#0F172A" />
+                  <rect x="29" y="18" width="2" height="4" fill="#0F172A" />
+                  <path d="M25 22L19 29H24L23 34L29 27H24L25 22Z" fill="#DC2626" />
+                  <defs>
+                    <linearGradient id="gradasi-hijau" x1="12" y1="12" x2="36" y2="36" gradientUnits="userSpaceOnUse">
+                      <stop stop-color="#14B8A6" />
+                      <stop offset="1" stop-color="#0F766E" />
+                    </linearGradient>
+                  </defs>
+                </svg>
+              </div>
+              <div>
+                <div class="panel-title">Data Pelanggan PLN</div>
+                <div class="panel-desc">Informasi data rekening listrik terkait</div>
+              </div>
+            </div>
+            <div class="panel-body">
+              <div class="field">
+                <label for="inputNamaPln">Atas Nama Pelanggan</label>
+                <div class="input-wrap">
+                  <input id="inputNamaPln" placeholder="Masukkan nama sesuai pelanggan">
+                  <button class="clear-input" type="button" aria-label="Hapus nama pelanggan">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+                      <line x1="18" y1="6" x2="6" y2="18"></line>
+                      <line x1="6" y1="6" x2="18" y2="18"></line>
+                    </svg>
+                  </button>
+                </div>
+              </div>
+              <div class="field">
+                <label for="inputAlamatPln">Alamat Pelanggan</label>
+                <div class="input-wrap">
+                  <input id="inputAlamatPln" placeholder="Masukkan alamat pelanggan">
+                  <button class="clear-input" type="button" aria-label="Hapus alamat pelanggan">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+                      <line x1="18" y1="6" x2="6" y2="18"></line>
+                      <line x1="6" y1="6" x2="18" y2="18"></line>
+                    </svg>
+                  </button>
+                </div>
+              </div>
+              <div class="field">
+                <label for="inputIdPel">ID pelanggan</label>
+                <div class="input-wrap">
+                  <input id="inputIdPel" inputmode="numeric" placeholder="Masukkan ID pelanggan">
+                  <button class="clear-input" type="button" aria-label="Hapus ID pelanggan">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+                      <line x1="18" y1="6" x2="6" y2="18"></line>
+                      <line x1="6" y1="6" x2="18" y2="18"></line>
+                    </svg>
+                  </button>
+                </div>
+              </div>
+              <div class="field">
+                <label>Tarif / Daya Listrik</label>
+                <input type="hidden" id="inputTarif">
+                <div class="tariff-grid" id="tariffGrid">
+                  <button class="tariff" type="button" data-value="R1 / 450 VA">R1 / 450</button>
+                  <button class="tariff" type="button" data-value="R1 / 900 VA">R1 / 900</button>
+                  <button class="tariff" type="button" data-value="R1M / 900 VA">R1M / 900</button>
+                  <button class="tariff" type="button" data-value="R1 / 1300 VA">R1 / 1300</button>
+                  <button class="tariff" type="button" data-value="R1 / 2200 VA">R1 / 2200</button>
+                  <button class="tariff" type="button" data-value="R2 / 3500 VA">R2 / 3500</button>
+                  <button class="tariff" type="button" data-value="R2 / 4400 VA">R2 / 4400</button>
+                  <button class="tariff" type="button" data-value="R2 / 5500 VA">R2 / 5500</button>
+                  <button class="tariff" type="button" data-value="R3 / 7700 VA">R3 / 7700</button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Panel Berkas Dokumen -->
+          <div class="panel">
+            <div class="panel-head">
+              <div class="panel-icon">
+                <!-- Ikon Folder Warna KUNING (Flat 3D) -->
+                <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M6 10C6 8.89543 6.89543 8 8 8H18L22 12H40C41.1046 12 42 12.8954 42 14V38C42 39.1046 41.1046 40 40 40H8C6.89543 40 6 39.1046 6 38V10Z" fill="#EAB308" />
+                  <path d="M6 16C6 14.8954 6.89543 14 8 14H40C41.1046 14 42 14.8954 42 16V38C42 39.1046 41.1046 40 40 40H8C6.89543 40 6 39.1046 6 38V16Z" fill="#FACC15" />
+                  <path d="M10 18H38V36H10V18Z" fill="#FEF08A" fill-opacity="0.3" />
+                </svg>
+              </div>
+              <div>
+                <div class="panel-title">Berkas Dokumen</div>
+                <div class="panel-desc">Lengkapi foto KTP & TTD</div>
+              </div>
+            </div>
+            <div class="panel-body">
+              <div class="field">
+                <label>Foto KTP</label>
+                <div class="upload-box" id="uploadBox" role="button" tabindex="0" aria-label="Pilih foto KTP">
+                  <button class="corner-clear" id="clearKtpBtn" type="button" aria-label="Hapus foto KTP">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+                      <line x1="18" y1="6" x2="6" y2="18"></line>
+                      <line x1="6" y1="6" x2="18" y2="18"></line>
+                    </svg>
+                  </button>
+                  <div id="uploadContent">
+                    <div class="upload-icon">
+                      <!-- Ikon Kamera Warna -->
+                      <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <rect x="6" y="12" width="36" height="28" rx="4" fill="#38BDF8" />
+                        <rect x="6" y="12" width="36" height="28" rx="4" fill="url(#paint0_linear_cam)" />
+                        <path d="M16 12L19 7H29L32 12H16Z" fill="#0284C7" />
+                        <circle cx="24" cy="26" r="9" fill="#F0F9FF" />
+                        <circle cx="24" cy="26" r="7" fill="#0F172A" />
+                        <circle cx="24" cy="26" r="4" fill="#38BDF8" />
+                        <circle cx="22" cy="24" r="1.5" fill="#FFF" />
+                        <rect x="34" y="16" width="4" height="2" rx="1" fill="#F0F9FF" />
+                        <defs>
+                          <linearGradient id="paint0_linear_cam" x1="24" y1="12" x2="24" y2="40" gradientUnits="userSpaceOnUse">
+                            <stop stop-color="#7DD3FC" />
+                            <stop offset="1" stop-color="#38BDF8" />
+                          </linearGradient>
+                        </defs>
+                      </svg>
                     </div>
-                    <img id="ktpBoxPreview" class="ktp-box-preview" alt="Preview KTP">
+                    <div class="upload-title">ketuk untuk upload foto<br>ambil dari kamera langsung atau galeri</div>
+                  </div>
+                  <img class="upload-preview" id="ktpBoxPreview" alt="Pratinjau foto KTP">
                 </div>
-                <input type="file" id="inputKamera" accept="image/*" capture="environment" style="display:none;" onchange="initCrop(event)">
-                <input type="file" id="inputGaleri" accept="image/*" style="display:none;" onchange="initCrop(event)">
+                <input type="file" id="inputKamera" accept="image/*" capture="environment" hidden>
+                <input type="file" id="inputGaleri" accept="image/*" hidden>
+              </div>
+              <div class="field">
+                <label>Tanda Tangan</label>
+                <div class="signature-wrap">
+                  <canvas id="signaturePad" aria-label="Area untuk menggambar tanda tangan"></canvas>
+                </div>
+                <div class="signature-hint">
+                  <span>Gunakan jari untuk tanda tangan.</span>
+                  <button type="button" class="text-button" id="clearSignBtn" title="Hapus Tanda Tangan">Hapus TTD</button>
+                </div>
+              </div>
+
+              <div class="action-row">
+                <button type="button" class="btn-reset" onclick="openResetModal()" title="Hapus Semua Data" aria-label="Hapus Semua Data">
+                  <svg class="btn-icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M3 6h18"></path>
+                    <path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"></path>
+                    <path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"></path>
+                  </svg>
+                </button>
+                <button type="button" class="primary" style="flex: 1;" onclick="switchTab('preview')">Lihat Surat</button>
+              </div>
             </div>
-            <div class="form-group" style="margin-top: 16px;">
-                <label>✍️ Tanda Tangan Digital</label>
-                <div class="signature-wrapper">
-                    <canvas id="signaturePad" class="signature-pad"></canvas>
-                    <button type="button" class="clear-btn" id="clearSignBtn" style="display: none;" onclick="clearSignature()" title="Hapus Tanda Tangan">✕</button>
-                </div>
+          </div>
+
+        </section>
+
+        <!-- KOLOM PRATINJAU (KANAN) -->
+        <section class="preview-column" id="previewPane">
+          <div class="panel preview-panel">
+            <div class="preview-top">
+              <div>
+                <h2>Pratinjau Surat</h2>
+                <div class="panel-desc">Hasil surat diperbarui otomatis ketika isi form</div>
+              </div>
             </div>
-        </div>
 
-        <!-- 2 Tombol Bersebelahan di Bawah Form -->
-        <div class="button-group">
-            <button class="btn btn-danger" onclick="openResetModal()">Reset Data</button>
-            <button class="btn" onclick="switchTab('preview')">Lihat Surat</button>
-        </div>
-
-    </div>
-
-    <div class="preview-section" id="previewPane">
-        <h3>Pratinjau Dokumen</h3>
-        <div class="sheet-wrapper">
-            <div class="sheet" id="suratContainer">
-                <div class="header-surat">
-                    <img src="https://i.ibb.co.com/XfkR6wrZ/Logo-PLN.png" class="logo-pln" alt="Logo PLN" crossorigin="anonymous">
-                    <div class="header-text">
-                        <strong>PT PLN (Persero)</strong><br>
-                        Unit Induk Distribusi Jawa Barat<br>
-                        UP3 Cikarang<br>
-                        ULP Lemah Abang
-                    </div>
+            <!-- Kertas Surat -->
+            <div class="paper-area">
+              <article class="paper" id="suratContainer">
+                <div class="letter-head">
+                  <img src="https://i.ibb.co.com/XfkR6wrZ/Logo-PLN.png" class="letter-logo" alt="Logo PLN" crossorigin="anonymous">
+                  <div class="letter-org">
+                    <strong>PT PLN (Persero)</strong><br>
+                    Unit Induk Distribusi Jawa Barat<br>
+                    UP3 Cikarang<br>
+                    ULP Lemah Abang
+                  </div>
                 </div>
-                <div class="judul">SURAT PERNYATAAN</div>
-                <p style="margin: 15px 0;">Saya yang bertandatangan dibawah ini :</p>
-                <table style="width: 100%; border-collapse: collapse;">
-                    <tr><td style="width: 25%; padding: 4px 0;">Nama</td><td style="width: 3%;">:</td><td id="prevNama"></td></tr>
-                    <tr><td style="padding: 4px 0;">Alamat</td><td>:</td><td id="prevAlamat"></td></tr>
-                    <tr><td style="padding: 4px 0;">No. KTP</td><td>:</td><td id="prevKtp"></td></tr>
-                    <tr><td style="padding: 4px 0;">No. Telp/HP</td><td>:</td><td id="prevTelp"></td></tr>
+
+                <div class="letter-title">SURAT PERNYATAAN</div>
+                <p>Saya yang bertanda tangan di bawah ini:</p>
+                <table>
+                  <tr>
+                    <td class="label-col">Nama</td>
+                    <td class="colon-col">:</td>
+                    <td id="prevNama">...</td>
+                  </tr>
+                  <tr>
+                    <td>Alamat</td>
+                    <td>:</td>
+                    <td id="prevAlamat">...</td>
+                  </tr>
+                  <tr>
+                    <td>No. KTP</td>
+                    <td>:</td>
+                    <td id="prevKtp">...</td>
+                  </tr>
+                  <tr>
+                    <td>No. Telp/HP</td>
+                    <td>:</td>
+                    <td id="prevTelp">...</td>
+                  </tr>
                 </table>
 
-                <p style="margin: 20px 0 10px 0;">Adalah penanggungjawab rekening listrik PT PLN (Persero) UP3 Cikarang ULP Lemah Abang dengan data sebagai berikut :</p>
-                <table style="width: 100%; border-collapse: collapse;">
-                    <tr><td style="width: 25%; padding: 4px 0;">Atas nama pelanggan</td><td style="width: 3%;">:</td><td id="prevNamaPln"></td></tr>
-                    <tr><td style="padding: 4px 0;">Alamat</td><td>:</td><td id="prevAlamatPln"></td></tr>
-                    <tr><td style="padding: 4px 0;">ID Pelanggan</td><td>:</td><td id="inputIdPelPrev"></td></tr>
-                    <tr><td style="padding: 4px 0;">Tarif / Daya</td><td>:</td><td id="prevTarif"></td></tr>
+                <p>Adalah penanggung jawab rekening listrik PT PLN (Persero) UP3 Cikarang ULP Lemah Abang dengan data sebagai berikut:</p>
+                <table>
+                  <tr>
+                    <td class="label-col">Atas nama pelanggan</td>
+                    <td class="colon-col">:</td>
+                    <td id="prevNamaPln">...</td>
+                  </tr>
+                  <tr>
+                    <td>Alamat</td>
+                    <td>:</td>
+                    <td id="prevAlamatPln">...</td>
+                  </tr>
+                  <tr>
+                    <td>ID </td>
+                    <td>:</td>
+                    <td id="prevIdPel">...</td>
+                  </tr>
+                  <tr>
+                    <td>Tarif / Daya</td>
+                    <td>:</td>
+                    <td id="prevTarif">...</td>
+                  </tr>
                 </table>
 
-                <p style="margin: 15px 0 8px 0;">Dengan ini saya menyatakan :</p>
-                <ul style="padding-left: 20px; margin: 0; line-height: 1.6;">
-                    <li>Telah mengetahui <b>batas akhir pembayaran tagihan listrik adalah tanggal 20 setiap bulannya.</b></li>
-                    <li>Apabila sejak bulan ini dan bulan selanjutnya pembayaran melewati batas akhir sebagaimana diatas, maka Saya bersedia dilakukan <b>penggantian meter ke kwh system prabayar (token)</b> oleh pihak PLN tanpa perlu menunggu persetujuan / izin.</li>
-                    <li>Tidak melakukan <b>pengajuan kembali ke system pascabayar apabila sudah menjadi system prabayar (token)</b> dengan alasan apapun.</li>
+                <p>Dengan ini saya menyatakan:</p>
+                <ul>
+                  <li>Telah mengetahui <b>batas akhir pembayaran tagihan listrik adalah tanggal 20 setiap bulannya.</b></li>
+                  <li>Apabila sejak bulan ini dan bulan selanjutnya pembayaran melewati batas akhir sebagaimana di atas, maka saya bersedia dilakukan <b>penggantian meter ke kWh sistem prabayar (token)</b> oleh pihak PLN tanpa perlu menunggu persetujuan/izin.</li>
+                  <li>Tidak melakukan <b>pengajuan kembali ke sistem pascabayar apabila sudah menjadi sistem prabayar (token)</b> dengan alasan apa pun.</li>
                 </ul>
+                <p>Demikian pernyataan ini dibuat sebagai bentuk kesadaran dan kepedulian untuk disiplin terhadap peraturan tanpa paksaan dari siapa pun.</p>
 
-                <p style="margin: 15px 0 10px 0;">Demikian pernyataan ini dibuat sebagai bentuk kesadaran dan kepedulian untuk disiplin terhadap peraturan tanpa paksaan siapapun.</p>
-
-                <table style="width: 100%; margin-top: 40px;">
-                    <tr>
-                        <td style="width: 50%; vertical-align: top;">
-                            <div id="containerKtp"></div>
-                        </td>
-                        <td style="width: 50%; text-align: center; vertical-align: top;">
-                            <span id="prevTanggal">Bekasi, 16 Oktober 2026</span><br>
-                            Pelanggan
-                            <div style="height: 70px; display: flex; align-items: center; justify-content: center; margin: 5px 0;">
-                                <img id="prevTtd" class="ttd-preview" alt="">
-                            </div>
-                            <strong>(<span id="prevTandaTangan">...</span>)</strong>
-                        </td>
-                    </tr>
+                <table class="signature-table">
+                  <tr>
+                    <td style="width: 50%; vertical-align: top;">
+                      <div id="containerKtp"></div>
+                    </td>
+                    <td style="width: 50%; text-align: center; vertical-align: top;">
+                      <span id="prevTanggal">Bekasi, ...</span><br>
+                      Pelanggan
+                      <div class="paper-ttd"><img id="prevTtd" alt="Tanda tangan"></div>
+                      <div class="signature-name">(<span id="prevTandaTangan">...</span>)</div>
+                    </td>
+                  </tr>
                 </table>
+              </article>
             </div>
-        </div>
 
-        <!-- 2 Tombol Bersebelahan di Bawah Halaman Surat -->
-        <div class="button-group" style="margin-top: 20px;">
-            <button class="btn btn-secondary" onclick="switchTab('form')">Kembali</button>
-            <button class="btn" onclick="downloadImage()">Download</button>
-        </div>
+            <!-- Tombol Aksi Pratinjau -->
+            <div class="preview-actions">
+              <button class="btn-back-icon" type="button" onclick="switchTab('form')" title="Kembali ke Form" aria-label="Kembali ke Form">
+                <svg class="btn-icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+                  <line x1="19" y1="12" x2="5" y2="12"></line>
+                  <polyline points="12 19 5 12 12 5"></polyline>
+                </svg>
+              </button>
+              <!-- Tombol Simpan (Hijau) -->
+              <button class="primary" id="downloadBtn" type="button" onclick="downloadImage()">
+                Simpan
+              </button>
+            </div>
+            <div class="preview-note">Periksa kembali semua data sebelum menyimpan, pastikan form dan berkas sudah lengkap dan sesuai.</div>
+
+          </div>
+        </section>
+
+      </div>
     </div>
-</div>
 
-<!-- Modal Popup Pilihan Sumber Foto KTP -->
-<div id="sourceModal" class="custom-modal">
-    <div class="modal-content">
-        <button type="button" class="clear-btn" onclick="closeSourceModal()" title="Tutup">✕</button>
-        <h3 style="margin-top:0; color:#0f172a; font-size:1.1rem; margin-bottom:8px;">Pilih Sumber Foto</h3>
-        <p style="color:#64748b; font-size:0.9rem; margin-bottom:20px;">Mau ambil foto KTP dari mana nih?</p>
-        <div class="modal-btn-group" style="margin-top: 0;">
-            <button type="button" class="btn" onclick="triggerKamera()">📷 Kamera</button>
-            <button type="button" class="btn" onclick="triggerGaleri()">🖼️ Galeri</button>
-        </div>
+    <!-- Footer -->
+    <footer class="footer">BA Tertib Bayar · ULP Lemah Abang</footer>
+
+  </main>
+
+  <!-- HTML: MODAL -->
+
+  <!-- Modal Sumber Foto -->
+  <div class="modal" id="sourceModal" role="dialog" aria-modal="true" aria-labelledby="sourceTitle">
+    <div class="modal-card">
+      <button type="button" class="modal-close" onclick="closeModal('sourceModal')" aria-label="Tutup">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="18" y1="6" x2="6" y2="18"></line>
+          <line x1="6" y1="6" x2="18" y2="18"></line>
+        </svg>
+      </button>
+      <h3 id="sourceTitle">Pilih sumber foto</h3>
+      <p>Ambil foto KTP menggunakan kamera atau pilih gambar yang sudah tersedia di perangkat.</p>
+      <div class="modal-options">
+        <button class="btn-tariff-style btn-kamera" type="button" onclick="triggerCamera()">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"></path>
+            <circle cx="12" cy="13" r="4"></circle>
+          </svg>
+          Kamera
+        </button>
+        <button class="btn-tariff-style btn-galeri" type="button" onclick="triggerGallery()">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+            <circle cx="8.5" cy="8.5" r="1.5"></circle>
+            <polyline points="21 15 16 10 5 21"></polyline>
+          </svg>
+          Galeri
+        </button>
+      </div>
     </div>
-</div>
+  </div>
 
-<!-- Modal Popup Crop KTP -->
-<div id="cropModal" class="custom-modal">
-    <div class="modal-content" style="max-width: 450px;">
-        <button type="button" class="clear-btn" onclick="cancelCrop()" title="Tutup">✕</button>
-        <h3 style="margin-top:0; color:var(--primary-dark); font-size:1.1rem; margin-bottom:12px;">Sesuaikan Area KTP</h3>
-        <div class="crop-container">
-            <img id="imageToCrop" src="" alt="Crop Preview">
-        </div>
-        <div class="modal-btn-group">
-            <button type="button" class="btn btn-secondary" onclick="cancelCrop()">Kembali</button>
-            <button type="button" class="btn" onclick="performCrop()">Simpan</button>
-        </div>
+  <!-- Modal Crop -->
+  <div class="modal" id="cropModal" role="dialog" aria-modal="true" aria-labelledby="cropTitle">
+    <div class="modal-card" style="max-width: 480px;">
+      <button type="button" class="modal-close" onclick="cancelCrop()" aria-label="Tutup">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="18" y1="6" x2="6" y2="18"></line>
+          <line x1="6" y1="6" x2="18" y2="18"></line>
+        </svg>
+      </button>
+      <h3 id="cropTitle">Sesuaikan foto KTP</h3>
+      <p>Silahkan atur posisi foto sampai seluruh bagian KTP terlihat jelas.</p>
+      <div class="crop-frame"><img id="imageToCrop" alt="Foto untuk dipotong"></div>
+      <div class="crop-tools">
+        <button type="button" class="secondary" onclick="rotateImage(-90)">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"></path>
+            <path d="M3 3v5h5"></path>
+          </svg> Kiri
+        </button>
+        <button type="button" class="secondary" onclick="rotateImage(90)">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M21 12a9 9 0 1 1-9-9 9.75 9.75 0 0 1 6.74 2.74L21 8"></path>
+            <path d="M21 3v5h-5"></path>
+          </svg> Kanan
+        </button>
+      </div>
+      <!-- Tombol Gunakan Foto (Full Width) -->
+      <button type="button" class="btn-apply-crop" id="applyCropBtn" onclick="performCrop()">Simpan</button>
     </div>
-</div>
+  </div>
 
-<!-- Modal Popup Konfirmasi Reset Data -->
-<div id="resetModal" class="custom-modal">
-    <div class="modal-content">
-        <h3 style="margin-top:0; color:#0f172a; font-size:1.1rem; margin-bottom:8px;">Konfirmasi Reset</h3>
-        <p style="color:#64748b; font-size:0.9rem; margin-bottom:20px;">Yakin ingin mereset semua data?</p>
-        <div class="modal-btn-group" style="margin-top: 0;">
-            <button type="button" class="btn btn-secondary" onclick="closeResetModal()">Kembali</button>
-            <button type="button" class="btn btn-danger" onclick="confirmResetData()">Ya, Reset</button>
-        </div>
+  <!-- Modal Reset Konfirmasi -->
+  <div class="modal" id="resetModal" role="dialog" aria-modal="true" aria-labelledby="resetTitle">
+    <div class="modal-card">
+      <h3 id="resetTitle">Konfirmasi hapus data</h3>
+      <p>Data yang sudah terisi termasuk berkas dan tanda tangan akan terhapus, yakin ingin menghapus nya?</p>
+      <div class="modal-options">
+        <button type="button" class="btn-batal-reset" onclick="closeModal('resetModal')">Batal</button>
+        <button type="button" class="btn-yakin-reset" onclick="confirmReset()">Hapus</button>
+      </div>
     </div>
-</div>
+  </div>
 
-<script>
+  <!-- Toast (Notifikasi) -->
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+  <script>
+    "use strict";
+
+    /* ============================================================ */
+    /* JS: VARIABEL GLOBAL & HELPER                                 */
+    /* ============================================================ */
+    const $ = id => document.getElementById(id);
     let cropper = null;
+    let ktpDataUrl = "";
+    let signatureDataUrl = "";
+    let toastTimer;
+    let signatureDirty = false;
+
+    function vibrate(ms = 15) {
+      if (navigator.vibrate) navigator.vibrate(ms);
+    }
+
+    function showToast(message) {
+      const toast = $("toast");
+      // Tambahkan ikon centang + pesan
+      toast.innerHTML = `
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+          <polyline points="20 6 9 17 4 12"></polyline>
+        </svg>
+        <span>${message}</span>
+      `;
+      toast.classList.add("show");
+      clearTimeout(toastTimer);
+      toastTimer = setTimeout(() => toast.classList.remove("show"), 2600);
+    }
+
+    /* ============================================================ */
+    /* JS: LAYOUT & NAVIGASI TAB                                    */
+    /* ============================================================ */
+    function fitMobilePaper() {
+      const paper = $("suratContainer");
+      const area = paper.parentElement;
+      if (!paper || !area) return;
+
+      if (window.matchMedia("(max-width: 700px)").matches) {
+        const styles = getComputedStyle(area);
+        const horizontalPadding = parseFloat(styles.paddingLeft) + parseFloat(styles.paddingRight);
+        const availableWidth = Math.max(1, area.clientWidth - horizontalPadding);
+        const scale = Math.min(1, availableWidth / 794);
+        paper.style.setProperty("--paper-scale", String(scale));
+        area.style.height = `${Math.ceil(paper.offsetHeight * scale) + parseFloat(styles.paddingTop) + parseFloat(styles.paddingBottom)}px`;
+      } else {
+        paper.style.removeProperty("--paper-scale");
+        area.style.removeProperty("height");
+      }
+    }
 
     function switchTab(tab) {
-        let formPane = document.getElementById('formPane');
-        let previewPane = document.getElementById('previewPane');
+      vibrate(10);
+      const isForm = tab === "form";
+      const layout = $("appLayout");
+      const nav = $("mobileNav");
 
-        if (tab === 'form') {
-            formPane.classList.add('mobile-active');
-            previewPane.classList.remove('mobile-active');
-        } else {
-            formPane.classList.remove('mobile-active');
-            previewPane.classList.add('mobile-active');
-            resizeCanvas();
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-        }
-    }
+      layout.classList.toggle("show-preview", !isForm);
+      nav.classList.toggle("show-preview", !isForm);
+      $("tabForm").classList.toggle("active", isForm);
+      $("tabPreview").classList.toggle("active", !isForm);
 
-    window.onload = function() { 
-        resizeCanvas();
-        setOtomatisTanggal();
-        checkAllInputsOnLoad();
-    };
-    window.onresize = function() { resizeCanvas(); };
-
-    function setOtomatisTanggal() {
-        const options = { timeZone: 'Asia/Jakarta', day: 'numeric', month: 'long', year: 'numeric' };
-        const today = new Date().toLocaleDateString('id-ID', options);
-        document.getElementById('prevTanggal').innerText = `Bekasi, ${today}`;
-    }
-
-    function selectTarif(value, btnElement) {
-        document.getElementById('inputTarif').value = value;
-        let buttons = document.querySelectorAll('.tarif-btn');
-        buttons.forEach(b => b.classList.remove('selected'));
-        btnElement.classList.add('selected');
-        updatePreview();
-    }
-
-    function updatePreview() {
-        document.getElementById('prevNama').innerText = document.getElementById('inputNama').value.toUpperCase() || '...';
-        document.getElementById('prevAlamat').innerText = document.getElementById('inputAlamat').value.toUpperCase() || '...';
-        document.getElementById('prevKtp').innerText = document.getElementById('inputKtp').value || '...';
-        document.getElementById('prevTelp').innerText = document.getElementById('inputTelp').value || '...';
-        
-        document.getElementById('prevNamaPln').innerText = document.getElementById('inputNamaPln').value.toUpperCase() || '...';
-        document.getElementById('prevAlamatPln').innerText = document.getElementById('inputAlamatPln').value.toUpperCase() || '...';
-        document.getElementById('inputIdPelPrev').innerText = document.getElementById('inputIdPel').value || '...';
-        document.getElementById('prevTarif').innerText = document.getElementById('inputTarif').value || '...';
-
-        let namaFull = document.getElementById('inputNama').value.trim();
-        document.getElementById('prevTandaTangan').innerText = namaFull ? namaFull.toUpperCase() : '...';
-    }
-
-    function handleInputChange(inputElement) {
-        let clearBtn = inputElement.nextElementSibling;
-        if (inputElement.value.trim().length > 0) {
-            clearBtn.style.display = 'flex';
-        } else {
-            clearBtn.style.display = 'none';
-        }
-    }
-
-    function clearInput(inputId) {
-        let inputElement = document.getElementById(inputId);
-        inputElement.value = '';
-        inputElement.nextElementSibling.style.display = 'none';
-        inputElement.focus();
-        updatePreview();
-    }
-
-    function checkAllInputsOnLoad() {
-        let inputs = document.querySelectorAll('.input-clear-wrapper input');
-        inputs.forEach(inp => {
-            if (inp.value.trim().length > 0) {
-                inp.nextElementSibling.style.display = 'flex';
-            }
+      if (isForm) {
+        requestAnimationFrame(() => {
+          resizeCanvas();
+          restoreSignature();
+          $("formPane").style.animation = 'none';
+          $("formPane").offsetHeight;
+          $("formPane").style.animation = 'fadeUp 0.4s ease forwards';
         });
+      } else {
+        updatePreview();
+        requestAnimationFrame(fitMobilePaper);
+        $("previewPane").style.animation = 'none';
+        $("previewPane").offsetHeight;
+        $("previewPane").style.animation = 'fadeUp 0.4s ease forwards';
+        window.scrollTo({
+          top: 0,
+          behavior: "smooth"
+        });
+      }
     }
 
-    function openSourceModal() {
-        document.getElementById('sourceModal').style.display = 'flex';
+    /* ============================================================ */
+    /* JS: UPDATE PRATINJAU (SINKRON FORM KE SURAT)                 */
+    /* ============================================================ */
+    function updatePreview() {
+      const map = {
+        inputNama: "prevNama",
+        inputAlamat: "prevAlamat",
+        inputKtp: "prevKtp",
+        inputTelp: "prevTelp",
+        inputNamaPln: "prevNamaPln",
+        inputAlamatPln: "prevAlamatPln",
+        inputIdPel: "prevIdPel",
+        inputTarif: "prevTarif"
+      };
+
+      Object.entries(map).forEach(([inputId, outputId]) => {
+        const value = $(inputId).value.trim();
+        $(outputId).textContent = value ? (inputId.includes("Alamat") || inputId.includes("Nama") ? value.toLocaleUpperCase("id-ID") : value) : "...";
+      });
+
+      $("prevTandaTangan").textContent = $("inputNama").value.trim().toLocaleUpperCase("id-ID") || "...";
     }
 
-    function closeSourceModal() {
-        document.getElementById('sourceModal').style.display = 'none';
+    /* ============================================================ */
+    /* JS: INPUT FORM & TOMBOL CLEAR                                */
+    /* ============================================================ */
+    document.querySelectorAll(".input-wrap input").forEach(input => {
+      const clearBtn = input.parentElement.querySelector(".clear-input");
+
+      function syncClear() {
+        clearBtn.classList.toggle("visible", input.value.length > 0);
+      }
+
+      input.addEventListener("input", () => {
+        if (["inputKtp", "inputIdPel"].includes(input.id)) {
+          input.value = input.value.replace(/\D/g, "");
+        }
+        syncClear();
+        updatePreview();
+      });
+
+      clearBtn.addEventListener("click", () => {
+        vibrate(10);
+        input.value = "";
+        syncClear();
+        updatePreview();
+        input.focus();
+      });
+
+      syncClear();
+    });
+
+    /* ============================================================ */
+    /* JS: PILIH TARIF / DAYA                                       */
+    /* ============================================================ */
+    document.querySelectorAll(".tariff").forEach(button => {
+      button.addEventListener("click", () => {
+        vibrate(15);
+        $("inputTarif").value = button.dataset.value;
+        document.querySelectorAll(".tariff").forEach(item => {
+          const active = item === button;
+          item.classList.toggle("selected", active);
+          item.setAttribute("aria-pressed", String(active));
+        });
+        updatePreview();
+      });
+    });
+
+    /* ============================================================ */
+    /* JS: TANGGAL OTOMATIS                                         */
+    /* ============================================================ */
+    function setAutomaticDate() {
+      const today = new Intl.DateTimeFormat("id-ID", {
+        timeZone: "Asia/Jakarta",
+        day: "numeric",
+        month: "long",
+        year: "numeric"
+      }).format(new Date());
+      $("prevTanggal").textContent = "Bekasi, " + today;
     }
 
-    function triggerKamera() {
-        closeSourceModal();
-        document.getElementById('inputKamera').click();
+    /* ============================================================ */
+    /* JS: MODAL (BUKA/TUTUP)                                       */
+    /* ============================================================ */
+    function openModal(id) {
+      vibrate(10);
+      $(id).classList.add("open");
     }
 
-    function triggerGaleri() {
-        closeSourceModal();
-        document.getElementById('inputGaleri').click();
+    function closeModal(id) {
+      $(id).classList.remove("open");
     }
 
     function openResetModal() {
-        document.getElementById('resetModal').style.display = 'flex';
+      openModal('resetModal');
     }
 
-    function closeResetModal() {
-        document.getElementById('resetModal').style.display = 'none';
+    /* ============================================================ */
+    /* JS: RESET DATA (KONFIRMASI)                                  */
+    /* ============================================================ */
+    function confirmReset() {
+      vibrate(30);
+      closeModal('resetModal');
+
+      document.querySelectorAll(".input-wrap input").forEach(input => {
+        input.value = "";
+        const clearBtn = input.parentElement.querySelector(".clear-input");
+        if (clearBtn) clearBtn.classList.remove("visible");
+      });
+
+      $("inputTarif").value = "";
+      document.querySelectorAll(".tariff").forEach(btn => {
+        btn.classList.remove("selected");
+        btn.setAttribute("aria-pressed", "false");
+      });
+
+      clearKtp();
+
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      signatureDataUrl = "";
+      signatureDirty = false;
+      const ttdImg = $("prevTtd");
+      ttdImg.removeAttribute("src");
+      ttdImg.style.display = "none";
+
+      updatePreview();
+      showToast("Berhasil dihapus");
+      switchTab("form");
     }
 
-    function confirmResetData() {
-        let inputs = document.querySelectorAll('.input-clear-wrapper input');
-        inputs.forEach(inp => {
-            inp.value = '';
-            inp.nextElementSibling.style.display = 'none';
-        });
+    /* ============================================================ */
+    /* JS: UPLOAD & CROP FOTO KTP                                   */
+    /* ============================================================ */
+    $("uploadBox").addEventListener("click", event => {
+      if (event.target.closest("#clearKtpBtn")) return;
+      openModal("sourceModal");
+    });
 
-        document.getElementById('inputTarif').value = '';
-        clearKtpInternal();
+    $("uploadBox").addEventListener("keydown", event => {
+      if (event.key === "Enter" || event.key === " ") {
+        event.preventDefault();
+        openModal("sourceModal");
+      }
+    });
 
-        document.querySelectorAll('.tarif-btn').forEach(b => b.classList.remove('selected'));
+    $("clearKtpBtn").addEventListener("click", event => {
+      event.stopPropagation();
+      vibrate(15);
+      clearKtp();
+    });
 
-        clearSignature();
-        updatePreview();
-        closeResetModal();
+    function triggerCamera() {
+      closeModal("sourceModal");
+      $("inputKamera").click();
     }
+
+    function triggerGallery() {
+      closeModal("sourceModal");
+      $("inputGaleri").click();
+    }
+
+    $("inputKamera").addEventListener("change", initCrop);
+    $("inputGaleri").addEventListener("change", initCrop);
 
     function initCrop(event) {
-        let files = event.target.files;
-        if (files && files.length > 0) {
-            let reader = new FileReader();
-            reader.onload = function(e) {
-                let imageElement = document.getElementById('imageToCrop');
-                imageElement.src = e.target.result;
-                document.getElementById('cropModal').style.display = 'flex';
-                
-                if (cropper) {
-                    cropper.destroy();
-                }
-                cropper = new Cropper(imageElement, {
-                    aspectRatio: 1.585,
-                    viewMode: 1,
-                    autoCropArea: 0.9,
-                    responsive: true,
-                });
-            }
-            reader.readAsDataURL(files[0]);
+      const file = event.target.files && event.target.files[0];
+      if (!file) return;
+
+      if (!file.type.startsWith("image/")) {
+        showToast("Pilih file gambar yang valid.");
+        event.target.value = "";
+        return;
+      }
+
+      if (file.size > 15 * 1024 * 1024) {
+        showToast("Ukuran foto maksimal 15 MB.");
+        event.target.value = "";
+        return;
+      }
+
+      const reader = new FileReader();
+      reader.onload = () => {
+        $("imageToCrop").src = reader.result;
+        openModal("cropModal");
+
+        if (cropper) {
+          cropper.destroy();
+          cropper = null;
         }
+
+        $("imageToCrop").onload = () => {
+          cropper = new Cropper($("imageToCrop"), {
+            aspectRatio: 1.585,
+            viewMode: 1,
+            autoCropArea: 0.9,
+            responsive: true,
+            background: false,
+            movable: true,
+            zoomable: true
+          });
+        };
+      };
+      reader.onerror = () => showToast("Foto tidak bisa dibaca.");
+      reader.readAsDataURL(file);
+    }
+
+    function rotateImage(degree) {
+      if (cropper) cropper.rotate(degree);
     }
 
     function performCrop() {
-        if (cropper) {
-            let canvasCropped = cropper.croppedCanvas || cropper.getCroppedCanvas({
-                width: 800,
-                imageSmoothingQuality: 'high'
-            });
-            
-            let croppedImageUrl = canvasCropped.toDataURL('image/jpeg');
-            
-            let output = document.getElementById('containerKtp');
-            output.innerHTML = `<img src="${croppedImageUrl}" class="ktp-preview" alt="Foto KTP">`;
-            
-            let boxPreview = document.getElementById('ktpBoxPreview');
-            boxPreview.src = croppedImageUrl;
-            boxPreview.style.display = 'block';
+      vibrate(15);
+      if (!cropper) return;
 
-            document.getElementById('uploadKtpContent').style.display = 'none';
-            document.getElementById('clearKtpBtn').style.display = 'flex';
-            
-            document.getElementById('cropModal').style.display = 'none';
-            cropper.destroy();
-            cropper = null;
-        }
+      const cropped = cropper.getCroppedCanvas({
+        width: 1000,
+        height: Math.round(1000 / 1.585),
+        imageSmoothingEnabled: true,
+        imageSmoothingQuality: "high",
+        fillColor: "#ffffff"
+      });
+
+      if (!cropped) {
+        showToast("Gagal memproses foto.");
+        return;
+      }
+
+      ktpDataUrl = cropped.toDataURL("image/jpeg", 0.92);
+
+      const output = document.createElement("img");
+      output.src = ktpDataUrl;
+      output.alt = "Foto KTP";
+      output.className = "ktp-output";
+
+      $("containerKtp").replaceChildren(output);
+      $("ktpBoxPreview").src = ktpDataUrl;
+      $("ktpBoxPreview").style.display = "block";
+      $("uploadContent").style.display = "none";
+      $("clearKtpBtn").style.display = "flex";
+
+      closeModal("cropModal");
+      cropper.destroy();
+      cropper = null;
+      $("inputKamera").value = "";
+      $("inputGaleri").value = "";
     }
 
     function cancelCrop() {
-        document.getElementById('cropModal').style.display = 'none';
-        document.getElementById('inputKamera').value = ''; 
-        document.getElementById('inputGaleri').value = ''; 
-        if (cropper) {
-            cropper.destroy();
-            cropper = null;
-        }
+      closeModal("cropModal");
+      if (cropper) {
+        cropper.destroy();
+        cropper = null;
+      }
+      $("inputKamera").value = "";
+      $("inputGaleri").value = "";
     }
 
-    function clearKtp(event) {
-        event.stopPropagation();
-        clearKtpInternal();
+    function clearKtp() {
+      ktpDataUrl = "";
+      $("containerKtp").replaceChildren();
+      $("ktpBoxPreview").removeAttribute("src");
+      $("ktpBoxPreview").style.display = "none";
+      $("uploadContent").style.display = "block";
+      $("clearKtpBtn").style.display = "none";
+      $("inputKamera").value = "";
+      $("inputGaleri").value = "";
     }
 
-    function clearKtpInternal() {
-        document.getElementById('inputKamera').value = '';
-        document.getElementById('inputGaleri').value = '';
-        document.getElementById('containerKtp').innerHTML = '';
-        document.getElementById('ktpBoxPreview').style.display = 'none';
-        document.getElementById('ktpBoxPreview').src = '';
-        document.getElementById('uploadKtpContent').style.display = 'flex';
-        document.getElementById('clearKtpBtn').style.display = 'none';
-    }
-
-    function downloadImage() {
-        const element = document.getElementById('suratContainer');
-        let btnCetak = document.querySelectorAll('.btn');
-        btnCetak.forEach(b => {
-            if(b.innerText.includes("Download")) b.innerText = "Memproses...";
-        });
-
-        html2canvas(element, { scale: 2, useCORS: true, backgroundColor: '#ffffff' }).then(canvas => {
-            const imageURL = canvas.toDataURL('image/jpeg', 0.95);
-            let namaFile = document.getElementById('inputNamaPln').value.trim() || 'Surat_Pernyataan_PLN';
-
-            const link = document.createElement('a');
-            link.href = imageURL;
-            link.download = `Surat_Pernyataan_${namaFile}.jpg`;
-            document.body.appendChild(link);
-            link.click();
-            document.body.removeChild(link);
-
-            btnCetak.forEach(b => {
-                if(b.innerText.includes("Memproses")) b.innerText = "Download (JPG)";
-            });
-        }).catch(err => {
-            alert("Gagal membuat gambar: " + err);
-            btnCetak.forEach(b => {
-                if(b.innerText.includes("Memproses")) b.innerText = "Download (JPG)";
-            });
-        });
-    }
-
-    const canvas = document.getElementById('signaturePad');
-    const ctx = canvas.getContext('2d');
-    let isDrawing = false;
+    /* ============================================================ */
+    /* JS: TANDA TANGAN DIGITAL (CANVAS)                            */
+    /* ============================================================ */
+    const canvas = $("signaturePad");
+    const ctx = canvas.getContext("2d");
+    let drawing = false;
+    let lastPoint = null;
 
     function resizeCanvas() {
-        let rect = canvas.getBoundingClientRect();
-        if (rect.width > 0) {
-            canvas.width = rect.width;
-            canvas.height = rect.height;
+      const rect = canvas.getBoundingClientRect();
+      if (!rect.width || !rect.height) return;
+
+      const dpr = Math.max(1, window.devicePixelRatio || 1);
+      const newWidth = Math.round(rect.width * dpr);
+      const newHeight = Math.round(rect.height * dpr);
+
+      if (canvas.width === newWidth && canvas.height === newHeight) return;
+
+      let oldImage = null;
+      if (signatureDirty) {
+        oldImage = document.createElement("canvas");
+        oldImage.width = canvas.width;
+        oldImage.height = canvas.height;
+        oldImage.getContext("2d").drawImage(canvas, 0, 0);
+      }
+
+      canvas.width = newWidth;
+      canvas.height = newHeight;
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      ctx.lineCap = "round";
+      ctx.lineJoin = "round";
+      ctx.strokeStyle = "#111827";
+      ctx.lineWidth = 2.2;
+
+      if (oldImage && oldImage.width && oldImage.height) {
+        ctx.drawImage(oldImage, 0, 0, oldImage.width, oldImage.height, 0, 0, rect.width, rect.height);
+      } else if (signatureDataUrl) {
+        restoreSignature();
+      }
+    }
+
+    function getPoint(event) {
+      const rect = canvas.getBoundingClientRect();
+      return {
+        x: event.clientX - rect.left,
+        y: event.clientY - rect.top
+      };
+    }
+
+    canvas.addEventListener("pointerdown", event => {
+      if (event.button !== undefined && event.button !== 0) return;
+      event.preventDefault();
+      drawing = true;
+      lastPoint = getPoint(event);
+      canvas.setPointerCapture(event.pointerId);
+      ctx.beginPath();
+      ctx.moveTo(lastPoint.x, lastPoint.y);
+      ctx.lineTo(lastPoint.x + 0.01, lastPoint.y + 0.01);
+      ctx.stroke();
+      signatureDirty = true;
+    });
+
+    canvas.addEventListener("pointermove", event => {
+      if (!drawing) return;
+      event.preventDefault();
+      const point = getPoint(event);
+      ctx.beginPath();
+      ctx.moveTo(lastPoint.x, lastPoint.y);
+      ctx.lineTo(point.x, point.y);
+      ctx.stroke();
+      lastPoint = point;
+      saveSignature();
+    });
+
+    function endDrawing() {
+      if (!drawing) return;
+      drawing = false;
+      lastPoint = null;
+      saveSignature();
+    }
+
+    canvas.addEventListener("pointerup", endDrawing);
+    canvas.addEventListener("pointercancel", endDrawing);
+    canvas.addEventListener("lostpointercapture", endDrawing);
+
+    function saveSignature() {
+      if (!signatureDirty) return;
+      signatureDataUrl = canvas.toDataURL("image/png");
+      const ttdImg = $("prevTtd");
+      ttdImg.src = signatureDataUrl;
+      ttdImg.style.display = "block";
+    }
+
+    function restoreSignature() {
+      if (!signatureDataUrl || signatureDirty) {
+        if (signatureDirty) saveSignature();
+        return;
+      }
+      const img = new Image();
+      img.onload = () => {
+        const rect = canvas.getBoundingClientRect();
+        ctx.clearRect(0, 0, rect.width, rect.height);
+        ctx.drawImage(img, 0, 0, rect.width, rect.height);
+        signatureDirty = true;
+        $("prevTtd").style.display = "block";
+      };
+      img.src = signatureDataUrl;
+    }
+
+    $("clearSignBtn").addEventListener("click", () => {
+      vibrate(15);
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      signatureDataUrl = "";
+      signatureDirty = false;
+      const ttdImg = $("prevTtd");
+      ttdImg.removeAttribute("src");
+      ttdImg.style.display = "none";
+    });
+
+    /* ============================================================ */
+    /* JS: EVENT WINDOW (RESIZE / ORIENTATION)                      */
+    /* ============================================================ */
+    window.addEventListener("resize", () => {
+      resizeCanvas();
+      fitMobilePaper();
+    });
+
+    window.addEventListener("orientationchange", () => setTimeout(() => {
+      resizeCanvas();
+      fitMobilePaper();
+    }, 150));
+
+    /* ============================================================ */
+    /* JS: SIMPAN GAMBAR SURAT (DOWNLOAD)                           */
+    /* ============================================================ */
+    async function downloadImage() {
+      vibrate(20);
+      const button = $("downloadBtn");
+      const originalText = button.innerHTML;
+      if (button.disabled) return;
+
+      button.disabled = true;
+      button.innerHTML = "Menyiapkan...";
+
+      try {
+        updatePreview();
+
+        if (document.fonts && document.fonts.ready) {
+          await document.fonts.ready;
         }
+
+        const paper = $("suratContainer");
+
+        const logoImg = paper.querySelector(".letter-logo");
+        if (logoImg && !logoImg.src.startsWith("data:")) {
+          await new Promise(resolve => {
+            const tempImg = new Image();
+            tempImg.crossOrigin = "anonymous";
+            tempImg.onload = () => {
+              try {
+                const canvasImg = document.createElement("canvas");
+                canvasImg.width = tempImg.naturalWidth;
+                canvasImg.height = tempImg.naturalHeight;
+                const ctxImg = canvasImg.getContext("2d");
+                ctxImg.drawImage(tempImg, 0, 0);
+                logoImg.src = canvasImg.toDataURL("image/png");
+              } catch (e) {}
+              resolve();
+            };
+            tempImg.onerror = resolve;
+            tempImg.src = logoImg.src;
+          });
+        }
+
+        const originalTransform = paper.style.transform;
+        const originalMargin = paper.style.marginBottom;
+
+        paper.style.transform = "scale(1)";
+        paper.style.marginBottom = "0";
+
+        const result = await html2canvas(paper, {
+          scale: 1.5,
+          useCORS: true,
+          allowTaint: true,
+          backgroundColor: "#ffffff",
+          logging: false,
+          imageTimeout: 10000,
+          windowWidth: 794
+        });
+
+        paper.style.transform = originalTransform;
+        paper.style.marginBottom = originalMargin;
+
+        const blob = await new Promise((resolve, reject) => {
+          result.toBlob(blob => {
+            if (blob) resolve(blob);
+            else reject(new Error("Gagal membuat file gambar."));
+          }, "image/jpeg", 0.90);
+        });
+
+        const rawName = $("inputNamaPln").value.trim() || "Surat_Pernyataan_PLN";
+        const safeName = rawName
+          .replace(/[<>:"/\\|?*\x00-\x1F]/g, "_")
+          .replace(/\s+/g, "_")
+          .slice(0, 80);
+
+        const url = URL.createObjectURL(blob);
+        const link = document.createElement("a");
+        link.href = url;
+        link.download = `Surat_Pernyataan_${safeName}.jpg`;
+        document.body.appendChild(link);
+        link.click();
+        link.remove();
+        setTimeout(() => URL.revokeObjectURL(url), 1500);
+
+        confetti({
+          particleCount: 150,
+          spread: 70,
+          origin: {
+            y: 0.6
+          },
+          colors: ['#2563eb', '#10b981', '#f59e0b', '#ef4444']
+        });
+
+        showToast("Berhasil disimpan");
+      } catch (error) {
+        console.error(error);
+        showToast("Gagal menyimpan gambar. Pastikan file gambar/tanda tangan tidak kosong.");
+      } finally {
+        button.disabled = false;
+        button.innerHTML = originalText;
+      }
     }
 
-    function getPos(e) {
-        let rect = canvas.getBoundingClientRect();
-        let clientX = e.clientX || (e.touches && e.touches[0].clientX);
-        let clientY = e.clientY || (e.touches && e.touches[0].clientY);
-        return { x: clientX - rect.left, y: clientY - rect.top };
-    }
+    /* ============================================================ */
+    /* JS: EVENT GLOBAL (KLIK MODAL & TOMBOL ESC)                   */
+    /* ============================================================ */
+    document.querySelectorAll(".modal").forEach(modal => {
+      modal.addEventListener("click", event => {
+        if (event.target === modal) {
+          if (modal.id === "cropModal") cancelCrop();
+          else closeModal(modal.id);
+        }
+      });
+    });
 
-    canvas.addEventListener('mousedown', startDraw);
-    canvas.addEventListener('mousemove', drawing);
-    canvas.addEventListener('mouseup', stopDraw);
-    canvas.addEventListener('touchstart', startDraw, { passive: false });
-    canvas.addEventListener('touchmove', drawing, { passive: false });
-    canvas.addEventListener('touchend', stopDraw);
+    document.addEventListener("keydown", event => {
+      if (event.key === "Escape") {
+        closeModal("sourceModal");
+        closeModal("resetModal");
+        if ($("cropModal").classList.contains("open")) cancelCrop();
+      }
+    });
 
-    function startDraw(e) {
-        e.preventDefault();
-        isDrawing = true;
-        let pos = getPos(e);
-        ctx.beginPath();
-        ctx.moveTo(pos.x, pos.y);
-    }
-
-    function drawing(e) {
-        if (!isDrawing) return;
-        e.preventDefault();
-        let pos = getPos(e);
-        ctx.lineTo(pos.x, pos.y);
-        ctx.strokeStyle = '#000';
-        ctx.lineWidth = 2.5;
-        ctx.stroke();
-        document.getElementById('prevTtd').src = canvas.toDataURL();
-        document.getElementById('clearSignBtn').style.display = 'flex';
-    }
-
-    function stopDraw(e) {
-        if (!isDrawing) return;
-        isDrawing = false;
-    }
-
-    function clearSignature() {
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
-        document.getElementById('prevTtd').src = '';
-        document.getElementById('clearSignBtn').style.display = 'none';
-    }
-</script>
-
+    /* ============================================================ */
+    /* JS: INISIALISASI SAAT HALAMAN DIMUAT                         */
+    /* ============================================================ */
+    setAutomaticDate();
+    updatePreview();
+    requestAnimationFrame(() => {
+      resizeCanvas();
+      fitMobilePaper();
+    });
+  </script>
 </body>
 </html>
