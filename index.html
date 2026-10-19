@@ -245,7 +245,6 @@
       filter: drop-shadow(0 2px 2px rgba(0, 0, 0, 0.05));
     }
 
-    /* Khusus Ikon PLN (KWh Meter) */
     .panel-icon .ikon-pln {
       width: 26px !important;
       height: 26px !important;
@@ -528,7 +527,6 @@
       background: var(--blue-dark);
     }
 
-    /* Tombol Simpan (Hijau Emerald) */
     #downloadBtn {
       background: #10b981 !important;
       border-color: #10b981 !important;
@@ -901,7 +899,7 @@
     }
 
     /* ============================================================ */
-    /* CSS: MODAL TAMBAH TARIF BARU (REVISI)                        */
+    /* CSS: MODAL TAMBAH TARIF BARU                                 */
     /* ============================================================ */
     .custom-tariff-input {
       width: 100%;
@@ -918,20 +916,16 @@
       outline: none;
       transition: all 0.3s ease;
     }
-    /* (BAGIAN YANG DIUBAH) Border fokus disamakan dengan input nama */
     .custom-tariff-input:focus {
-  border-color: #3889d4 !important;
-  background: #fff !important;
-  box-shadow: 0 0 0 2.5px #dceeff !important;
-  outline: none !important; /* Memastikan tidak ada outline bawaan browser */
+      border-color: #3889d4 !important;
+      background: #fff !important;
+      box-shadow: 0 0 0 2.5px #dceeff !important;
+      outline: none !important;
     }
-    
-    /* (BAGIAN YANG DIUBAH) Container tombol agar sejajar */
     .modal-tariff-actions {
       display: flex;
       gap: 10px;
     }
-    
     .btn-batal-tarif {
       flex: 1;
       height: 48px;
@@ -949,7 +943,6 @@
     .btn-batal-tarif:hover {
       background: #e2e8f0;
     }
-
     .btn-simpan-tarif {
       flex: 1;
       height: 48px;
@@ -997,7 +990,6 @@
       font-weight: 700;
     }
 
-    /* Tombol Gunakan Foto (Full Width) */
     .btn-apply-crop {
       width: 100%;
       height: 50px;
@@ -1024,7 +1016,7 @@
     }
 
     /* ============================================================ */
-    /* CSS: TOAST (NOTIFIKASI TENGAH - HIJAU), FOOTER, ANIMASI       */
+    /* CSS: TOAST, FOOTER, ANIMASI                                  */
     /* ============================================================ */
     .toast {
       position: fixed;
@@ -1053,6 +1045,10 @@
     .toast.show {
       opacity: 1;
       transform: translate(-50%, -50%) scale(1);
+    }
+
+    .toast.error {
+      background: #ef4444;
     }
 
     .toast svg {
@@ -1084,50 +1080,23 @@
     }
 
     /* ============================================================ */
-    /* CSS: RESPONSIVE (TABLET & MOBILE)                            */
+    /* CSS: RESPONSIVE                                              */
     /* ============================================================ */
     @media (max-width: 1000px) {
-      .workspace {
-        padding: 0 14px 25px;
-      }
-      .layout {
-        grid-template-columns: minmax(0, 1fr);
-      }
-      .preview-panel {
-        position: static;
-      }
-      .paper-area {
-        padding: 14px;
-      }
-      .topbar {
-        padding: 20px 18px 27px;
-      }
+      .workspace { padding: 0 14px 25px; }
+      .layout { grid-template-columns: minmax(0, 1fr); }
+      .preview-panel { position: static; }
+      .paper-area { padding: 14px; }
+      .topbar { padding: 20px 18px 27px; }
     }
 
     @media (max-width: 700px) {
-      body {
-        font-size: 13px;
-        overflow-x: hidden;
-      }
-      .topbar {
-        padding: 18px 15px 25px;
-      }
-      .brand-mark {
-        height: 60px;
-      }
-      .brand-title {
-        font-size: 24px;
-        letter-spacing: 0.5px;
-      }
-      .brand-sub {
-        font-size: 9px;
-        margin-top: 3px;
-        margin-bottom: 8px;
-      }
-      .workspace {
-        padding: 0 !important;
-        margin-top: -10px;
-      }
+      body { font-size: 13px; overflow-x: hidden; }
+      .topbar { padding: 18px 15px 25px; }
+      .brand-mark { height: 60px; }
+      .brand-title { font-size: 24px; letter-spacing: 0.5px; }
+      .brand-sub { font-size: 9px; margin-top: 3px; margin-bottom: 8px; }
+      .workspace { padding: 0 !important; margin-top: -10px; }
 
       .mobile-nav {
         display: grid;
@@ -1199,9 +1168,7 @@
         opacity: 1;
       }
 
-      .form-column {
-        display: block !important;
-      }
+      .form-column { display: block !important; }
 
       .preview-column {
         display: none !important;
@@ -1209,13 +1176,8 @@
         padding: 0;
       }
 
-      .layout.show-preview .form-column {
-        display: none !important;
-      }
-
-      .layout.show-preview .preview-column {
-        display: block !important;
-      }
+      .layout.show-preview .form-column { display: none !important; }
+      .layout.show-preview .preview-column { display: block !important; }
 
       .preview-panel {
         width: 100%;
@@ -1252,54 +1214,19 @@
         border-radius: 2px;
       }
 
-      .panel {
-        border-radius: 15px;
-        margin-bottom: 12px;
-      }
-      .panel-head {
-        padding: 15px 15px 12px;
-      }
-      .panel-body {
-        padding: 15px;
-      }
-      .panel-icon {
-        width: 36px;
-        height: 36px;
-      }
-      .tariff-grid {
-        grid-template-columns: repeat(3, minmax(0, 1fr));
-        gap: 7px;
-      }
-      .tariff {
-        font-size: 10px;
-        min-height: 42px;
-      }
-      .preview-top {
-        padding: 15px;
-      }
-      .preview-actions {
-        padding: 13px 14px;
-      }
-      .preview-note {
-        padding: 0 14px 14px;
-      }
-      .footer {
-        font-size: 9px;
-      }
-      .modal {
-        padding: 16px;
-      }
-      .modal-card {
-        border-radius: 20px;
-        padding: 24px 20px;
-      }
-
-      /* Toast di HP sedikit lebih kecil */
-      .toast {
-        padding: 14px 20px;
-        font-size: 13px;
-        border-radius: 12px;
-      }
+      .panel { border-radius: 15px; margin-bottom: 12px; }
+      .panel-head { padding: 15px 15px 12px; }
+      .panel-body { padding: 15px; }
+      .panel-icon { width: 36px; height: 36px; }
+      .tariff-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 7px; }
+      .tariff { font-size: 10px; min-height: 42px; }
+      .preview-top { padding: 15px; }
+      .preview-actions { padding: 13px 14px; }
+      .preview-note { padding: 0 14px 14px; }
+      .footer { font-size: 9px; }
+      .modal { padding: 16px; }
+      .modal-card { border-radius: 20px; padding: 24px 20px; }
+      .toast { padding: 14px 20px; font-size: 13px; border-radius: 12px; }
     }
   </style>
 </head>
@@ -1332,7 +1259,6 @@
   <!-- HTML: KONTEN UTAMA -->
   <main class="workspace">
 
-    <!-- Navigasi Mobile -->
     <nav class="mobile-nav" id="mobileNav" aria-label="Navigasi aplikasi">
       <button id="tabForm" class="active" onclick="switchTab('form')">Isi Form Data</button>
       <button id="tabPreview" onclick="switchTab('preview')">Lihat Surat</button>
@@ -1344,15 +1270,11 @@
         <!-- KOLOM FORM (KIRI) -->
         <section class="form-column mobile-active view-fade" id="formPane">
 
-          <!-- Panel Data Penghuni -->
           <div class="panel">
             <div class="panel-head">
               <div class="panel-icon">
-                <!-- Ikon User Warna -->
                 <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <!-- Bagian Kepala -->
                   <circle cx="12" cy="8" r="4" fill="#3B82F6"/>
-                  <!-- Bagian Badan -->
                   <path d="M12 14C7.58172 14 4 17.5817 4 22H20C20 17.5817 16.4183 14 12 14Z" fill="#3B82F6"/>
                 </svg>
               </div>
@@ -1413,11 +1335,9 @@
             </div>
           </div>
 
-          <!-- Panel Data Pelanggan PLN -->
           <div class="panel">
             <div class="panel-head">
               <div class="panel-icon">
-                <!-- Ikon kWh PLN (Gradasi Hijau) -->
                 <svg class="ikon-pln" viewBox="10 10 28 28" fill="none" xmlns="http://www.w3.org/2000/svg">
                   <rect x="12" y="12" width="24" height="24" rx="4" fill="url(#gradasi-hijau)" />
                   <rect x="15" y="15" width="18" height="12" rx="2" fill="#F8FAFC" />
@@ -1486,18 +1406,15 @@
                   <button class="tariff" type="button" data-value="R1M / 900 VA">R1M / 900</button>
                   <button class="tariff" type="button" data-value="R1 / 1300 VA">R1 / 1300</button>
                   <button class="tariff" type="button" data-value="R1 / 2200 VA">R1 / 2200</button>
-                  <!-- Tombol buka popup -->
                   <button class="tariff" type="button" id="btnCustomTarif" onclick="bukaModalTarif()">Lainnya</button>
                 </div>
               </div>
             </div>
           </div>
 
-          <!-- Panel Berkas Dokumen -->
           <div class="panel">
             <div class="panel-head">
               <div class="panel-icon">
-                <!-- Ikon Folder Warna KUNING (Flat 3D) -->
                 <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
                   <path d="M6 10C6 8.89543 6.89543 8 8 8H18L22 12H40C41.1046 12 42 12.8954 42 14V38C42 39.1046 41.1046 40 40 40H8C6.89543 40 6 39.1046 6 38V10Z" fill="#EAB308" />
                   <path d="M6 16C6 14.8954 6.89543 14 8 14H40C41.1046 14 42 14.8954 42 16V38C42 39.1046 41.1046 40 40 40H8C6.89543 40 6 39.1046 6 38V16Z" fill="#FACC15" />
@@ -1521,7 +1438,6 @@
                   </button>
                   <div id="uploadContent">
                     <div class="upload-icon">
-                      <!-- Ikon Kamera Warna -->
                       <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
                         <rect x="6" y="12" width="36" height="28" rx="4" fill="#38BDF8" />
                         <rect x="6" y="12" width="36" height="28" rx="4" fill="url(#paint0_linear_cam)" />
@@ -1582,7 +1498,6 @@
               </div>
             </div>
 
-            <!-- Kertas Surat -->
             <div class="paper-area">
               <article class="paper" id="suratContainer">
                 <div class="letter-head">
@@ -1668,7 +1583,6 @@
               </article>
             </div>
 
-            <!-- Tombol Aksi Pratinjau -->
             <div class="preview-actions">
               <button class="btn-back-icon" type="button" onclick="switchTab('form')" title="Kembali ke Form" aria-label="Kembali ke Form">
                 <svg class="btn-icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
@@ -1676,9 +1590,8 @@
                   <polyline points="12 19 5 12 12 5"></polyline>
                 </svg>
               </button>
-              <!-- Tombol Simpan (Hijau) -->
               <button class="primary" id="downloadBtn" type="button" onclick="downloadImage()">
-                Simpan
+                Simpan & Kirim
               </button>
             </div>
             <div class="preview-note">Periksa kembali semua data sebelum menyimpan, pastikan form dan berkas sudah lengkap dan sesuai.</div>
@@ -1689,24 +1602,17 @@
       </div>
     </div>
 
-    <!-- Footer -->
     <footer class="footer">BA Tertib Bayar · ULP Lemah Abang</footer>
 
   </main>
 
   <!-- HTML: MODAL -->
 
-  <!-- (BAGIAN YANG DIUBAH) Modal Tambah Tarif Baru -->
   <div class="modal" id="modalCustomTarif" role="dialog" aria-modal="true" aria-labelledby="customTarifTitle">
     <div class="modal-card">
-      <!-- Tombol close (X) dihilangkan sesuai permintaan -->
-      
       <h3 id="customTarifTitle">Tambah Tarif Baru</h3>
       <p>Masukkan tarif / daya listrik yang tidak ada di daftar pilihan.</p>
-      
       <input type="text" id="inputCustomTarif" class="custom-tariff-input" placeholder="Contoh: B1 / 450" autocomplete="off">
-      
-      <!-- Tombol aksi sejajar: Batal dan Simpan -->
       <div class="modal-tariff-actions">
         <button type="button" class="btn-batal-tarif" onclick="closeModal('modalCustomTarif')">Batal</button>
         <button type="button" class="btn-simpan-tarif" onclick="simpanTarifBaru()">Simpan Tarif</button>
@@ -1714,7 +1620,6 @@
     </div>
   </div>
 
-  <!-- Modal Sumber Foto -->
   <div class="modal" id="sourceModal" role="dialog" aria-modal="true" aria-labelledby="sourceTitle">
     <div class="modal-card">
       <button type="button" class="modal-close" onclick="closeModal('sourceModal')" aria-label="Tutup">
@@ -1745,7 +1650,6 @@
     </div>
   </div>
 
-  <!-- Modal Crop -->
   <div class="modal" id="cropModal" role="dialog" aria-modal="true" aria-labelledby="cropTitle">
     <div class="modal-card" style="max-width: 480px;">
       <button type="button" class="modal-close" onclick="cancelCrop()" aria-label="Tutup">
@@ -1771,12 +1675,10 @@
           </svg> Kanan
         </button>
       </div>
-      <!-- Tombol Gunakan Foto (Full Width) -->
       <button type="button" class="btn-apply-crop" id="applyCropBtn" onclick="performCrop()">Simpan</button>
     </div>
   </div>
 
-  <!-- Modal Reset Konfirmasi -->
   <div class="modal" id="resetModal" role="dialog" aria-modal="true" aria-labelledby="resetTitle">
     <div class="modal-card">
       <h3 id="resetTitle">Konfirmasi hapus data</h3>
@@ -1788,11 +1690,15 @@
     </div>
   </div>
 
-  <!-- Toast (Notifikasi) -->
   <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
   <script>
     "use strict";
+
+    /* ============================================================ */
+    /* ⚙️ KONFIGURASI — URL APPS SCRIPT KAMU                        */
+    /* ============================================================ */
+    const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyDVvBt5nIqVGtd8_xslBk8zSVv1TADxQh1EpdVU6wAUYVse--AiFjVWtP3WTD7BEbo/exec";
 
     /* ============================================================ */
     /* JS: VARIABEL GLOBAL & HELPER                                 */
@@ -1808,18 +1714,85 @@
       if (navigator.vibrate) navigator.vibrate(ms);
     }
 
-    function showToast(message) {
+    function showToast(message, isError = false) {
       const toast = $("toast");
-      // Tambahkan ikon centang + pesan
+      toast.classList.toggle("error", isError);
       toast.innerHTML = `
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
-          <polyline points="20 6 9 17 4 12"></polyline>
+          ${isError
+            ? '<line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line>'
+            : '<polyline points="20 6 9 17 4 12"></polyline>'}
         </svg>
         <span>${message}</span>
       `;
       toast.classList.add("show");
       clearTimeout(toastTimer);
-      toastTimer = setTimeout(() => toast.classList.remove("show"), 2600);
+      toastTimer = setTimeout(() => toast.classList.remove("show"), isError ? 4000 : 2600);
+    }
+
+    /* ============================================================ */
+    /* JS: HELPER KONVERSI BASE64 → BLOB / BLOB → BASE64            */
+    /* ============================================================ */
+    function dataURLtoBlob(dataURL) {
+      if (!dataURL) return null;
+      const parts = dataURL.split(",");
+      const mime = parts[0].match(/:(.*?);/)[1];
+      const binary = atob(parts[1]);
+      const array = new Uint8Array(binary.length);
+      for (let i = 0; i < binary.length; i++) array[i] = binary.charCodeAt(i);
+      return new Blob([array], { type: mime });
+    }
+
+    function blobToBase64(blob) {
+      return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onload = () => resolve(reader.result);
+        reader.onerror = reject;
+        reader.readAsDataURL(blob);
+      });
+    }
+
+    /* ============================================================ */
+    /* JS: KIRIM DATA KE GOOGLE DRIVE VIA APPS SCRIPT               */
+    /* ============================================================ */
+    async function kirimKeDrive(payload) {
+      const response = await fetch(APPS_SCRIPT_URL, {
+        method: "POST",
+        headers: { "Content-Type": "text/plain;charset=utf-8" },
+        body: JSON.stringify(payload),
+        redirect: "follow"
+      });
+
+      if (!response.ok) throw new Error(`HTTP ${response.status}`);
+
+      const text = await response.text();
+      let result;
+      try {
+        result = JSON.parse(text);
+      } catch (e) {
+        throw new Error("Respons server tidak valid: " + text.substring(0, 100));
+      }
+
+      if (!result.success) throw new Error(result.error || "Gagal menyimpan ke Drive");
+      return result;
+    }
+
+    /* ============================================================ */
+    /* JS: VALIDASI SEBELUM SIMPAN                                  */
+    /* ============================================================ */
+    function validasiSebelumSimpan() {
+      const nama = $("inputNama").value.trim();
+      const ktp = $("inputKtp").value.trim();
+      const namaPln = $("inputNamaPln").value.trim();
+      const idPel = $("inputIdPel").value.trim();
+
+      if (!nama) { showToast("Nama penghuni wajib diisi!", true); $("inputNama").focus(); return false; }
+      if (ktp.length !== 16) { showToast("NIK harus 16 digit!", true); $("inputKtp").focus(); return false; }
+      if (!namaPln) { showToast("Nama pelanggan PLN wajib diisi!", true); $("inputNamaPln").focus(); return false; }
+      if (!idPel) { showToast("ID Pelanggan wajib diisi!", true); $("inputIdPel").focus(); return false; }
+      if (!ktpDataUrl) { showToast("Foto KTP wajib diupload!", true); return false; }
+      if (!signatureDataUrl) { showToast("Tanda tangan wajib diisi!", true); return false; }
+      return true;
     }
 
     /* ============================================================ */
@@ -1868,15 +1841,12 @@
         $("previewPane").style.animation = 'none';
         $("previewPane").offsetHeight;
         $("previewPane").style.animation = 'fadeUp 0.4s ease forwards';
-        window.scrollTo({
-          top: 0,
-          behavior: "smooth"
-        });
+        window.scrollTo({ top: 0, behavior: "smooth" });
       }
     }
 
     /* ============================================================ */
-    /* JS: UPDATE PRATINJAU (SINKRON FORM KE SURAT)                 */
+    /* JS: UPDATE PRATINJAU                                         */
     /* ============================================================ */
     function updatePreview() {
       const map = {
@@ -1932,18 +1902,15 @@
     /* ============================================================ */
     document.getElementById('tariffGrid').addEventListener('click', function(e) {
       const button = e.target.closest('.tariff');
-      // Pastikan yang diklik adalah tombol tarif, dan bukan tombol "Lainnya"
       if (button && button.id !== 'btnCustomTarif') {
         vibrate(15);
         $("inputTarif").value = button.dataset.value;
-        
-        // Hapus class selected dari semua tombol
+
         document.querySelectorAll(".tariff").forEach(item => {
           item.classList.remove("selected");
           item.setAttribute("aria-pressed", "false");
         });
-        
-        // Tambahkan class selected ke tombol yang diklik
+
         button.classList.add("selected");
         button.setAttribute("aria-pressed", "true");
         updatePreview();
@@ -1952,37 +1919,30 @@
 
     function bukaModalTarif() {
       vibrate(10);
-      $('inputCustomTarif').value = ''; // Kosongkan input setiap kali dibuka
+      $('inputCustomTarif').value = '';
       openModal('modalCustomTarif');
       setTimeout(() => $('inputCustomTarif').focus(), 100);
     }
 
     function simpanTarifBaru() {
       const nilaiBaru = $('inputCustomTarif').value.trim();
-      
-      if (!nilaiBaru) {
-        showToast("Tarif tidak boleh kosong!");
-        return;
-      }
+
+      if (!nilaiBaru) { showToast("Tarif tidak boleh kosong!", true); return; }
 
       vibrate(15);
-      
-      // Buat elemen tombol baru
+
       const btnBaru = document.createElement('button');
       btnBaru.type = 'button';
-      btnBaru.className = 'tariff selected'; // Langsung beri class selected
-      btnBaru.dataset.value = nilaiBaru + " VA"; // Tambahkan VA otomatis
+      btnBaru.className = 'tariff selected';
+      btnBaru.dataset.value = nilaiBaru + " VA";
       btnBaru.innerText = nilaiBaru;
-      
-      // Sisipkan tombol baru sebelum tombol "Lainnya"
+
       const tombolLainnya = $('btnCustomTarif');
       tombolLainnya.parentNode.insertBefore(btnBaru, tombolLainnya);
 
-      // Update input hidden dan pratinjau
       $("inputTarif").value = btnBaru.dataset.value;
       updatePreview();
 
-      // Hapus status selected dari tombol lain
       document.querySelectorAll(".tariff").forEach(item => {
         if (item !== btnBaru) {
           item.classList.remove("selected");
@@ -2009,7 +1969,7 @@
     }
 
     /* ============================================================ */
-    /* JS: MODAL (BUKA/TUTUP)                                       */
+    /* JS: MODAL                                                    */
     /* ============================================================ */
     function openModal(id) {
       vibrate(10);
@@ -2025,7 +1985,7 @@
     }
 
     /* ============================================================ */
-    /* JS: RESET DATA (KONFIRMASI)                                  */
+    /* JS: RESET DATA                                               */
     /* ============================================================ */
     function confirmReset() {
       vibrate(30);
@@ -2043,13 +2003,11 @@
         btn.setAttribute("aria-pressed", "false");
       });
 
-      // Hapus juga kolom tarif custom jika ada
       const tarifCustom = document.querySelectorAll('#tariffGrid .tariff');
       tarifCustom.forEach(btn => {
-        if (btn.id !== 'btnCustomTarif' && !btn.hasAttribute('data-value') || (btn.id !== 'btnCustomTarif' && btn.dataset.value !== undefined)) {
-          // Hanya hapus yang ditambahkan secara dinamis (bukan bawaan HTML)
+        if (btn.id !== 'btnCustomTarif' && btn.dataset.value !== undefined) {
           if (!['R1 / 450 VA', 'R1 / 900 VA', 'R1M / 900 VA', 'R1 / 1300 VA', 'R1 / 2200 VA'].includes(btn.dataset.value)) {
-            if(btn.id !== 'btnCustomTarif') btn.remove();
+            btn.remove();
           }
         }
       });
@@ -2107,13 +2065,13 @@
       if (!file) return;
 
       if (!file.type.startsWith("image/")) {
-        showToast("Pilih file gambar yang valid.");
+        showToast("Pilih file gambar yang valid.", true);
         event.target.value = "";
         return;
       }
 
       if (file.size > 15 * 1024 * 1024) {
-        showToast("Ukuran foto maksimal 15 MB.");
+        showToast("Ukuran foto maksimal 15 MB.", true);
         event.target.value = "";
         return;
       }
@@ -2140,7 +2098,7 @@
           });
         };
       };
-      reader.onerror = () => showToast("Foto tidak bisa dibaca.");
+      reader.onerror = () => showToast("Foto tidak bisa dibaca.", true);
       reader.readAsDataURL(file);
     }
 
@@ -2160,10 +2118,7 @@
         fillColor: "#ffffff"
       });
 
-      if (!cropped) {
-        showToast("Gagal memproses foto.");
-        return;
-      }
+      if (!cropped) { showToast("Gagal memproses foto.", true); return; }
 
       ktpDataUrl = cropped.toDataURL("image/jpeg", 0.92);
 
@@ -2207,7 +2162,7 @@
     }
 
     /* ============================================================ */
-    /* JS: TANDA TANGAN DIGITAL (CANVAS)                            */
+    /* JS: TANDA TANGAN DIGITAL                                     */
     /* ============================================================ */
     const canvas = $("signaturePad");
     const ctx = canvas.getContext("2d");
@@ -2326,7 +2281,7 @@
     });
 
     /* ============================================================ */
-    /* JS: EVENT WINDOW (RESIZE / ORIENTATION)                      */
+    /* JS: EVENT WINDOW                                             */
     /* ============================================================ */
     window.addEventListener("resize", () => {
       resizeCanvas();
@@ -2339,14 +2294,17 @@
     }, 150));
 
     /* ============================================================ */
-    /* JS: SIMPAN GAMBAR SURAT (DOWNLOAD)                           */
+    /* JS: SIMPAN GAMBAR + KIRIM KE GOOGLE DRIVE                    */
     /* ============================================================ */
     async function downloadImage() {
       vibrate(20);
+
+      if (!validasiSebelumSimpan()) return;
+
       const button = $("downloadBtn");
-      const originalText = button.innerHTML;
       if (button.disabled) return;
 
+      const originalText = button.innerHTML;
       button.disabled = true;
       button.innerHTML = "Menyiapkan...";
 
@@ -2359,6 +2317,7 @@
 
         const paper = $("suratContainer");
 
+        // Proses CORS logo
         const logoImg = paper.querySelector(".letter-logo");
         if (logoImg && !logoImg.src.startsWith("data:")) {
           await new Promise(resolve => {
@@ -2412,6 +2371,9 @@
           .replace(/\s+/g, "_")
           .slice(0, 80);
 
+        // =====================================================
+        // 1. DOWNLOAD JPG KE PERANGKAT (backup lokal)
+        // =====================================================
         const url = URL.createObjectURL(blob);
         const link = document.createElement("a");
         link.href = url;
@@ -2421,19 +2383,50 @@
         link.remove();
         setTimeout(() => URL.revokeObjectURL(url), 1500);
 
+        // =====================================================
+        // 2. KIRIM KE GOOGLE DRIVE VIA APPS SCRIPT
+        // =====================================================
+        button.innerHTML = "Mengirim ke Drive...";
+
+        const suratBase64 = await blobToBase64(blob);
+
+        const payload = {
+          nama: $("inputNama").value.trim(),
+          alamat: $("inputAlamat").value.trim(),
+          ktp: $("inputKtp").value.trim(),
+          telp: $("inputTelp").value.trim(),
+          namaPln: $("inputNamaPln").value.trim(),
+          alamatPln: $("inputAlamatPln").value.trim(),
+          idPel: $("inputIdPel").value.trim(),
+          tarif: $("inputTarif").value.trim(),
+          ktpImage: ktpDataUrl,
+          ttdImage: signatureDataUrl,
+          suratImage: suratBase64
+        };
+
+        await kirimKeDrive(payload);
+
+        // =====================================================
+        // 3. SUKSES
+        // =====================================================
         confetti({
           particleCount: 150,
           spread: 70,
-          origin: {
-            y: 0.6
-          },
+          origin: { y: 0.6 },
           colors: ['#2563eb', '#10b981', '#f59e0b', '#ef4444']
         });
 
-        showToast("Berhasil disimpan");
+        showToast("Berhasil disimpan ke Drive");
+
       } catch (error) {
-        console.error(error);
-        showToast("Gagal menyimpan gambar. Pastikan file gambar/tanda tangan tidak kosong.");
+        console.error("Error simpan:", error);
+        let pesan = "Gagal mengirim ke Drive.";
+        if (error.message && error.message.includes("Failed to fetch")) {
+          pesan = "Tidak bisa terhubung ke server. Periksa koneksi internet.";
+        } else if (error.message) {
+          pesan = "Gagal: " + error.message;
+        }
+        showToast(pesan, true);
       } finally {
         button.disabled = false;
         button.innerHTML = originalText;
@@ -2441,7 +2434,7 @@
     }
 
     /* ============================================================ */
-    /* JS: EVENT GLOBAL (KLIK MODAL & TOMBOL ESC)                   */
+    /* JS: EVENT GLOBAL                                             */
     /* ============================================================ */
     document.querySelectorAll(".modal").forEach(modal => {
       modal.addEventListener("click", event => {
@@ -2456,13 +2449,13 @@
       if (event.key === "Escape") {
         closeModal("sourceModal");
         closeModal("resetModal");
-        closeModal("modalCustomTarif"); // Tambahan untuk modal tarif
+        closeModal("modalCustomTarif");
         if ($("cropModal").classList.contains("open")) cancelCrop();
       }
     });
 
     /* ============================================================ */
-    /* JS: INISIALISASI SAAT HALAMAN DIMUAT                         */
+    /* JS: INISIALISASI                                             */
     /* ============================================================ */
     setAutomaticDate();
     updatePreview();
