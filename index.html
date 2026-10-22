@@ -2,7 +2,7 @@
 <html lang="id">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <meta name="theme-color" content="#0756a8">
   <title>BA Tertib Bayar | PLN ULP Lemah Abang</title>
 
@@ -21,6 +21,8 @@
     * {
       -webkit-tap-highlight-color: transparent !important;
       box-sizing: border-box;
+      margin: 0;
+      padding: 0;
     }
 
     button:focus,
@@ -43,16 +45,27 @@
       --shadow: 0 8px 24px rgba(37, 99, 235, 0.08);
     }
 
-    /* ============================================================ */
-    /* CSS: BODY & ELEMEN DASAR                                     */
-    /* ============================================================ */
     body {
-      margin: 0;
-      background: var(--bg);
+      background: #e2e8f0;
       color: var(--text);
       font-family: Inter, Arial, sans-serif;
       font-size: 14px;
       -webkit-font-smoothing: antialiased;
+      display: flex;
+      justify-content: center;
+      overflow: hidden;
+    }
+
+    .app-container {
+      width: 100%;
+      max-width: 480px;
+      background: var(--bg);
+      height: 100vh;
+      height: 100dvh;
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
     }
 
     button,
@@ -76,18 +89,20 @@
     }
 
     /* ============================================================ */
-    /* CSS: HEADER                                                  */
+    /* CSS: HEADER & NAVIGASI (STICKY)                              */
     /* ============================================================ */
+    .sticky-header {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      flex-shrink: 0;
+      background: var(--bg);
+    }
+
     .topbar {
       background: linear-gradient(115deg, #063d79, #0756a8 65%, #087fc1);
       color: #fff;
       padding: 22px 24px 30px;
-    }
-
-    .topbar-inner,
-    .workspace {
-      max-width: 1440px;
-      margin: auto;
     }
 
     .brand {
@@ -103,7 +118,7 @@
       justify-content: center;
       background: transparent;
       border: none;
-      height: 75px;
+      height: 65px;
       width: auto;
       flex-shrink: 0;
     }
@@ -191,33 +206,91 @@
       color: #fff;
     }
 
-    /* ============================================================ */
-    /* CSS: LAYOUT UTAMA                                            */
-    /* ============================================================ */
-    .workspace {
-      padding: 0 24px 36px;
-      margin-top: -13px;
-    }
-
-    .layout {
+    /* NAVIGASI TAB GESER */
+    .mobile-nav {
       display: grid;
-      grid-template-columns: minmax(340px, 0.88fr) minmax(0, 1.12fr);
-      gap: 22px;
-      align-items: start;
+      grid-template-columns: 1fr 1fr;
+      background: #ffffff;
+      padding: 4px;
+      border-radius: 14px;
+      position: relative;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+      margin: -20px 10px 16px 10px; 
     }
 
-    .form-column,
-    .preview-column {
-      min-width: 0;
+    .mobile-nav::before {
+      content: '';
+      position: absolute;
+      top: 4px;
+      bottom: 4px;
+      left: 4px;
+      width: calc(50% - 4px);
+      background: var(--blue);
+      border-radius: 10px;
+      transition: transform 0.4s cubic-bezier(0.25, 1, 0.5, 1);
+      z-index: 1;
     }
 
+    .mobile-nav.show-preview::before {
+      transform: translateX(100%);
+    }
+
+    .mobile-nav button {
+      border: 0;
+      border-radius: 10px;
+      padding: 12px 6px;
+      background: transparent;
+      color: #64748b;
+      font-size: 13px;
+      font-weight: 800;
+      position: relative;
+      z-index: 2;
+      transition: color 0.3s ease;
+    }
+
+    .mobile-nav button.active {
+      color: #ffffff;
+    }
+
+    /* ============================================================ */
+    /* CSS: LAYOUT SLIDER GESER                                     */
+    /* ============================================================ */
+    .slider-container {
+      flex: 1;
+      display: flex;
+      overflow-x: auto;
+      scroll-snap-type: x mandatory;
+      scrollbar-width: none; 
+      -ms-overflow-style: none;
+    }
+    
+    .slider-container::-webkit-scrollbar {
+      display: none;
+    }
+
+    .slide-page {
+      min-width: 100%;
+      width: 100%;
+      max-width: 100%;
+      flex-shrink: 0;
+      scroll-snap-align: start;
+      padding: 0 10px 20px 10px; 
+      box-sizing: border-box;
+      overflow-y: auto; 
+      overflow-x: hidden;
+      max-height: 100%;
+    }
+
+    /* ============================================================ */
+    /* CSS: PANEL / CARD FORM                                       */
+    /* ============================================================ */
     .panel {
       background: #fff;
       border: 1px solid var(--border);
       border-radius: var(--radius);
       box-shadow: var(--shadow);
       overflow: hidden;
-      margin-bottom: 16px;
+      margin-bottom: 18px; 
     }
 
     .panel-head {
@@ -283,7 +356,7 @@
     }
 
     /* ============================================================ */
-    /* CSS: FORM INPUT & TOMBOL CLEAR                               */
+    /* CSS: FORM INPUT                                              */
     /* ============================================================ */
     .input-wrap {
       position: relative;
@@ -486,6 +559,12 @@
       color: var(--muted);
     }
 
+    /* Tombol (x) di kolom tanda tangan - posisi sama seperti di KTP */
+    #clearSignBtn {
+      right: 8px;
+      top: 8px;
+    }
+
     .text-button {
       border: 0;
       background: transparent;
@@ -496,8 +575,6 @@
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      cursor: pointer;
-      transition: color 0.2s;
     }
 
     .text-button:hover {
@@ -544,7 +621,6 @@
       color: #536780;
       background: var(--bg);
       border: 1px solid var(--border);
-      box-shadow: none;
     }
 
     .secondary:hover {
@@ -555,6 +631,8 @@
       display: flex;
       gap: 10px;
       align-items: stretch;
+      /* Tambahan margin agar posisi di luar card terlihat rapi */
+      margin: 4px 0 24px 0;
     }
 
     .btn-icon-svg {
@@ -604,8 +682,14 @@
     /* CSS: PRATINJAU & KERTAS SURAT                                */
     /* ============================================================ */
     .preview-panel {
-      position: sticky;
-      top: 14px;
+      background: #fff;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      overflow: hidden;
+      margin-bottom: 18px;
+      width: 100%; 
+      box-sizing: border-box;
     }
 
     .preview-top {
@@ -622,15 +706,24 @@
       margin: 0;
       font-weight: 800;
     }
-
+    
     .paper-area {
-      padding: 20px;
+      padding: 16px;
       background: #eef2f7;
-      overflow: auto;
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      overflow: hidden; 
+      width: 100%;
+      max-width: 100%;
+      box-sizing: border-box;
     }
 
     .paper {
       width: 794px;
+      min-width: 794px; /* PENTING: Mencegah kertas mengecil (shrink) */
+      max-width: 794px; /* PENTING: Mengunci lebar kertas */
+      flex-shrink: 0;   /* PENTING: Mencegah flexbox merusak layout kertas */
       min-height: 1123px;
       padding: 60px 70px;
       margin: 0 auto;
@@ -641,6 +734,9 @@
       font-size: 14px;
       line-height: 1.5;
       border-radius: 2px;
+      transform-origin: top center !important; 
+      transform: scale(var(--paper-scale, 1)) !important; /* Skala diatur via JS */
+      transition: transform 0.2s ease-out;
     }
 
     .letter-head {
@@ -755,10 +851,6 @@
       color: #8a98aa;
       font-size: 10px;
       line-height: 1.6;
-    }
-
-    .mobile-nav {
-      display: none;
     }
 
     /* ============================================================ */
@@ -898,9 +990,6 @@
       border: 1.5px solid #b91c1c;
     }
 
-    /* ============================================================ */
-    /* CSS: MODAL TAMBAH TARIF BARU                                 */
-    /* ============================================================ */
     .custom-tariff-input {
       width: 100%;
       height: 45px;
@@ -916,16 +1005,19 @@
       outline: none;
       transition: all 0.3s ease;
     }
+
     .custom-tariff-input:focus {
       border-color: #3889d4 !important;
       background: #fff !important;
       box-shadow: 0 0 0 2.5px #dceeff !important;
       outline: none !important;
     }
+    
     .modal-tariff-actions {
       display: flex;
       gap: 10px;
     }
+
     .btn-batal-tarif {
       flex: 1;
       height: 48px;
@@ -940,9 +1032,11 @@
       justify-content: center;
       transition: 0.2s;
     }
+
     .btn-batal-tarif:hover {
       background: #e2e8f0;
     }
+
     .btn-simpan-tarif {
       flex: 1;
       height: 48px;
@@ -957,6 +1051,7 @@
       justify-content: center;
       transition: 0.2s;
     }
+
     .btn-simpan-tarif:hover {
       background: var(--blue-dark);
     }
@@ -1004,19 +1099,14 @@
       justify-content: center;
       margin-top: 10px;
       transition: all 0.2s;
-      box-shadow: none;
     }
 
     .btn-apply-crop:hover {
       background: var(--blue-dark);
     }
 
-    .btn-apply-crop:active {
-      transform: scale(0.96);
-    }
-
     /* ============================================================ */
-    /* CSS: TOAST, FOOTER, ANIMASI                                  */
+    /* CSS: TOAST & ANIMASI                                         */
     /* ============================================================ */
     .toast {
       position: fixed;
@@ -1064,127 +1154,25 @@
       padding: 8px 0 18px;
     }
 
-    .view-fade {
-      animation: fadeUp 0.4s ease forwards;
-    }
-
-    @keyframes fadeUp {
-      from {
-        opacity: 0;
-        transform: translateY(15px);
-      }
-      to {
-        opacity: 1;
-        transform: translateY(0);
-      }
-    }
-
     /* ============================================================ */
-    /* CSS: RESPONSIVE                                              */
+    /* CSS: KHUSUS MOBILE (PENYESUAIAN KERTAS)                      */
     /* ============================================================ */
-    @media (max-width: 1000px) {
-      .workspace { padding: 0 14px 25px; }
-      .layout { grid-template-columns: minmax(0, 1fr); }
-      .preview-panel { position: static; }
-      .paper-area { padding: 14px; }
-      .topbar { padding: 20px 18px 27px; }
-    }
-
     @media (max-width: 700px) {
-      body { font-size: 13px; overflow-x: hidden; }
-      .topbar { padding: 18px 15px 25px; }
-      .brand-mark { height: 60px; }
-      .brand-title { font-size: 24px; letter-spacing: 0.5px; }
-      .brand-sub { font-size: 9px; margin-top: 3px; margin-bottom: 8px; }
-      .workspace { padding: 0 !important; margin-top: -10px; }
-
-      .mobile-nav {
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-        background: #ffffff;
-        padding: 4px;
-        border-radius: 14px;
-        margin-bottom: 13px;
-        position: relative;
-        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
-        margin-left: 10px;
-        margin-right: 10px;
+      .workspace {
+        padding: 0 !important;
+        margin-top: -10px;
       }
 
-      .mobile-nav::before {
-        content: '';
-        position: absolute;
-        top: 4px;
-        bottom: 4px;
-        left: 4px;
-        width: calc(50% - 4px);
-        background: var(--blue);
-        border-radius: 10px;
-        transition: transform 0.4s cubic-bezier(0.25, 1, 0.5, 1);
-        z-index: 1;
+      .slide-page {
+        padding: 0 10px 20px 10px !important;
       }
-
-      .mobile-nav.show-preview::before {
-        transform: translateX(100%);
-      }
-
-      .mobile-nav button {
-        border: 0;
-        border-radius: 10px;
-        padding: 12px 6px;
-        background: transparent;
-        color: #64748b;
-        font-size: 11px;
-        font-weight: 800;
-        position: relative;
-        z-index: 2;
-        transition: color 0.3s ease;
-      }
-
-      .mobile-nav button.active {
-        color: #ffffff;
-      }
-
-      .layout-wrapper {
-        overflow: hidden;
-        width: calc(100% - 20px);
-        max-width: calc(100% - 20px);
-        position: relative;
-        margin: 0 10px;
-      }
-
-      .layout {
-        display: block;
-        width: 100%;
-        max-width: 100%;
-      }
-
-      .form-column,
-      .preview-column {
-        width: 100%;
-        max-width: 100%;
-        min-width: 0;
-        flex: none;
-        opacity: 1;
-      }
-
-      .form-column { display: block !important; }
-
-      .preview-column {
-        display: none !important;
-        overflow: hidden;
-        padding: 0;
-      }
-
-      .layout.show-preview .form-column { display: none !important; }
-      .layout.show-preview .preview-column { display: block !important; }
 
       .preview-panel {
         width: 100%;
         max-width: 100%;
-        margin: 0 0 12px;
+        margin: 0 0 18px;
       }
-
+      
       .paper-area {
         padding: 10px !important;
         background: #eef2f7;
@@ -1199,77 +1187,115 @@
       }
 
       .paper {
-        width: 794px !important;
-        max-width: none !important;
-        min-height: 1123px !important;
-        height: auto !important;
-        padding: 60px 70px !important;
-        flex: 0 0 794px;
-        transform: scale(var(--paper-scale, 1)) !important;
-        transform-origin: top center !important;
-        margin: 0 !important;
+        /* Lebar diambil dari CSS utama (794px & flex-shrink: 0) */
+        padding: 60px 70px !important; 
+        margin: 0 !important; 
         background: #fff;
         color: #111;
         box-shadow: 0 3px 12px rgba(0, 0, 0, 0.08);
         border-radius: 2px;
       }
 
-      .panel { border-radius: 15px; margin-bottom: 12px; }
-      .panel-head { padding: 15px 15px 12px; }
-      .panel-body { padding: 15px; }
-      .panel-icon { width: 36px; height: 36px; }
-      .tariff-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 7px; }
-      .tariff { font-size: 10px; min-height: 42px; }
-      .preview-top { padding: 15px; }
-      .preview-actions { padding: 13px 14px; }
-      .preview-note { padding: 0 14px 14px; }
-      .footer { font-size: 9px; }
-      .modal { padding: 16px; }
-      .modal-card { border-radius: 20px; padding: 24px 20px; }
-      .toast { padding: 14px 20px; font-size: 13px; border-radius: 12px; }
+      .panel {
+        border-radius: 15px;
+        margin-bottom: 18px;
+      }
+
+      .panel-head {
+        padding: 15px 15px 12px;
+      }
+
+      .panel-body {
+        padding: 15px;
+      }
+
+      .panel-icon {
+        width: 36px;
+        height: 36px;
+      }
+
+      .tariff-grid {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 7px;
+      }
+
+      .tariff {
+        font-size: 10px;
+        min-height: 42px;
+      }
+
+      .preview-top {
+        padding: 15px;
+      }
+
+      .preview-actions {
+        padding: 13px 14px;
+      }
+
+      .preview-note {
+        padding: 0 14px 14px;
+      }
+
+      .footer {
+        font-size: 9px;
+      }
+
+      .modal {
+        padding: 16px;
+      }
+
+      .modal-card {
+        border-radius: 20px;
+        padding: 24px 20px;
+      }
+
+      .toast {
+        padding: 14px 20px;
+        font-size: 13px;
+        border-radius: 12px;
+      }
     }
   </style>
 </head>
 <body>
 
-  <!-- HTML: HEADER -->
-  <header class="topbar">
-    <div class="topbar-inner">
-      <div class="brand">
-        <div class="brand-mark">
-          <img src="https://i.ibb.co.com/XfkR6wrZ/Logo-PLN.png" alt="Logo PLN" crossorigin="anonymous">
-        </div>
-        <div class="brand-text">
-          <h1 class="brand-title">ULP LEMAH ABANG</h1>
-          <p class="brand-sub">PT PLN (Persero) UP3 Cikarang</p>
-          <div class="user-badge">
-            <div class="user-avatar">
-              <img src="https://i.postimg.cc/R0YMVxZK/IMG-20261018-003418.png" alt="Foto Asep">
-            </div>
-            <div class="user-info">
-              <div class="role">CREATED BY</div>
-              <div class="name">ASEP SAEPUDIN</div>
+  <div class="app-container">
+
+    <!-- STICKY HEADER & TAB -->
+    <div class="sticky-header">
+      <header class="topbar">
+        <div class="brand">
+          <div class="brand-mark">
+            <img src="https://i.ibb.co.com/XfkR6wrZ/Logo-PLN.png" alt="Logo PLN" crossorigin="anonymous">
+          </div>
+          <div class="brand-text">
+            <h1 class="brand-title">ULP LEMAH ABANG</h1>
+            <p class="brand-sub">PT PLN (Persero) UP3 Cikarang</p>
+            <div class="user-badge">
+              <div class="user-avatar">
+                <img src="https://i.postimg.cc/R0YMVxZK/IMG-20261018-003418.png" alt="Foto Asep">
+              </div>
+              <div class="user-info">
+                <div class="role">CREATED BY</div>
+                <div class="name">ASEP SAEPUDIN</div>
+              </div>
             </div>
           </div>
         </div>
-      </div>
+      </header>
+
+      <nav class="mobile-nav" id="mobileNav" aria-label="Navigasi aplikasi">
+        <button id="tabForm" class="active" onclick="switchTab(0)">Isi Form</button>
+        <button id="tabPreview" onclick="switchTab(1)">Lihat Surat</button>
+      </nav>
     </div>
-  </header>
 
-  <!-- HTML: KONTEN UTAMA -->
-  <main class="workspace">
-
-    <nav class="mobile-nav" id="mobileNav" aria-label="Navigasi aplikasi">
-      <button id="tabForm" class="active" onclick="switchTab('form')">Isi Form Data</button>
-      <button id="tabPreview" onclick="switchTab('preview')">Lihat Surat</button>
-    </nav>
-
-    <div class="layout-wrapper">
-      <div class="layout" id="appLayout">
-
-        <!-- KOLOM FORM (KIRI) -->
-        <section class="form-column mobile-active view-fade" id="formPane">
-
+    <!-- SLIDER CONTAINER -->
+    <div class="slider-container" id="slider-container">
+      
+      <!-- SLIDE 1: FORM -->
+      <div class="slide-page" id="slide-form">
+        <section class="view-fade" id="formPane">
           <div class="panel">
             <div class="panel-head">
               <div class="panel-icon">
@@ -1279,7 +1305,7 @@
                 </svg>
               </div>
               <div>
-                <div class="panel-title">Data Penghuni</div>
+                <div class="panel-title">DATA PENGHUNI</div>
                 <div class="panel-desc">Informasi data penanggung jawab surat</div>
               </div>
             </div>
@@ -1299,7 +1325,7 @@
               <div class="field">
                 <label for="inputAlamat">Alamat Tempat Tinggal</label>
                 <div class="input-wrap">
-                  <input id="inputAlamat" placeholder="Masukkan alamat lengkap" autocomplete="street-address">
+                  <input id="inputAlamat" placeholder="Masukkan alamat lengkap penghuni" autocomplete="street-address">
                   <button class="clear-input" type="button" aria-label="Hapus alamat">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
                       <line x1="18" y1="6" x2="6" y2="18"></line>
@@ -1311,7 +1337,7 @@
               <div class="field">
                 <label for="inputKtp">NIK</label>
                 <div class="input-wrap">
-                  <input id="inputKtp" inputmode="numeric" maxlength="16" placeholder="Masukkan 16 digit nomor KTP">
+                  <input id="inputKtp" inputmode="numeric" maxlength="16" placeholder="Masukkan 16 digit no. KTP">
                   <button class="clear-input" type="button" aria-label="Hapus nomor KTP">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
                       <line x1="18" y1="6" x2="6" y2="18"></line>
@@ -1323,7 +1349,7 @@
               <div class="field">
                 <label for="inputTelp">Nomor Telepon / WhatsApp</label>
                 <div class="input-wrap">
-                  <input id="inputTelp" type="tel" inputmode="tel" placeholder="Masukkan Nomor yang bisa dihubungi">
+                  <input id="inputTelp" type="tel" inputmode="tel" placeholder="Masukkan nomor yang dapat dihubungi">
                   <button class="clear-input" type="button" aria-label="Hapus nomor telepon">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
                       <line x1="18" y1="6" x2="6" y2="18"></line>
@@ -1356,15 +1382,15 @@
                 </svg>
               </div>
               <div>
-                <div class="panel-title">Data Pelanggan PLN</div>
+                <div class="panel-title">DATA PELANGGAN</div>
                 <div class="panel-desc">Informasi data rekening listrik terkait</div>
               </div>
             </div>
             <div class="panel-body">
               <div class="field">
-                <label for="inputNamaPln">Atas Nama Pelanggan</label>
+                <label for="inputNamaPln">Nama Pelanggan</label>
                 <div class="input-wrap">
-                  <input id="inputNamaPln" placeholder="Masukkan nama sesuai pelanggan">
+                  <input id="inputNamaPln" placeholder="Masukkan nama pelanggan">
                   <button class="clear-input" type="button" aria-label="Hapus nama pelanggan">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
                       <line x1="18" y1="6" x2="6" y2="18"></line>
@@ -1374,9 +1400,9 @@
                 </div>
               </div>
               <div class="field">
-                <label for="inputAlamatPln">Alamat Pelanggan</label>
+                <label for="inputAlamatPln">Alamat</label>
                 <div class="input-wrap">
-                  <input id="inputAlamatPln" placeholder="Masukkan alamat pelanggan">
+                  <input id="inputAlamatPln" placeholder="Masukkan alamat Pelanggan">
                   <button class="clear-input" type="button" aria-label="Hapus alamat pelanggan">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
                       <line x1="18" y1="6" x2="6" y2="18"></line>
@@ -1388,7 +1414,7 @@
               <div class="field">
                 <label for="inputIdPel">ID pelanggan</label>
                 <div class="input-wrap">
-                  <input id="inputIdPel" inputmode="numeric" placeholder="Masukkan ID pelanggan">
+                  <input id="inputIdPel" inputmode="numeric" placeholder="Masukkan ID Pelanggan">
                   <button class="clear-input" type="button" aria-label="Hapus ID pelanggan">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
                       <line x1="18" y1="6" x2="6" y2="18"></line>
@@ -1398,7 +1424,7 @@
                 </div>
               </div>
               <div class="field">
-                <label>Tarif / Daya Listrik</label>
+                <label>Tarif / Daya</label>
                 <input type="hidden" id="inputTarif">
                 <div class="tariff-grid" id="tariffGrid">
                   <button class="tariff" type="button" data-value="R1 / 450 VA">R1 / 450</button>
@@ -1417,13 +1443,13 @@
               <div class="panel-icon">
                 <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
                   <path d="M6 10C6 8.89543 6.89543 8 8 8H18L22 12H40C41.1046 12 42 12.8954 42 14V38C42 39.1046 41.1046 40 40 40H8C6.89543 40 6 39.1046 6 38V10Z" fill="#EAB308" />
-                  <path d="M6 16C6 14.8954 6.89543 14 8 14H40C41.1046 14 42 14.8954 42 16V38C42 39.1046 41.1046 40 40 40H8C6.89543 40 6 39.1046 6 38V16Z" fill="#FACC15" />
+                  <path d="M6 16C6 14.8954 6.89543 14 8 14H40C41.1046 14 42 14.8954 42 16V38C42 39.1046 41.1046 40 40 40H8C6.89543 40 6 39.1046 6 38Z" fill="#FACC15" />
                   <path d="M10 18H38V36H10V18Z" fill="#FEF08A" fill-opacity="0.3" />
                 </svg>
               </div>
               <div>
-                <div class="panel-title">Berkas Dokumen</div>
-                <div class="panel-desc">Lengkapi foto KTP & TTD</div>
+                <div class="panel-title">BERKAS DOKUMEN</div>
+                <div class="panel-desc">Lengkapi foto KTP & Tanda Tangan</div>
               </div>
             </div>
             <div class="panel-body">
@@ -1465,36 +1491,44 @@
               <div class="field">
                 <label>Tanda Tangan</label>
                 <div class="signature-wrap">
+                  <button class="corner-clear" id="clearSignBtn" type="button" title="Hapus Tanda Tangan" aria-label="Hapus tanda tangan">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+                      <line x1="18" y1="6" x2="6" y2="18"></line>
+                      <line x1="6" y1="6" x2="18" y2="18"></line>
+                    </svg>
+                  </button>
                   <canvas id="signaturePad" aria-label="Area untuk menggambar tanda tangan"></canvas>
                 </div>
                 <div class="signature-hint">
                   <span>Gunakan jari untuk tanda tangan.</span>
-                  <button type="button" class="text-button" id="clearSignBtn" title="Hapus Tanda Tangan">Hapus TTD</button>
                 </div>
-              </div>
-
-              <div class="action-row">
-                <button type="button" class="btn-reset" onclick="openResetModal()" title="Hapus Semua Data" aria-label="Hapus Semua Data">
-                  <svg class="btn-icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
-                    <path d="M3 6h18"></path>
-                    <path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"></path>
-                    <path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"></path>
-                  </svg>
-                </button>
-                <button type="button" class="primary" style="flex: 1;" onclick="switchTab('preview')">Lihat Surat</button>
               </div>
             </div>
           </div>
 
-        </section>
+          <!-- ACTION ROW YANG SUDAH DIPINDAHKAN KE LUAR CARD -->
+          <div class="action-row">
+            <button type="button" class="btn-reset" onclick="openResetModal()" title="Hapus Semua Data" aria-label="Hapus Semua Data">
+              <svg class="btn-icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M3 6h18"></path>
+                <path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"></path>
+                <path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"></path>
+              </svg>
+            </button>
+            <button type="button" class="primary" style="flex: 1;" onclick="switchTab(1)">Lihat Surat</button>
+          </div>
 
-        <!-- KOLOM PRATINJAU (KANAN) -->
-        <section class="preview-column" id="previewPane">
-          <div class="panel preview-panel">
+        </section>
+      </div>
+
+      <!-- SLIDE 2: PREVIEW -->
+      <div class="slide-page" id="slide-preview">
+        <section class="view-fade" id="previewPane">
+          <div class="preview-panel">
             <div class="preview-top">
               <div>
                 <h2>Pratinjau Surat</h2>
-                <div class="panel-desc">Hasil surat diperbarui otomatis ketika isi form</div>
+                <div class="panel-desc" style="margin-top:4px;">Hasil surat diperbarui otomatis ketika isi form</div>
               </div>
             </div>
 
@@ -1548,7 +1582,7 @@
                     <td id="prevAlamatPln">...</td>
                   </tr>
                   <tr>
-                    <td>ID </td>
+                    <td>ID</td>
                     <td>:</td>
                     <td id="prevIdPel">...</td>
                   </tr>
@@ -1575,7 +1609,9 @@
                     <td style="width: 50%; text-align: center; vertical-align: top;">
                       <span id="prevTanggal">Bekasi, ...</span><br>
                       Pelanggan
-                      <div class="paper-ttd"><img id="prevTtd" alt="Tanda tangan"></div>
+                      <div class="paper-ttd">
+                        <img id="prevTtd" alt="Tanda tangan">
+                      </div>
                       <div class="signature-name">(<span id="prevTandaTangan">...</span>)</div>
                     </td>
                   </tr>
@@ -1584,33 +1620,26 @@
             </div>
 
             <div class="preview-actions">
-              <button class="btn-back-icon" type="button" onclick="switchTab('form')" title="Kembali ke Form" aria-label="Kembali ke Form">
+              <button class="btn-back-icon" type="button" onclick="switchTab(0)" title="Kembali ke Form" aria-label="Kembali ke Form">
                 <svg class="btn-icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
                   <line x1="19" y1="12" x2="5" y2="12"></line>
                   <polyline points="12 19 5 12 12 5"></polyline>
                 </svg>
               </button>
-              <button class="primary" id="downloadBtn" type="button" onclick="downloadImage()">
-                Simpan & Kirim
-              </button>
+              <button class="primary" id="downloadBtn" type="button" onclick="downloadImage()">Download</button>
             </div>
             <div class="preview-note">Periksa kembali semua data sebelum menyimpan, pastikan form dan berkas sudah lengkap dan sesuai.</div>
-
           </div>
         </section>
-
       </div>
+
     </div>
-
-    <footer class="footer">BA Tertib Bayar · ULP Lemah Abang</footer>
-
-  </main>
+  </div>
 
   <!-- HTML: MODAL -->
-
-  <div class="modal" id="modalCustomTarif" role="dialog" aria-modal="true" aria-labelledby="customTarifTitle">
+  <div class="modal" id="modalCustomTarif" role="dialog" aria-modal="true">
     <div class="modal-card">
-      <h3 id="customTarifTitle">Tambah Tarif Baru</h3>
+      <h3>Tambah Tarif Baru</h3>
       <p>Masukkan tarif / daya listrik yang tidak ada di daftar pilihan.</p>
       <input type="text" id="inputCustomTarif" class="custom-tariff-input" placeholder="Contoh: B1 / 450" autocomplete="off">
       <div class="modal-tariff-actions">
@@ -1620,7 +1649,7 @@
     </div>
   </div>
 
-  <div class="modal" id="sourceModal" role="dialog" aria-modal="true" aria-labelledby="sourceTitle">
+  <div class="modal" id="sourceModal" role="dialog" aria-modal="true">
     <div class="modal-card">
       <button type="button" class="modal-close" onclick="closeModal('sourceModal')" aria-label="Tutup">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
@@ -1628,29 +1657,27 @@
           <line x1="6" y1="6" x2="18" y2="18"></line>
         </svg>
       </button>
-      <h3 id="sourceTitle">Pilih sumber foto</h3>
+      <h3>Pilih sumber foto</h3>
       <p>Ambil foto KTP menggunakan kamera atau pilih gambar yang sudah tersedia di perangkat.</p>
       <div class="modal-options">
         <button class="btn-tariff-style btn-kamera" type="button" onclick="triggerCamera()">
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
             <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"></path>
             <circle cx="12" cy="13" r="4"></circle>
-          </svg>
-          Kamera
+          </svg>Kamera
         </button>
         <button class="btn-tariff-style btn-galeri" type="button" onclick="triggerGallery()">
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
             <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
             <circle cx="8.5" cy="8.5" r="1.5"></circle>
             <polyline points="21 15 16 10 5 21"></polyline>
-          </svg>
-          Galeri
+          </svg>Galeri
         </button>
       </div>
     </div>
   </div>
 
-  <div class="modal" id="cropModal" role="dialog" aria-modal="true" aria-labelledby="cropTitle">
+  <div class="modal" id="cropModal" role="dialog" aria-modal="true">
     <div class="modal-card" style="max-width: 480px;">
       <button type="button" class="modal-close" onclick="cancelCrop()" aria-label="Tutup">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
@@ -1658,9 +1685,11 @@
           <line x1="6" y1="6" x2="18" y2="18"></line>
         </svg>
       </button>
-      <h3 id="cropTitle">Sesuaikan foto KTP</h3>
+      <h3>Sesuaikan foto KTP</h3>
       <p>Silahkan atur posisi foto sampai seluruh bagian KTP terlihat jelas.</p>
-      <div class="crop-frame"><img id="imageToCrop" alt="Foto untuk dipotong"></div>
+      <div class="crop-frame">
+        <img id="imageToCrop" alt="Foto untuk dipotong">
+      </div>
       <div class="crop-tools">
         <button type="button" class="secondary" onclick="rotateImage(-90)">
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
@@ -1679,9 +1708,9 @@
     </div>
   </div>
 
-  <div class="modal" id="resetModal" role="dialog" aria-modal="true" aria-labelledby="resetTitle">
+  <div class="modal" id="resetModal" role="dialog" aria-modal="true">
     <div class="modal-card">
-      <h3 id="resetTitle">Konfirmasi hapus data</h3>
+      <h3>Konfirmasi hapus data</h3>
       <p>Data yang sudah terisi termasuk berkas dan tanda tangan akan terhapus, yakin ingin menghapus nya?</p>
       <div class="modal-options">
         <button type="button" class="btn-batal-reset" onclick="closeModal('resetModal')">Batal</button>
@@ -1695,14 +1724,8 @@
   <script>
     "use strict";
 
-    /* ============================================================ */
-    /* ⚙️ KONFIGURASI — URL APPS SCRIPT KAMU                        */
-    /* ============================================================ */
     const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyaSbeKt7Yfo11QUmYYzg0qbO6ezrLWTVJt3OcGyGCV3nZ7xma8cpNDbyfu_Nz-hupRAQ/exec";
 
-    /* ============================================================ */
-    /* JS: VARIABEL GLOBAL & HELPER                                 */
-    /* ============================================================ */
     const $ = id => document.getElementById(id);
     let cropper = null;
     let ktpDataUrl = "";
@@ -1711,7 +1734,9 @@
     let signatureDirty = false;
 
     function vibrate(ms = 15) {
-      if (navigator.vibrate) navigator.vibrate(ms);
+      if (navigator.vibrate) {
+        navigator.vibrate(ms);
+      }
     }
 
     function showToast(message, isError = false) {
@@ -1719,27 +1744,26 @@
       toast.classList.toggle("error", isError);
       toast.innerHTML = `
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
-          ${isError
-            ? '<line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line>'
-            : '<polyline points="20 6 9 17 4 12"></polyline>'}
+          ${isError ? '<line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line>' : '<polyline points="20 6 9 17 4 12"></polyline>'}
         </svg>
         <span>${message}</span>
       `;
       toast.classList.add("show");
       clearTimeout(toastTimer);
-      toastTimer = setTimeout(() => toast.classList.remove("show"), isError ? 4000 : 2600);
+      toastTimer = setTimeout(() => {
+        toast.classList.remove("show");
+      }, isError ? 4000 : 2600);
     }
 
-    /* ============================================================ */
-    /* JS: HELPER KONVERSI BASE64 → BLOB / BLOB → BASE64            */
-    /* ============================================================ */
     function dataURLtoBlob(dataURL) {
       if (!dataURL) return null;
       const parts = dataURL.split(",");
       const mime = parts[0].match(/:(.*?);/)[1];
       const binary = atob(parts[1]);
       const array = new Uint8Array(binary.length);
-      for (let i = 0; i < binary.length; i++) array[i] = binary.charCodeAt(i);
+      for (let i = 0; i < binary.length; i++) {
+        array[i] = binary.charCodeAt(i);
+      }
       return new Blob([array], { type: mime });
     }
 
@@ -1752,9 +1776,6 @@
       });
     }
 
-    /* ============================================================ */
-    /* JS: KIRIM DATA KE GOOGLE DRIVE VIA APPS SCRIPT               */
-    /* ============================================================ */
     async function kirimKeDrive(payload) {
       const response = await fetch(APPS_SCRIPT_URL, {
         method: "POST",
@@ -1762,9 +1783,9 @@
         body: JSON.stringify(payload),
         redirect: "follow"
       });
-
-      if (!response.ok) throw new Error(`HTTP ${response.status}`);
-
+      if (!response.ok) {
+        throw new Error(`HTTP ${response.status}`);
+      }
       const text = await response.text();
       let result;
       try {
@@ -1772,82 +1793,106 @@
       } catch (e) {
         throw new Error("Respons server tidak valid: " + text.substring(0, 100));
       }
-
-      if (!result.success) throw new Error(result.error || "Gagal menyimpan ke Drive");
+      if (!result.success) {
+        throw new Error(result.error || "Gagal menyimpan ke Drive");
+      }
       return result;
     }
 
-    /* ============================================================ */
-    /* JS: VALIDASI SEBELUM SIMPAN                                  */
-    /* ============================================================ */
     function validasiSebelumSimpan() {
       const nama = $("inputNama").value.trim();
       const ktp = $("inputKtp").value.trim();
       const namaPln = $("inputNamaPln").value.trim();
       const idPel = $("inputIdPel").value.trim();
 
-      if (!nama) { showToast("Nama penghuni wajib diisi!", true); $("inputNama").focus(); return false; }
-      if (ktp.length !== 16) { showToast("NIK harus 16 digit!", true); $("inputKtp").focus(); return false; }
-      if (!namaPln) { showToast("Nama pelanggan PLN wajib diisi!", true); $("inputNamaPln").focus(); return false; }
-      if (!idPel) { showToast("ID Pelanggan wajib diisi!", true); $("inputIdPel").focus(); return false; }
-      if (!ktpDataUrl) { showToast("Foto KTP wajib diupload!", true); return false; }
-      if (!signatureDataUrl) { showToast("Tanda tangan wajib diisi!", true); return false; }
+      if (!nama) {
+        showToast("Nama penghuni wajib diisi!", true);
+        $("inputNama").focus();
+        return false;
+      }
+      if (ktp.length !== 16) {
+        showToast("NIK harus 16 digit!", true);
+        $("inputKtp").focus();
+        return false;
+      }
+      if (!namaPln) {
+        showToast("Nama pelanggan PLN wajib diisi!", true);
+        $("inputNamaPln").focus();
+        return false;
+      }
+      if (!idPel) {
+        showToast("ID Pelanggan wajib diisi!", true);
+        $("inputIdPel").focus();
+        return false;
+      }
+      if (!ktpDataUrl) {
+        showToast("Foto KTP wajib diupload!", true);
+        return false;
+      }
+      if (!signatureDataUrl) {
+        showToast("Tanda tangan wajib diisi!", true);
+        return false;
+      }
       return true;
     }
 
-    /* ============================================================ */
-    /* JS: LAYOUT & NAVIGASI TAB                                    */
-    /* ============================================================ */
     function fitMobilePaper() {
       const paper = $("suratContainer");
-      const area = paper.parentElement;
+      const area = paper.parentElement; 
       if (!paper || !area) return;
 
-      if (window.matchMedia("(max-width: 700px)").matches) {
-        const styles = getComputedStyle(area);
-        const horizontalPadding = parseFloat(styles.paddingLeft) + parseFloat(styles.paddingRight);
-        const availableWidth = Math.max(1, area.clientWidth - horizontalPadding);
-        const scale = Math.min(1, availableWidth / 794);
-        paper.style.setProperty("--paper-scale", String(scale));
-        area.style.height = `${Math.ceil(paper.offsetHeight * scale) + parseFloat(styles.paddingTop) + parseFloat(styles.paddingBottom)}px`;
-      } else {
-        paper.style.removeProperty("--paper-scale");
-        area.style.removeProperty("height");
-      }
+      area.style.height = 'auto';
+      
+      const styles = getComputedStyle(area);
+      const paddingLeft = parseFloat(styles.paddingLeft) || 0;
+      const paddingRight = parseFloat(styles.paddingRight) || 0;
+      const paddingTop = parseFloat(styles.paddingTop) || 0;
+      const paddingBottom = parseFloat(styles.paddingBottom) || 0;
+
+      const areaRect = area.getBoundingClientRect();
+      const availableWidth = Math.max(1, areaRect.width - paddingLeft - paddingRight);
+      
+      const scale = Math.min(1, availableWidth / 794);
+
+      paper.style.setProperty("--paper-scale", String(scale));
+
+      const unscaledHeight = paper.offsetHeight; 
+      const scaledHeight = unscaledHeight * scale;
+
+      area.style.height = `${Math.ceil(scaledHeight + paddingTop + paddingBottom)}px`;
     }
 
-    function switchTab(tab) {
+    const sliderContainer = $("slider-container");
+    const mobileNav = $("mobileNav");
+
+    function switchTab(index) {
       vibrate(10);
-      const isForm = tab === "form";
-      const layout = $("appLayout");
-      const nav = $("mobileNav");
+      const pageWidth = sliderContainer.clientWidth;
+      sliderContainer.scrollTo({ left: pageWidth * index, behavior: "smooth" });
+    }
 
-      layout.classList.toggle("show-preview", !isForm);
-      nav.classList.toggle("show-preview", !isForm);
-      $("tabForm").classList.toggle("active", isForm);
-      $("tabPreview").classList.toggle("active", !isForm);
+    sliderContainer.addEventListener("scroll", () => {
+      const pageWidth = sliderContainer.clientWidth;
+      const scrollLeft = sliderContainer.scrollLeft;
+      const activeIndex = Math.round(scrollLeft / pageWidth);
 
-      if (isForm) {
+      if (activeIndex === 0) {
+        mobileNav.classList.remove("show-preview");
+        $("tabForm").classList.add("active");
+        $("tabPreview").classList.remove("active");
         requestAnimationFrame(() => {
           resizeCanvas();
           restoreSignature();
-          $("formPane").style.animation = 'none';
-          $("formPane").offsetHeight;
-          $("formPane").style.animation = 'fadeUp 0.4s ease forwards';
         });
       } else {
+        mobileNav.classList.add("show-preview");
+        $("tabPreview").classList.add("active");
+        $("tabForm").classList.remove("active");
         updatePreview();
-        requestAnimationFrame(fitMobilePaper);
-        $("previewPane").style.animation = 'none';
-        $("previewPane").offsetHeight;
-        $("previewPane").style.animation = 'fadeUp 0.4s ease forwards';
-        window.scrollTo({ top: 0, behavior: "smooth" });
+        requestAnimationFrame(fitMobilePaper); 
       }
-    }
+    });
 
-    /* ============================================================ */
-    /* JS: UPDATE PRATINJAU                                         */
-    /* ============================================================ */
     function updatePreview() {
       const map = {
         inputNama: "prevNama",
@@ -1868,9 +1913,6 @@
       $("prevTandaTangan").textContent = $("inputNama").value.trim().toLocaleUpperCase("id-ID") || "...";
     }
 
-    /* ============================================================ */
-    /* JS: INPUT FORM & TOMBOL CLEAR                                */
-    /* ============================================================ */
     document.querySelectorAll(".input-wrap input").forEach(input => {
       const clearBtn = input.parentElement.querySelector(".clear-input");
 
@@ -1897,20 +1939,15 @@
       syncClear();
     });
 
-    /* ============================================================ */
-    /* JS: PILIH TARIF / DAYA                                       */
-    /* ============================================================ */
     document.getElementById('tariffGrid').addEventListener('click', function(e) {
       const button = e.target.closest('.tariff');
       if (button && button.id !== 'btnCustomTarif') {
         vibrate(15);
         $("inputTarif").value = button.dataset.value;
-
         document.querySelectorAll(".tariff").forEach(item => {
           item.classList.remove("selected");
           item.setAttribute("aria-pressed", "false");
         });
-
         button.classList.add("selected");
         button.setAttribute("aria-pressed", "true");
         updatePreview();
@@ -1921,43 +1958,36 @@
       vibrate(10);
       $('inputCustomTarif').value = '';
       openModal('modalCustomTarif');
-      setTimeout(() => $('inputCustomTarif').focus(), 100);
+      setTimeout(() => {
+        $('inputCustomTarif').focus();
+      }, 100);
     }
 
     function simpanTarifBaru() {
       const nilaiBaru = $('inputCustomTarif').value.trim();
-
-      if (!nilaiBaru) { showToast("Tarif tidak boleh kosong!", true); return; }
-
+      if (!nilaiBaru) {
+        showToast("Tarif tidak boleh kosong!", true);
+        return;
+      }
       vibrate(15);
-
       const btnBaru = document.createElement('button');
       btnBaru.type = 'button';
       btnBaru.className = 'tariff selected';
       btnBaru.dataset.value = nilaiBaru + " VA";
       btnBaru.innerText = nilaiBaru;
-
-      const tombolLainnya = $('btnCustomTarif');
-      tombolLainnya.parentNode.insertBefore(btnBaru, tombolLainnya);
-
+      $('btnCustomTarif').parentNode.insertBefore(btnBaru, $('btnCustomTarif'));
       $("inputTarif").value = btnBaru.dataset.value;
       updatePreview();
 
       document.querySelectorAll(".tariff").forEach(item => {
-        if (item !== btnBaru) {
-          item.classList.remove("selected");
-          item.setAttribute("aria-pressed", "false");
-        }
+        if (item !== btnBaru) item.classList.remove("selected");
+        item.setAttribute("aria-pressed", "false");
       });
       btnBaru.setAttribute("aria-pressed", "true");
-
       closeModal('modalCustomTarif');
       showToast("Tarif berhasil ditambahkan");
     }
 
-    /* ============================================================ */
-    /* JS: TANGGAL OTOMATIS                                         */
-    /* ============================================================ */
     function setAutomaticDate() {
       const today = new Intl.DateTimeFormat("id-ID", {
         timeZone: "Asia/Jakarta",
@@ -1968,9 +1998,6 @@
       $("prevTanggal").textContent = "Bekasi, " + today;
     }
 
-    /* ============================================================ */
-    /* JS: MODAL                                                    */
-    /* ============================================================ */
     function openModal(id) {
       vibrate(10);
       $(id).classList.add("open");
@@ -1984,25 +2011,20 @@
       openModal('resetModal');
     }
 
-    /* ============================================================ */
-    /* JS: RESET DATA                                               */
-    /* ============================================================ */
     function confirmReset() {
       vibrate(30);
       closeModal('resetModal');
-
       document.querySelectorAll(".input-wrap input").forEach(input => {
         input.value = "";
         const clearBtn = input.parentElement.querySelector(".clear-input");
         if (clearBtn) clearBtn.classList.remove("visible");
       });
-
       $("inputTarif").value = "";
       document.querySelectorAll(".tariff").forEach(btn => {
         btn.classList.remove("selected");
         btn.setAttribute("aria-pressed", "false");
       });
-
+      
       const tarifCustom = document.querySelectorAll('#tariffGrid .tariff');
       tarifCustom.forEach(btn => {
         if (btn.id !== 'btnCustomTarif' && btn.dataset.value !== undefined) {
@@ -2011,24 +2033,19 @@
           }
         }
       });
-
       clearKtp();
-
       ctx.clearRect(0, 0, canvas.width, canvas.height);
       signatureDataUrl = "";
       signatureDirty = false;
+      updateSignClearVisibility();
       const ttdImg = $("prevTtd");
       ttdImg.removeAttribute("src");
       ttdImg.style.display = "none";
-
       updatePreview();
       showToast("Berhasil dihapus");
-      switchTab("form");
+      switchTab(0);
     }
 
-    /* ============================================================ */
-    /* JS: UPLOAD & CROP FOTO KTP                                   */
-    /* ============================================================ */
     $("uploadBox").addEventListener("click", event => {
       if (event.target.closest("#clearKtpBtn")) return;
       openModal("sourceModal");
@@ -2063,29 +2080,24 @@
     function initCrop(event) {
       const file = event.target.files && event.target.files[0];
       if (!file) return;
-
       if (!file.type.startsWith("image/")) {
         showToast("Pilih file gambar yang valid.", true);
         event.target.value = "";
         return;
       }
-
       if (file.size > 15 * 1024 * 1024) {
         showToast("Ukuran foto maksimal 15 MB.", true);
         event.target.value = "";
         return;
       }
-
       const reader = new FileReader();
       reader.onload = () => {
         $("imageToCrop").src = reader.result;
         openModal("cropModal");
-
         if (cropper) {
           cropper.destroy();
           cropper = null;
         }
-
         $("imageToCrop").onload = () => {
           cropper = new Cropper($("imageToCrop"), {
             aspectRatio: 1.585,
@@ -2109,7 +2121,6 @@
     function performCrop() {
       vibrate(15);
       if (!cropper) return;
-
       const cropped = cropper.getCroppedCanvas({
         width: 1000,
         height: Math.round(1000 / 1.585),
@@ -2117,22 +2128,20 @@
         imageSmoothingQuality: "high",
         fillColor: "#ffffff"
       });
-
-      if (!cropped) { showToast("Gagal memproses foto.", true); return; }
-
+      if (!cropped) {
+        showToast("Gagal memproses foto.", true);
+        return;
+      }
       ktpDataUrl = cropped.toDataURL("image/jpeg", 0.92);
-
       const output = document.createElement("img");
       output.src = ktpDataUrl;
       output.alt = "Foto KTP";
       output.className = "ktp-output";
-
       $("containerKtp").replaceChildren(output);
       $("ktpBoxPreview").src = ktpDataUrl;
       $("ktpBoxPreview").style.display = "block";
       $("uploadContent").style.display = "none";
       $("clearKtpBtn").style.display = "flex";
-
       closeModal("cropModal");
       cropper.destroy();
       cropper = null;
@@ -2161,22 +2170,24 @@
       $("inputGaleri").value = "";
     }
 
-    /* ============================================================ */
-    /* JS: TANDA TANGAN DIGITAL                                     */
-    /* ============================================================ */
     const canvas = $("signaturePad");
     const ctx = canvas.getContext("2d");
     let drawing = false;
     let lastPoint = null;
 
+    // Tombol (x) untuk tanda tangan
+    const signClearBtn = $("clearSignBtn");
+
+    function updateSignClearVisibility() {
+      signClearBtn.style.display = (signatureDirty && !!signatureDataUrl) ? "flex" : "none";
+    }
+
     function resizeCanvas() {
       const rect = canvas.getBoundingClientRect();
       if (!rect.width || !rect.height) return;
-
       const dpr = Math.max(1, window.devicePixelRatio || 1);
       const newWidth = Math.round(rect.width * dpr);
       const newHeight = Math.round(rect.height * dpr);
-
       if (canvas.width === newWidth && canvas.height === newHeight) return;
 
       let oldImage = null;
@@ -2186,7 +2197,6 @@
         oldImage.height = canvas.height;
         oldImage.getContext("2d").drawImage(canvas, 0, 0);
       }
-
       canvas.width = newWidth;
       canvas.height = newHeight;
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
@@ -2252,6 +2262,7 @@
       const ttdImg = $("prevTtd");
       ttdImg.src = signatureDataUrl;
       ttdImg.style.display = "block";
+      updateSignClearVisibility();
     }
 
     function restoreSignature() {
@@ -2266,6 +2277,7 @@
         ctx.drawImage(img, 0, 0, rect.width, rect.height);
         signatureDirty = true;
         $("prevTtd").style.display = "block";
+        updateSignClearVisibility();
       };
       img.src = signatureDataUrl;
     }
@@ -2278,46 +2290,36 @@
       const ttdImg = $("prevTtd");
       ttdImg.removeAttribute("src");
       ttdImg.style.display = "none";
+      updateSignClearVisibility();
     });
 
-    /* ============================================================ */
-    /* JS: EVENT WINDOW                                             */
-    /* ============================================================ */
     window.addEventListener("resize", () => {
       resizeCanvas();
       fitMobilePaper();
     });
 
-    window.addEventListener("orientationchange", () => setTimeout(() => {
-      resizeCanvas();
-      fitMobilePaper();
-    }, 150));
+    window.addEventListener("orientationchange", () => {
+      setTimeout(() => {
+        resizeCanvas();
+        fitMobilePaper();
+      }, 150);
+    });
 
-    /* ============================================================ */
-    /* JS: SIMPAN GAMBAR + KIRIM KE GOOGLE DRIVE                    */
-    /* ============================================================ */
     async function downloadImage() {
       vibrate(20);
-
       if (!validasiSebelumSimpan()) return;
-
       const button = $("downloadBtn");
       if (button.disabled) return;
-
       const originalText = button.innerHTML;
       button.disabled = true;
       button.innerHTML = "Menyiapkan...";
 
       try {
         updatePreview();
-
         if (document.fonts && document.fonts.ready) {
           await document.fonts.ready;
         }
-
         const paper = $("suratContainer");
-
-        // Proses CORS logo
         const logoImg = paper.querySelector(".letter-logo");
         if (logoImg && !logoImg.src.startsWith("data:")) {
           await new Promise(resolve => {
@@ -2338,10 +2340,8 @@
             tempImg.src = logoImg.src;
           });
         }
-
         const originalTransform = paper.style.transform;
         const originalMargin = paper.style.marginBottom;
-
         paper.style.transform = "scale(1)";
         paper.style.marginBottom = "0";
 
@@ -2354,7 +2354,6 @@
           imageTimeout: 10000,
           windowWidth: 794
         });
-
         paper.style.transform = originalTransform;
         paper.style.marginBottom = originalMargin;
 
@@ -2366,14 +2365,8 @@
         });
 
         const rawName = $("inputIdPel").value.trim() || "Surat_Pernyataan_PLN";
-        const safeName = rawName
-          .replace(/[<>:"/\\|?*\x00-\x1F]/g, "_")
-          .replace(/\s+/g, "_")
-          .slice(0, 80);
+        const safeName = rawName.replace(/[<>:"/\\|?*\x00-\x1F]/g, "_").replace(/\s+/g, "_").slice(0, 80);
 
-        // =====================================================
-        // 1. DOWNLOAD JPG KE PERANGKAT (backup lokal)
-        // =====================================================
         const url = URL.createObjectURL(blob);
         const link = document.createElement("a");
         link.href = url;
@@ -2383,13 +2376,8 @@
         link.remove();
         setTimeout(() => URL.revokeObjectURL(url), 1500);
 
-        // =====================================================
-        // 2. KIRIM KE GOOGLE DRIVE VIA APPS SCRIPT
-        // =====================================================
         button.innerHTML = "Mengirim ke Drive...";
-
         const suratBase64 = await blobToBase64(blob);
-
         const payload = {
           nama: $("inputNama").value.trim(),
           alamat: $("inputAlamat").value.trim(),
@@ -2403,21 +2391,14 @@
           ttdImage: signatureDataUrl,
           suratImage: suratBase64
         };
-
         await kirimKeDrive(payload);
-
-        // =====================================================
-        // 3. SUKSES
-        // =====================================================
         confetti({
           particleCount: 150,
           spread: 70,
           origin: { y: 0.6 },
           colors: ['#2563eb', '#10b981', '#f59e0b', '#ef4444']
         });
-
         showToast("Berhasil disimpan ke Drive");
-
       } catch (error) {
         console.error("Error simpan:", error);
         let pesan = "Gagal mengirim ke Drive.";
@@ -2433,9 +2414,6 @@
       }
     }
 
-    /* ============================================================ */
-    /* JS: EVENT GLOBAL                                             */
-    /* ============================================================ */
     document.querySelectorAll(".modal").forEach(modal => {
       modal.addEventListener("click", event => {
         if (event.target === modal) {
@@ -2454,11 +2432,9 @@
       }
     });
 
-    /* ============================================================ */
-    /* JS: INISIALISASI                                             */
-    /* ============================================================ */
     setAutomaticDate();
     updatePreview();
+    updateSignClearVisibility();
     requestAnimationFrame(() => {
       resizeCanvas();
       fitMobilePaper();
