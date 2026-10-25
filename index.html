@@ -11,8 +11,14 @@
   <!-- ============================================================ -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  
+  <!-- Font untuk UI Aplikasi -->
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   
+  <!-- Font Tinos untuk Kertas Surat (Resmi) -->
+  <link href="https://fonts.googleapis.com/css2?family=Tinos:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet">
+  
+  <!-- Library Pendukung (Cropper KTP & Pembuat PDF/Gambar) -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.6.2/cropper.min.css">
   <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.6.2/cropper.min.js"></script>
@@ -46,39 +52,43 @@
     }
 
     :root {
+      /* Warna Dasar Aplikasi */
       --blue: #0D5DA6;
       --blue-dark: #093E6F;
       --blue-light: #e6f0f9;
-      
       --green: #10b981;
       --green-dark: #059669;
       --green-light: #ecfdf5;
+      --red: #ef4444;
       
+      /* Warna Tema Terang (Light Mode) */
       --bg: #f3f6fb;
       --bg-card: #ffffff;
       --bg-input: #fbfcfe;
-      --bg-input-focus: #ffffff;
       --text: #172b4d;
       --muted: #718096;
-      --border: #e1e8f0;
+      --border: #cbd5e1; 
       
+      /* Ukuran Radius & Bayangan */
       --radius: 18px;
-      --shadow: 0 8px 24px rgba(13, 93, 166, 0.08);
+      --shadow-card: 0 8px 24px rgba(0, 0, 0, 0.12);
     }
 
+    /* Warna Tema Gelap (Dark Mode) */
     body.dark-mode {
       --bg: #0b1220;
       --bg-card: #1e293b;
       --bg-input: #1e293b;
-      --bg-input-focus: #1e293b;
       --text: #f1f5f9;
       --muted: #94a3b8;
-      --border: #334155;
-      --shadow: 0 10px 30px rgba(0, 0, 0, 0.4), 0 1px 3px rgba(0,0,0,0.3);
+      --border: rgba(255,255,255,0.2); 
+      --shadow-card: 0 8px 30px rgba(0, 0, 0, 0.6);
     }
 
+    /* Pengaturan Dasar Body */
     body {
-      background: #f3f6fb;
+      background: #f3f6fb; /* Fallback */
+      background: var(--bg);
       color: var(--text);
       font-family: 'Plus Jakarta Sans', Arial, sans-serif;
       font-size: 14px;
@@ -89,11 +99,7 @@
       transition: background-color 0.3s ease, color 0.3s ease;
     }
 
-    body.dark-mode {
-      background: #050a18;
-    }
-
-    /* ANIMASI TRANSISI SAAT GANTI TEMA */
+    /* Transisi Halus Saat Ganti Tema */
     @media (prefers-reduced-motion: no-preference) {
       body.theme-transition,
       body.theme-transition * {
@@ -115,14 +121,17 @@
       transition: background-color 0.3s ease;
     }
 
-    button, input { font: inherit; }
-    button:active { transform: scale(0.96); }
-
-
-    /* ============================================================ */
-    /* 3. CSS: TOP BAR & TOGGLE MODE                                */
-    /* ============================================================ */
+    button, input { 
+      font: inherit; 
+    }
     
+    button:active { 
+      transform: scale(0.96); 
+    }
+
+    /* ============================================================ */
+    /* 3. CSS: TOP BAR & TOGGLE MODE TEMA                           */
+    /* ============================================================ */
     .top-bar {
       display: flex;
       align-items: center;
@@ -137,54 +146,59 @@
       flex-shrink: 0;
     }
 
-    .theme-toggle-neu {
-      display: flex;
-      align-items: center;
-      cursor: pointer;
+    /* Tombol Saklar Tema (Switch) */
+    .theme-toggle-neu { 
+      display: flex; 
+      align-items: center; 
+      cursor: pointer; 
     }
-
-    .switch-neu {
-      position: relative;
-      display: inline-block;
+    
+    .switch-neu { 
+      position: relative; 
+      display: inline-block; 
       width: 105px; 
-      height: 28px;  
-      flex-shrink: 0;
+      height: 28px; 
+      flex-shrink: 0; 
     }
-
+    
     .switch-neu input { 
       opacity: 0; 
       width: 0; 
       height: 0; 
       position: absolute; 
     }
-
+    
     .slider-neu {
-      position: absolute;
-      top: 0; left: 0; right: 0; bottom: 0;
+      position: absolute; 
+      top: 0; 
+      left: 0; 
+      right: 0; 
+      bottom: 0;
       background-color: #e2e8f0; 
       border-radius: 30px;
       transition: background-color 0.4s ease, box-shadow 0.4s ease;
-      display: flex;
-      align-items: center;
+      display: flex; 
+      align-items: center; 
       justify-content: space-between;
       box-shadow: inset 2px 2px 5px rgba(0,0,0,0.1), inset -2px -2px 5px rgba(255,255,255,0.8);
     }
-
+    
     .switch-neu input:checked + .slider-neu { 
       background-color: #1e293b; 
       box-shadow: inset 3px 3px 6px rgba(0,0,0,0.5), inset -1px -1px 4px rgba(255,255,255,0.1);
     }
-
+    
+    /* Teks Dark Mode / Light Mode */
     .mode-text-neu {
       font-size: 9px; 
-      font-weight: 800;
-      white-space: nowrap;
+      font-weight: 800; 
+      white-space: nowrap; 
       pointer-events: none;
-      transition: opacity 0.3s ease, color 0.3s ease;
-      z-index: 1;
+      transition: opacity 0.3s ease, color 0.3s ease; 
+      z-index: 1; 
       letter-spacing: 0.5px;
-      position: absolute;
-      top: 50%;
+      position: absolute; 
+      top: 50%; 
       transform: translateY(-50%);
     }
     
@@ -193,341 +207,1291 @@
       opacity: 0; 
       left: 12px; 
     }
-
+    
     .mode-text-neu.light { 
       color: #94a3b8; 
       opacity: 1; 
       right: 12px; 
     }
-
-    .switch-neu input:checked + .slider-neu .mode-text-neu.light { opacity: 0; }
-    .switch-neu input:checked + .slider-neu .mode-text-neu.dark { opacity: 1; }
-
+    
+    .switch-neu input:checked + .slider-neu .mode-text-neu.light { 
+      opacity: 0; 
+    }
+    
+    .switch-neu input:checked + .slider-neu .mode-text-neu.dark { 
+      opacity: 1; 
+    }
+    
+    /* Ikon Lingkaran Matahari / Bulan */
     .thumb-neu {
-      position: absolute;
+      position: absolute; 
       height: 24px; 
-      width: 24px;
+      width: 24px; 
       left: 2px; 
-      top: 2px;  
-      background-color: #ffffff;
+      top: 2px;
+      background-color: #ffffff; 
       transition: transform 0.4s cubic-bezier(0.4, 0.0, 0.2, 1), box-shadow 0.4s ease;
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
+      border-radius: 50%; 
+      display: flex; 
+      align-items: center; 
       justify-content: center;
-      box-shadow: 1px 1px 4px rgba(0, 0, 0, 0.2), -1px -1px 3px rgba(255,255,255,0.8);
+      box-shadow: 1px 1px 4px rgba(0, 0, 0, 0.2), -1px -1px 3px rgba(255,255,255,0.8); 
       z-index: 2;
     }
-
+    
     .switch-neu input:checked + .slider-neu .thumb-neu {
       transform: translateX(77px); 
       box-shadow: 2px 2px 6px rgba(0, 0, 0, 0.4), -1px -1px 3px rgba(255,255,255,0.1);
     }
-
-    .thumb-neu svg {
-      position: absolute;
-      width: 13px;
-      height: 13px;
-      transition: opacity 0.3s ease, transform 0.3s ease;
+    
+    .thumb-neu svg { 
+      position: absolute; 
+      width: 13px; 
+      height: 13px; 
+      transition: opacity 0.3s ease, transform 0.3s ease; 
     }
-
+    
     .thumb-neu .icon-sun-neu { 
       color: #94a3b8; 
       opacity: 1; 
       transform: rotate(0deg) scale(1); 
     }
+    
     .thumb-neu .icon-moon-neu { 
       color: #94a3b8; 
       opacity: 0; 
       transform: rotate(-90deg) scale(0.5); 
     }
-
+    
     .switch-neu input:checked + .slider-neu .thumb-neu .icon-sun-neu { 
       opacity: 0; 
       transform: rotate(90deg) scale(0.5); 
     }
+    
     .switch-neu input:checked + .slider-neu .thumb-neu .icon-moon-neu { 
       opacity: 1; 
       transform: rotate(0deg) scale(1); 
     }
 
-
     /* ============================================================ */
     /* 4. CSS: PROFIL KREATOR DI TOP BAR                            */
     /* ============================================================ */
+    .top-bar-profile { 
+      display: flex; 
+      align-items: center; 
+      gap: 8px; 
+      flex-shrink: 0; 
+      margin-left: auto; 
+    }
     
-    .top-bar-profile { display: flex; align-items: center; gap: 8px; flex-shrink: 0; margin-left: auto; }
-    .top-bar-text { display: flex; flex-direction: column; align-items: flex-end; text-align: right; line-height: 1.15; }
-    .top-bar-role { font-size: 8px; font-weight: 600; color: #a8d1ff; letter-spacing: 0.5px; }
-    .top-bar-name { font-size: 11px; font-weight: 800; color: #ffffff; white-space: nowrap; margin-top: 1px; }
-    .top-bar-avatar { width: 32px; height: 32px; border-radius: 50%; object-fit: cover; border: 2px solid #ffffff; box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2); }
-
-    /* ============================================================ */
-    /* 5. CSS: HEADER BIRU & NAVIGASI TAB                           */
-    /* ============================================================ */
+    .top-bar-text { 
+      display: flex; 
+      flex-direction: column; 
+      align-items: flex-end; 
+      text-align: right; 
+      line-height: 1.15; 
+    }
     
-    .sticky-header { position: relative; flex-shrink: 0; background: var(--bg); }
-
-    .topbar-biru {
-      background: linear-gradient(115deg, #093E6F, #0D5DA6 65%, #1A72C4);
-      color: #fff;
-      padding: 25px 24px 45px;
+    .top-bar-role { 
+      font-size: 8px; 
+      font-weight: 600; 
+      color: #a8d1ff; 
+      letter-spacing: 0.5px; 
+    }
+    
+    .top-bar-name { 
+      font-size: 11px; 
+      font-weight: 800; 
+      color: #ffffff; 
+      white-space: nowrap; 
+      margin-top: 1px; 
+    }
+    
+    .top-bar-avatar { 
+      width: 32px; 
+      height: 32px; 
+      border-radius: 50%; 
+      object-fit: cover; 
+      border: 2px solid #ffffff; 
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2); 
     }
 
-    .brand { display: flex; align-items: center; justify-content: space-between; gap: 15px; }
-    .brand-mark { display: flex; align-items: center; justify-content: center; height: 65px; flex-shrink: 0; }
-    .brand-mark img { height: 150%; width: auto; object-fit: contain; display: block; border-radius: 6px; }
-    .brand-text { text-align: right; flex: 1; display: flex; flex-direction: column; align-items: flex-end; }
+    /* ============================================================ */
+    /* 5. CSS: HEADER BIRU BESAR & TAB NAVIGASI                     */
+    /* ============================================================ */
+    .sticky-header { 
+      position: relative; 
+      flex-shrink: 0; 
+      background: var(--bg); 
+    }
+    
+    .topbar-biru { 
+      background: linear-gradient(115deg, #093E6F, #0D5DA6 65%, #1A72C4); 
+      color: #fff; 
+      padding: 25px 24px 45px; 
+    }
+    
+    .brand { 
+      display: flex; 
+      align-items: center; 
+      justify-content: space-between; 
+      gap: 15px; 
+    }
+    
+    .brand-mark { 
+      display: flex; 
+      align-items: center; 
+      justify-content: center; 
+      height: 65px; 
+      flex-shrink: 0; 
+    }
+    
+    .brand-mark img { 
+      height: 150%; 
+      width: auto; 
+      object-fit: contain; 
+      display: block; 
+      border-radius: 6px; 
+    }
+    
+    .brand-text { 
+      text-align: right; 
+      flex: 1; 
+      display: flex; 
+      flex-direction: column; 
+      align-items: flex-end; 
+    }
     
     .brand-title { 
-      font-size: clamp(22px, 4vw, 32px);
-      font-weight: 800; color: #fff; margin: 0; line-height: 1.1; letter-spacing: 0.5px; 
+      font-size: clamp(22px, 4vw, 32px); 
+      font-weight: 800; 
+      color: #fff; 
+      margin: 0; 
+      line-height: 1.1; 
+      letter-spacing: 0.5px; 
       text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2); 
     }
     
-    .brand-sub { font-size: 10px; font-weight: 600; color: #a8d1ff; margin: 5px 0 10px; letter-spacing: 1.2px; text-transform: uppercase; }
-
-    .user-badge { display: inline-flex; align-items: center; gap: 8px; background: rgba(255, 255, 255, 0.15); border: 1px solid rgba(255, 255, 255, 0.25); padding: 6px 12px; border-radius: 50px; backdrop-filter: blur(4px); }
-    .user-badge svg { width: 16px; height: 16px; stroke: #a8d1ff; stroke-width: 2.5; flex-shrink: 0; }
-    .user-info .name { font-size: 11px; font-weight: 700; color: #fff; letter-spacing: 0.5px; }
-
-    .mobile-nav { display: grid; grid-template-columns: 1fr 1fr; background: var(--bg-card); padding: 4px; border-radius: 14px; position: relative; box-shadow: var(--shadow); margin: -20px 10px 16px 10px; }
-    .mobile-nav::before { content: ''; position: absolute; top: 4px; bottom: 4px; left: 4px; width: calc(50% - 4px); background: var(--blue); border-radius: 10px; transition: transform 0.4s cubic-bezier(0.25, 1, 0.5, 1); z-index: 1; }
-    .mobile-nav.show-preview::before { transform: translateX(100%); }
-    .mobile-nav button { border-radius: 10px; padding: 12px 6px; background: transparent; color: var(--muted); font-size: 13px; font-weight: 800; position: relative; z-index: 2; transition: color 0.3s ease; }
-    .mobile-nav button.active { color: #ffffff; }
-
-
-    /* ============================================================ */
-    /* 6. CSS: AREA KONTEN & KARTU FORM                             */
-    /* ============================================================ */
+    .brand-sub { 
+      font-size: 10px; 
+      font-weight: 600; 
+      color: #a8d1ff; 
+      margin: 5px 0 10px; 
+      letter-spacing: 1.2px; 
+      text-transform: uppercase; 
+    }
     
-    .content-area { padding: 0 10px 20px 10px; }
-    .content-page { display: none; animation: fadeIn 0.3s ease; }
-    .content-page.active { display: block; }
-    @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-
-    .panel { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius); box-shadow: var(--shadow); overflow: hidden; margin-bottom: 18px; }
-    .panel-head { display: flex; align-items: center; gap: 12px; padding: 19px 20px 15px; border-bottom: 1px solid var(--border); }
-    .panel-icon { width: 42px; height: 42px; flex-shrink: 0; border-radius: 12px; background: var(--bg-input); display: grid; place-items: center; border: 1.5px solid var(--border); }
-    .panel-icon svg { width: 28px; height: 28px; filter: drop-shadow(0 2px 2px rgba(0, 0, 0, 0.05)); }
-    .panel-icon .ikon-pln { width: 26px !important; height: 26px !important; }
-    .panel-title { font-size: 13px; font-weight: 800; }
-    .panel-desc { font-size: 11px; color: var(--muted); margin-top: 4px; line-height: 1.5; }
-    .panel-body { padding: 19px 20px 21px; }
-
-    .field { margin-bottom: 17px; }
-    .field:last-child { margin-bottom: 0; }
-    .field label { display: block; font-size: 11px; font-weight: 700; color: var(--text); margin-bottom: 8px; }
-    .input-wrap { position: relative; }
-    .input-wrap input { width: 100%; height: 45px; border: 2px solid var(--border); background: var(--bg-input); border-radius: 11px; padding: 0 42px 0 13px; color: var(--text); font-weight: 600; transition: all 0.3s ease; }
-    .input-wrap input:not([type="tel"]) { text-transform: uppercase; }
-    .input-wrap input::placeholder { color: var(--muted); text-transform: none; font-weight: 400; }
-    .input-wrap input:focus { outline: none; border-color: var(--blue); background: var(--bg-input-focus); box-shadow: 0 0 0 2.5px var(--blue-light); }
-
-    .clear-input { position: absolute; right: 9px; top: 50%; transform: translateY(-50%); width: 26px; height: 26px; border-radius: 50%; color: var(--muted); background: var(--bg); display: none; place-items: center; transition: background-color 0.2s, color 0.2s; }
-    .clear-input svg { width: 14px; height: 14px; stroke-width: 3; }
-    .clear-input.visible { display: grid; }
-    .clear-input:hover { background: var(--border); color: var(--text); }
-    .clear-input:active { transform: translateY(-50%) !important; }
-
-    .tariff-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; }
-    .tariff { min-height: 43px; border: 1.5px solid var(--border); background: var(--bg-card); border-radius: 10px; color: var(--muted); font-size: 10px; font-weight: 700; padding: 8px 4px; transition: all 0.2s ease; }
-    .tariff:hover { border-color: var(--blue); background: var(--bg-input); }
-    .tariff.selected { color: var(--blue); background: var(--blue-light); border: 1.5px solid var(--blue); box-shadow: inset 0 0 0 1px var(--blue); }
-
-
-    /* ============================================================ */
-    /* 7. CSS: UPLOAD BOX (KTP & TANDA TANGAN)                      */
-    /* ============================================================ */
+    .user-badge { 
+      display: inline-flex; 
+      align-items: center; 
+      gap: 8px; 
+      background: rgba(255, 255, 255, 0.15); 
+      border: 1px solid rgba(255, 255, 255, 0.25); 
+      padding: 6px 12px; 
+      border-radius: 50px; 
+      backdrop-filter: blur(4px); 
+    }
     
-    .upload-box { position: relative; min-height: 140px; border: 1.5px dashed var(--border); background: var(--bg-input); border-radius: 13px; display: flex; justify-content: center; align-items: center; text-align: center; padding: 20px; cursor: pointer; overflow: hidden; transition: 0.2s; }
-    .upload-box:hover { border-color: var(--blue); background: var(--bg-input-focus); }
-    .upload-icon { margin-bottom: 8px; display: flex; justify-content: center; align-items: center; }
-    .upload-icon svg { width: 45px; height: 45px; margin-top: -10px; }
-    .upload-icon-emoji { font-size: 38px; line-height: 1; margin-top: -5px; margin-bottom: 5px; }
-    .upload-title { font-weight: 500; font-size: 10px; color: var(--muted); margin-top: -10px; }
-    .upload-preview { display: none; max-width: 100%; max-height: 145px; object-fit: contain; border-radius: 8px; }
+    .user-badge svg { 
+      width: 16px; 
+      height: 16px; 
+      stroke: #a8d1ff; 
+      stroke-width: 2.5; 
+      flex-shrink: 0; 
+    }
     
-    #signatureBox { min-height: 100px; flex-direction: column; }
-    #signaturePreview { display: none; width: 80%; max-height: 80px; object-fit: contain; }
-    #signatureContent { display: flex; flex-direction: column; align-items: center; justify-content: center; width: 100%; height: 100%; }
-
-    .corner-clear { display: none; position: absolute; right: 8px; top: 8px; z-index: 3; width: 30px; height: 30px; border-radius: 50%; background: #ef4444; color: #fff; align-items: center; justify-content: center; }
-    .corner-clear svg { width: 16px; height: 16px; stroke-width: 3; }
-
-
-    /* ============================================================ */
-    /* 8. CSS: TOMBOL UTAMA (Primary/Secondary)                     */
-    /* ============================================================ */
-    
-    .primary, .secondary { min-height: 46px; padding: 12px 16px; border-radius: 11px; font-size: 12px; font-weight: 800; }
-    .primary { color: #fff; background: var(--blue); border: 1px solid var(--blue); box-shadow: 0 3px 8px rgba(13, 93, 166, 0.2); }
-    .primary:hover { background: var(--blue-dark); }
-    
-    #downloadBtn { background: var(--green) !important; border-color: var(--green) !important; display: flex; align-items: center; justify-content: center; gap: 8px; }
-    #downloadBtn:hover { background: var(--green-dark) !important; }
-    #downloadBtn svg { width: 18px; height: 18px; stroke-width: 2.5; }
-
-    .secondary { color: var(--muted); background: var(--bg); border: 1px solid var(--border); }
-    .secondary:hover { background: var(--border); }
-
-    .panel-footer { display: flex; gap: 10px; padding: 16px 20px; background: var(--bg-input); border-top: 1px solid var(--border); }
-
-
-    /* ============================================================ */
-    /* 9. CSS: PRATINJAU SURAT & KERTAS A4                          */
-    /* ============================================================ */
-    
-    .preview-panel { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius); box-shadow: var(--shadow); overflow: hidden; margin-bottom: 18px; width: 100%; }
-    .preview-top { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 19px 20px; border-bottom: 1px solid var(--border); }
-    .preview-top h2 { font-size: 13px; margin: 0; font-weight: 800; }
-
-    .paper-area { padding: 20px 10px; background: #e2e8f0; display: flex; justify-content: center; align-items: flex-start; overflow: hidden; width: 100%; transition: background-color 0.3s ease; }
-    body.dark-mode .paper-area { background: #0f172a; }
-
-    .paper-scaler { transform-origin: top center; transition: transform 0.2s ease-out; }
-
-    .paper {
-      width: 794px; min-width: 794px; max-width: 794px; flex-shrink: 0; min-height: 1123px;
-      padding: 60px 70px; margin: 0 auto; background: #fff; color: #111;
-      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
-      font-family: Arial, Helvetica, sans-serif; font-size: 14px; line-height: 1.5; border-radius: 2px;
+    .user-info .name { 
+      font-size: 11px; 
+      font-weight: 700; 
+      color: #fff; 
+      letter-spacing: 0.5px; 
     }
 
-    .letter-head { display: flex; align-items: center; gap: 15px; padding-bottom: 12px; border-bottom: 2px solid #222; }
-    .letter-logo { width: 75px; height: auto; object-fit: contain; }
-    .letter-org { font-size: 15px; line-height: 1.6; }
-    .letter-org strong { font-size: 15px; }
-    .letter-title { text-align: center; font-weight: bold; font-size: 17px; margin: 23px 0; }
-
-    .data-grid { display: grid; grid-template-columns: 28% 4% 68%; row-gap: 4px; margin: 12px 0; }
-    .data-label, .data-colon, .data-value { line-height: 1.5; font-size: 14px; }
-    .data-value { word-break: break-word; }
-
-    .paper p { margin: 12px 0; }
-    .paper ul { padding-left: 21px; margin: 7px 0; line-height: 1.55; }
-    .paper li { padding-left: 2px; margin-bottom: 5px; }
-
-    .signature-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-top: 30px; }
-    .ktp-col { width: 100%; }
-    .ktp-output { width: 260px; max-width: 100%; height: auto; display: block; border: 1px solid #bbb; }
-    .sign-col { text-align: center; font-size: 14px; }
+    /* Pilihan Tab (Form Surat & Draf Surat) */
+    .mobile-nav { 
+      display: grid; 
+      grid-template-columns: 1fr 1fr; 
+      background: var(--bg-card); 
+      padding: 4px; 
+      border-radius: 14px; 
+      position: relative; 
+      box-shadow: var(--shadow-card); 
+      border: none; 
+      margin: -20px 10px 16px 10px; 
+      z-index: 10; 
+    }
     
-    .paper-ttd { height: 110px; display: flex; align-items: center; justify-content: center; margin: 4px 0; }
-    .paper-ttd img { width: 100%; max-width: 280px; height: 100%; object-fit: contain; display: none; }
-    .signature-name { font-weight: bold; text-align: center; }
+    .mobile-nav::before { 
+      content: ''; 
+      position: absolute; 
+      top: 4px; 
+      bottom: 4px; 
+      left: 4px; 
+      width: calc(50% - 4px); 
+      background: var(--blue); 
+      border-radius: 10px; 
+      transition: transform 0.4s cubic-bezier(0.25, 1, 0.5, 1); 
+      z-index: 1; 
+    }
+    
+    .mobile-nav.show-preview::before { 
+      transform: translateX(100%); 
+    }
+    
+    .mobile-nav button { 
+      border-radius: 10px; 
+      padding: 12px 6px; 
+      background: transparent; 
+      color: var(--muted); 
+      font-size: 13px; 
+      font-weight: 800; 
+      position: relative; 
+      z-index: 2; 
+      transition: color 0.3s ease; 
+    }
+    
+    .mobile-nav button.active { 
+      color: #ffffff; 
+    }
 
-    .preview-actions { display: flex; gap: 10px; padding: 16px 20px 20px; background: var(--bg-input); border-top: 1px solid var(--border); }
-    .preview-actions .primary { flex: 1; }
-    .preview-note { padding: 0 20px 18px; color: var(--muted); font-size: 10px; line-height: 1.6; background: var(--bg-input); }
+    /* ============================================================ */
+    /* 6. CSS: AREA KONTEN & KARTU FORM (INPUT DATA)                */
+    /* ============================================================ */
+    .content-area { 
+      padding: 0 10px 20px 10px; 
+    }
+    
+    .content-page { 
+      display: none; 
+    }
+    
+    .content-page.active { 
+      display: block; 
+    }
+    
+    .panel { 
+      background: var(--bg-card); 
+      border: none; 
+      border-radius: var(--radius); 
+      box-shadow: var(--shadow-card); 
+      overflow: hidden; 
+      margin-bottom: 18px; 
+    }
+    
+    .panel-head { 
+      display: flex; 
+      align-items: center; 
+      gap: 12px; 
+      padding: 19px 20px 15px; 
+      border-bottom: 1px solid var(--border); 
+    }
+    
+    .panel-icon { 
+      width: 42px; 
+      height: 42px; 
+      flex-shrink: 0; 
+      border-radius: 12px; 
+      background: var(--bg-input); 
+      display: grid; 
+      place-items: center; 
+      border: 1.5px solid var(--border); 
+    }
+    
+    .panel-icon svg { 
+      width: 28px; 
+      height: 28px; 
+      filter: drop-shadow(0 2px 2px rgba(0, 0, 0, 0.05)); 
+    }
+    
+    .panel-icon .ikon-pln { 
+      width: 26px !important; 
+      height: 26px !important; 
+    }
+    
+    .panel-title { 
+      font-size: 13px; 
+      font-weight: 800; 
+    }
+    
+    .panel-desc { 
+      font-size: 11px; 
+      color: var(--muted); 
+      margin-top: 4px; 
+      line-height: 1.5; 
+    }
+    
+    .panel-body { 
+      padding: 19px 20px 21px; 
+    }
 
+    /* Pengaturan Kotak Input Teks */
+    .field { 
+      margin-bottom: 17px; 
+    }
+    
+    .field:last-child { 
+      margin-bottom: 0; 
+    }
+    
+    .field label { 
+      display: block; 
+      font-size: 11px; 
+      font-weight: 700; 
+      color: var(--text); 
+      margin-bottom: 8px; 
+    }
+    
+    .input-wrap { 
+      position: relative; 
+    }
+    
+    .input-wrap input { 
+      width: 100%; 
+      height: 45px; 
+      border: 1.5px solid var(--border); 
+      background: var(--bg-input); 
+      border-radius: 11px; 
+      padding: 0 42px 0 13px; 
+      color: var(--text); 
+      font-weight: 600; 
+      transition: all 0.3s ease; 
+      box-shadow: none; 
+    }
+    
+    .input-wrap input:not([type="tel"]) { 
+      text-transform: uppercase; 
+    }
+    
+    .input-wrap input::placeholder { 
+      color: var(--muted); 
+      text-transform: none; 
+      font-weight: 400; 
+    }
+    
+    .input-wrap input:focus { 
+      outline: none; 
+      border-color: var(--blue); 
+      background: var(--bg-input); 
+      box-shadow: none; 
+    }
+    
+    body.dark-mode .input-wrap input:focus { 
+      border-color: #ffffff; 
+    }
+
+    /* Validasi Input Error (Merah) */
+    .input-wrap input.input-error { 
+      border-color: var(--red) !important; 
+      background: rgba(239, 68, 68, 0.05) !important; 
+      box-shadow: none !important; 
+    }
+
+    /* Tombol Silang (X) di dalam Input */
+    .clear-input { 
+      position: absolute; 
+      right: 9px; 
+      top: 50%; 
+      transform: translateY(-50%); 
+      width: 26px; 
+      height: 26px; 
+      border-radius: 50%; 
+      color: var(--muted); 
+      background: var(--bg); 
+      display: none; 
+      place-items: center; 
+      transition: background-color 0.2s, color 0.2s; 
+    }
+    
+    .clear-input svg { 
+      width: 14px; 
+      height: 14px; 
+      stroke-width: 3; 
+    }
+    
+    .clear-input.visible { 
+      display: grid; 
+    }
+    
+    .clear-input:hover { 
+      background: var(--border); 
+      color: var(--text); 
+    }
+    
+    .clear-input:active { 
+      transform: translateY(-50%) !important; 
+    }
+
+    /* Kotak Pilihan Tarif / Daya */
+    .tariff-grid { 
+      display: grid; 
+      grid-template-columns: repeat(3, minmax(0, 1fr)); 
+      gap: 8px; 
+    }
+    
+    .tariff { 
+      min-height: 43px; 
+      border: 1.5px solid var(--border); 
+      background: var(--bg-card); 
+      border-radius: 10px; 
+      color: var(--muted); 
+      font-size: 10px; 
+      font-weight: 700; 
+      padding: 8px 4px; 
+      transition: all 0.2s ease; 
+    }
+    
+    .tariff:hover { 
+      border-color: var(--blue); 
+      background: var(--bg-input); 
+    }
+    
+    .tariff.selected { 
+      color: var(--blue); 
+      background: var(--blue-light); 
+      border: 1.5px solid var(--blue); 
+    }
+
+    /* ============================================================ */
+    /* 7. CSS: UPLOAD BOX (FOTO KTP & TANDA TANGAN)                 */
+    /* ============================================================ */
+    .upload-box { 
+      position: relative; 
+      min-height: 140px; 
+      border: 1.5px dashed var(--border); 
+      background: var(--bg-input); 
+      border-radius: 13px; 
+      display: flex; 
+      justify-content: center; 
+      align-items: center; 
+      text-align: center; 
+      padding: 20px; 
+      cursor: pointer; 
+      overflow: hidden; 
+      transition: 0.2s; 
+    }
+    
+    .upload-box:hover { 
+      border-color: var(--blue); 
+      background: var(--bg-input); 
+    }
+    
+    .upload-box.upload-error { 
+      border-color: var(--red) !important; 
+      background: rgba(239, 68, 68, 0.05) !important; 
+    }
+    
+    .upload-icon { 
+      margin-bottom: 8px; 
+      display: flex; 
+      justify-content: center; 
+      align-items: center; 
+    }
+    
+    .upload-icon svg { 
+      width: 40px; 
+      height: 40px; 
+      margin-top: -10px; 
+    }
+    
+    .upload-icon-emoji { 
+      font-size: 35px; 
+      line-height: 1; 
+      margin-top: -5px; 
+      margin-bottom: 5px; 
+    }
+    
+    .upload-title { 
+      font-weight: 500; 
+      font-size: 10px; 
+      color: var(--muted); 
+      margin-top: -10px; 
+    }
+    
+    .upload-preview { 
+      display: none; 
+      max-width: 100%; 
+      max-height: 145px; 
+      object-fit: contain; 
+      border-radius: 8px; 
+    }
+    
+    #signatureBox { 
+      min-height: 100px; 
+      flex-direction: column; 
+    }
+    
+    #signaturePreview { 
+      display: none; 
+      width: 80%; 
+      max-height: 80px; 
+      object-fit: contain; 
+    }
+    
+    #signatureContent { 
+      display: flex; 
+      flex-direction: column; 
+      align-items: center; 
+      justify-content: center; 
+      width: 100%; 
+      height: 100%; 
+    }
+
+    /* Tombol Silang Merah di Pojok Kotak Upload */
+    .corner-clear { 
+      display: none; 
+      position: absolute; 
+      right: 8px; 
+      top: 8px; 
+      z-index: 3; 
+      width: 30px; 
+      height: 30px; 
+      border-radius: 50%; 
+      background: #ef4444; 
+      color: #fff; 
+      align-items: center; 
+      justify-content: center; 
+    }
+    
+    .corner-clear svg { 
+      width: 16px; 
+      height: 16px; 
+      stroke-width: 3; 
+    }
+
+    /* ============================================================ */
+    /* 8. CSS: TOMBOL AKSI UTAMA                                    */
+    /* ============================================================ */
+    .primary, 
+    .secondary { 
+      min-height: 46px; 
+      padding: 12px 16px; 
+      border-radius: 11px; 
+      font-size: 12px; 
+      font-weight: 800; 
+    }
+    
+    .primary { 
+      color: #fff; 
+      background: var(--blue); 
+      border: 1px solid var(--blue); 
+      box-shadow: 0 3px 8px rgba(13, 93, 166, 0.2); 
+    }
+    
+    .primary:hover { 
+      background: var(--blue-dark); 
+    }
+    
+    #downloadBtn { 
+      background: var(--green) !important; 
+      border-color: var(--green) !important; 
+      display: flex; 
+      align-items: center; 
+      justify-content: center; 
+      gap: 8px; 
+    }
+    
+    #downloadBtn:hover { 
+      background: var(--green-dark) !important; 
+    }
+    
+    #downloadBtn svg { 
+      width: 18px; 
+      height: 18px; 
+      stroke-width: 2.5; 
+    }
+
+    .secondary { 
+      color: var(--muted); 
+      background: var(--bg); 
+      border: 1px solid var(--border); 
+    }
+    
+    .secondary:hover { 
+      background: var(--border); 
+    }
+    
+    .panel-footer { 
+      display: flex; 
+      gap: 10px; 
+      padding: 16px 20px; 
+      background: var(--bg-input); 
+      border-top: 1px solid var(--border); 
+    }
+
+    /* ============================================================ */
+    /* 9. CSS: PRATINJAU SURAT (KERTAS A4 & FONT RESMI)             */
+    /* ============================================================ */
+    .preview-panel { 
+      background: var(--bg-card); 
+      border: 1px solid var(--border); 
+      border-radius: var(--radius); 
+      box-shadow: var(--shadow-card); 
+      overflow: hidden; 
+      margin-bottom: 18px; 
+      width: 100%; 
+    }
+    
+    .preview-top { 
+      display: flex; 
+      align-items: center; 
+      justify-content: space-between; 
+      gap: 12px; 
+      padding: 19px 20px; 
+      border-bottom: 1px solid var(--border); 
+    }
+    
+    .preview-top h2 { 
+      font-size: 13px; 
+      margin: 0; 
+      font-weight: 800; 
+    }
+
+    /* Indikator Status Kelengkapan */
+    .status-indicator { 
+      display: flex; 
+      align-items: center; 
+      font-size: 10px; 
+      font-weight: 600; 
+      line-height: 1; 
+      padding: 0; 
+      background: transparent; 
+      border: none; 
+    }
+    
+    .status-indicator.merah .status-text { 
+      color: var(--red); 
+    }
+    
+    .status-indicator.hijau .status-text { 
+      color: var(--green); 
+    }
+
+    /* Pembungkus Kertas Skala Otomatis */
+    .paper-area { 
+      padding: 20px 10px; 
+      background: #e2e8f0; 
+      display: flex; 
+      justify-content: center; 
+      align-items: flex-start; 
+      overflow: hidden; 
+      width: 100%; 
+      transition: background-color 0.3s ease; 
+    }
+    
+    body.dark-mode .paper-area { 
+      background: #0f172a; 
+    }
+    
+    .paper-scaler { 
+      transform-origin: top center; 
+      transition: transform 0.2s ease-out; 
+    }
+
+    /* Ukuran Kertas Resmi A4 */
+    .paper {
+      width: 794px; 
+      min-width: 794px; 
+      max-width: 794px; 
+      flex-shrink: 0; 
+      min-height: 1123px;
+      padding: 60px 70px; 
+      margin: 0 auto; 
+      background: #fff; 
+      
+      /* Pemaksaan Warna Hitam Pekat */
+      color: #000000; 
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+      
+      /* Pemaksaan Font Tinos (Times New Roman) */
+      font-family: 'Tinos', 'Times New Roman', serif !important; 
+      font-size: 14px; 
+      line-height: 1.5; 
+      border-radius: 2px;
+    }
+
+    /* Header Surat Kertas */
+    .letter-head { 
+      display: flex; 
+      align-items: center; 
+      gap: 15px; 
+      padding-bottom: 12px; 
+      border-bottom: 2px solid #000; 
+    }
+    
+    .letter-logo { 
+      width: 75px; 
+      height: auto; 
+      object-fit: contain; 
+    }
+    
+    .letter-org { 
+      font-size: 15px; 
+      line-height: 1.6; 
+    }
+    
+    .letter-org strong { 
+      font-size: 15px; 
+    }
+    
+    .letter-title { 
+      text-align: center; 
+      font-weight: bold; 
+      font-size: 17px; 
+      margin: 23px 0; 
+    }
+
+    /* Tata Letak Data Surat */
+    .data-grid { 
+      display: grid; 
+      grid-template-columns: 28% 4% 68%; 
+      row-gap: 4px; 
+      margin: 12px 0; 
+    }
+    
+    .data-label, 
+    .data-colon, 
+    .data-value { 
+      line-height: 1.5; 
+      font-size: 14px; 
+    }
+    
+    .data-value { 
+      word-break: break-word; 
+    }
+
+    /* KUNCI PAKSA KE TINOS DAN HITAM PEKAT UNTUK SEMUA ISI KERTAS */
+    .paper, .paper * {
+      font-family: 'Tinos', 'Times New Roman', serif !important;
+      color: #000000 !important; 
+      letter-spacing: normal !important;
+      word-spacing: normal !important;
+      text-rendering: optimizeLegibility;
+    }
+
+    .paper p { 
+      margin: 12px 0; 
+    }
+    
+    .paper ul { 
+      padding-left: 21px; 
+      margin: 7px 0; 
+      line-height: 1.55; 
+    }
+    
+    .paper li { 
+      padding-left: 2px; 
+      margin-bottom: 5px; 
+    }
+
+    /* Grid Area Tanda Tangan & KTP */
+    .signature-grid { 
+      display: grid; 
+      grid-template-columns: 1fr 1fr; 
+      gap: 20px; 
+      margin-top: 30px; 
+    }
+    
+    .ktp-col { 
+      width: 100%; 
+    }
+    
+    .ktp-output { 
+      width: 260px; 
+      max-width: 100%; 
+      height: auto; 
+      display: block; 
+      border: 1px solid #bbb; 
+    }
+    
+    .sign-col { 
+      text-align: center; 
+      font-size: 14px; 
+    }
+    
+    .paper-ttd { 
+      height: 110px; 
+      display: flex; 
+      align-items: center; 
+      justify-content: center; 
+      margin: 4px 0; 
+    }
+    
+    .paper-ttd img { 
+      width: 100%; 
+      max-width: 280px; 
+      height: 100%; 
+      object-fit: contain; 
+      display: none; 
+    }
+    
+    .signature-name { 
+      font-weight: bold; 
+      text-align: center; 
+    }
+
+    /* Catatan Bawah Pratinjau */
+    .preview-actions { 
+      display: flex; 
+      gap: 10px; 
+      padding: 16px 20px 20px; 
+      background: var(--bg-input); 
+      border-top: 1px solid var(--border); 
+    }
+    
+    .preview-actions .primary { 
+      flex: 1; 
+    }
+    
+    .preview-note { 
+      padding: 0 20px 18px; 
+      color: var(--muted); 
+      font-size: 10px; 
+      line-height: 1.6; 
+      background: var(--bg-input); 
+    }
 
     /* ============================================================ */
     /* 10. CSS: MODAL (POPUP) & TOAST (NOTIFIKASI)                  */
     /* ============================================================ */
+    .modal { 
+      display: none; 
+      position: fixed; 
+      inset: 0; 
+      z-index: 1000; 
+      background: rgba(15, 23, 42, 0.6); 
+      backdrop-filter: blur(5px); 
+      align-items: center; 
+      justify-content: center; 
+      padding: 20px; 
+    }
     
-    .modal { display: none; position: fixed; inset: 0; z-index: 1000; background: rgba(15, 23, 42, 0.6); backdrop-filter: blur(5px); align-items: center; justify-content: center; padding: 20px; }
-    .modal.open { display: flex; }
+    .modal.open { 
+      display: flex; 
+    }
     
-    .modal-card { position: relative; width: 100%; max-width: 420px; max-height: 90vh; overflow: auto; background: var(--bg-card); border-radius: 24px; padding: 32px 24px; box-shadow: 0 25px 80px rgba(0, 0, 0, 0.2); animation: popIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards; }
-    @keyframes popIn { from { transform: scale(0.85); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+    .modal-card { 
+      position: relative; 
+      width: 100%; 
+      max-width: 420px; 
+      max-height: 90vh; 
+      overflow: auto; 
+      background: var(--bg-card); 
+      border-radius: 24px; 
+      padding: 32px 24px; 
+      box-shadow: 0 25px 80px rgba(0, 0, 0, 0.2); 
+      animation: popIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards; 
+    }
+    
+    @keyframes popIn { 
+      from { transform: scale(0.85); opacity: 0; } 
+      to { transform: scale(1); opacity: 1; } 
+    }
+    
+    .modal-card h3 { 
+      font-size: 20px; 
+      font-weight: 800; 
+      margin: 0 0 8px; 
+      color: var(--text); 
+    }
+    
+    .modal-card p { 
+      font-size: 14px; 
+      color: var(--muted); 
+      line-height: 1.5; 
+      margin: 0 0 24px; 
+    }
+    
+    .modal-close { 
+      position: absolute; 
+      right: 16px; 
+      top: 16px; 
+      width: 30px; 
+      height: 30px; 
+      border-radius: 50%; 
+      background: #ef4444 !important; 
+      color: #fff !important; 
+      display: grid; 
+      place-items: center; 
+      padding: 0; 
+      z-index: 10; 
+      border: none !important; 
+    }
+    
+    .modal-close svg { 
+      width: 16px; 
+      height: 16px; 
+      stroke-width: 3; 
+    }
 
-    .modal-card h3 { font-size: 20px; font-weight: 800; margin: 0 0 8px; color: var(--text); }
-    .modal-card p { font-size: 14px; color: var(--muted); line-height: 1.5; margin: 0 0 24px; }
+    .modal-options { 
+      display: flex; 
+      gap: 12px; 
+    }
+    
+    .btn-tariff-style { 
+      flex: 1; 
+      height: 54px; 
+      border-radius: 16px !important; 
+      font-size: 14px !important; 
+      font-weight: 800 !important; 
+      display: flex; 
+      align-items: center; 
+      justify-content: center; 
+      gap: 10px; 
+      padding: 0 !important; 
+    }
+    
+    .btn-kamera { 
+      background: var(--blue-light) !important; 
+      color: var(--blue) !important; 
+      border: 2.2px solid var(--blue) !important; 
+    }
+    
+    .btn-galeri { 
+      background: var(--green-light) !important; 
+      color: var(--green) !important; 
+      border: 2.2px solid var(--green) !important; 
+    }
 
-    .modal-close { position: absolute; right: 16px; top: 16px; width: 30px; height: 30px; border-radius: 50%; background: #ef4444 !important; color: #fff !important; display: grid; place-items: center; padding: 0; z-index: 10; border: none !important; }
-    .modal-close svg { width: 16px; height: 16px; stroke-width: 3; }
+    .btn-batal-reset { 
+      flex: 1; 
+      height: 54px; 
+      border-radius: 16px; 
+      font-size: 14px; 
+      font-weight: 800; 
+      background: var(--bg-input); 
+      color: var(--text); 
+      display: flex; 
+      align-items: center; 
+      justify-content: center; 
+      border: 1.5px solid var(--border); 
+    }
+    
+    .btn-yakin-reset { 
+      flex: 1; 
+      height: 54px; 
+      border-radius: 16px; 
+      font-size: 14px; 
+      font-weight: 800; 
+      background: #dc2626; 
+      color: #ffffff; 
+      display: flex; 
+      align-items: center; 
+      justify-content: center; 
+      border: 1.5px solid #b91c1c; 
+    }
 
-    .modal-options { display: flex; gap: 12px; }
-    .btn-tariff-style { flex: 1; height: 54px; border-radius: 16px !important; font-size: 14px !important; font-weight: 800 !important; display: flex; align-items: center; justify-content: center; gap: 10px; padding: 0 !important; }
-    .btn-kamera { background: var(--blue-light) !important; color: var(--blue) !important; border: 2.2px solid var(--blue) !important; }
-    .btn-galeri { background: var(--green-light) !important; color: var(--green) !important; border: 2.2px solid var(--green) !important; }
+    /* Input Modal Tambah Tarif */
+    .custom-tariff-input { 
+      width: 100%; 
+      height: 45px; 
+      border: 2px solid var(--border); 
+      background: var(--bg-input); 
+      border-radius: 11px; 
+      padding: 0 15px; 
+      color: var(--text); 
+      font-weight: 600; 
+      font-size: 15px; 
+      margin-bottom: 20px; 
+    }
+    
+    .custom-tariff-input:focus { 
+      border-color: var(--blue) !important; 
+      background: var(--bg-input-focus, #e6f0f9) !important; 
+      box-shadow: 0 0 0 2.5px var(--blue-light) !important; 
+      outline: none !important; 
+    }
 
-    .btn-batal-reset { flex: 1; height: 54px; border-radius: 16px; font-size: 14px; font-weight: 800; background: var(--bg-input); color: var(--text); display: flex; align-items: center; justify-content: center; border: 1.5px solid var(--border); }
-    .btn-yakin-reset { flex: 1; height: 54px; border-radius: 16px; font-size: 14px; font-weight: 800; background: #dc2626; color: #ffffff; display: flex; align-items: center; justify-content: center; border: 1.5px solid #b91c1c; }
+    .modal-tariff-actions { 
+      display: flex; 
+      gap: 10px; 
+    }
+    
+    .btn-batal-tarif { 
+      flex: 1; 
+      height: 48px; 
+      background: var(--bg-input); 
+      color: var(--text); 
+      border: 1.5px solid var(--border); 
+      border-radius: 11px; 
+      font-size: 14px; 
+      font-weight: 800; 
+      display: flex; 
+      align-items: center; 
+      justify-content: center; 
+    }
+    
+    .btn-simpan-tarif { 
+      flex: 1; 
+      height: 48px; 
+      background: var(--blue); 
+      color: #fff; 
+      border: none; 
+      border-radius: 11px; 
+      font-size: 14px; 
+      font-weight: 800; 
+      display: flex; 
+      align-items: center; 
+      justify-content: center; 
+    }
 
-    .custom-tariff-input { width: 100%; height: 45px; border: 2px solid var(--border); background: var(--bg-input); border-radius: 11px; padding: 0 15px; color: var(--text); font-weight: 600; font-size: 15px; margin-bottom: 20px; }
-    .custom-tariff-input:focus { border-color: var(--blue) !important; background: var(--bg-input-focus) !important; box-shadow: 0 0 0 2.5px var(--blue-light) !important; outline: none !important; }
+    /* Editor Crop Foto KTP */
+    .crop-frame { 
+      height: 320px; 
+      overflow: hidden; 
+      background: #111; 
+      border-radius: 12px; 
+      margin: 16px 0; 
+    }
+    
+    .crop-frame img { 
+      display: block; 
+      max-width: 100%; 
+    }
+    
+    .crop-tools { 
+      display: flex; 
+      gap: 8px; 
+      margin-bottom: 12px; 
+    }
+    
+    .crop-tools button { 
+      flex: 1; 
+      display: flex; 
+      align-items: center; 
+      justify-content: center; 
+      gap: 6px; 
+      padding: 10px; 
+      font-weight: 700; 
+    }
+    
+    .btn-apply-crop { 
+      width: 100%; 
+      height: 50px; 
+      background: var(--blue); 
+      color: #fff; 
+      border: none; 
+      border-radius: 11px; 
+      font-size: 14px; 
+      font-weight: 800; 
+      display: flex; 
+      align-items: center; 
+      justify-content: center; 
+      margin-top: 10px; 
+    }
 
-    .modal-tariff-actions { display: flex; gap: 10px; }
-    .btn-batal-tarif { flex: 1; height: 48px; background: var(--bg-input); color: var(--text); border: 1.5px solid var(--border); border-radius: 11px; font-size: 14px; font-weight: 800; display: flex; align-items: center; justify-content: center; }
-    .btn-simpan-tarif { flex: 1; height: 48px; background: var(--blue); color: #fff; border: none; border-radius: 11px; font-size: 14px; font-weight: 800; display: flex; align-items: center; justify-content: center; }
+    /* Modal Kanvas Tanda Tangan */
+    .signature-modal-card { 
+      max-width: 500px; 
+      width: 100%; 
+      padding: 24px; 
+      text-align: center; 
+    }
+    
+    .signature-canvas-wrapper { 
+      width: 100%; 
+      height: 350px; 
+      margin: 15px 0; 
+      background: #ffffff; 
+      border: 2px dashed var(--blue); 
+      border-radius: 12px; 
+      position: relative; 
+      overflow: hidden; 
+    }
+    
+    #signaturePadFull { 
+      display: block; 
+      width: 100%; 
+      height: 100%; 
+      touch-action: none; 
+      cursor: crosshair; 
+    }
+    
+    .signature-actions { 
+      display: flex; 
+      gap: 10px; 
+      margin-top: 15px; 
+    }
+    
+    .signature-actions .btn-batal-reset, 
+    .signature-actions .primary { 
+      flex: 1; 
+      min-height: 48px; 
+      padding: 12px 16px; 
+      font-size: 14px; 
+      font-weight: 800; 
+      border-radius: 11px; 
+      display: flex; 
+      align-items: center; 
+      justify-content: center; 
+    }
 
-    .crop-frame { height: 320px; overflow: hidden; background: #111; border-radius: 12px; margin: 16px 0; }
-    .crop-frame img { display: block; max-width: 100%; }
-    .crop-tools { display: flex; gap: 8px; margin-bottom: 12px; }
-    .crop-tools button { flex: 1; display: flex; align-items: center; justify-content: center; gap: 6px; padding: 10px; font-weight: 700; }
-    .btn-apply-crop { width: 100%; height: 50px; background: var(--blue); color: #fff; border: none; border-radius: 11px; font-size: 14px; font-weight: 800; display: flex; align-items: center; justify-content: center; margin-top: 10px; }
+    /* Notifikasi Pop-up (Toast) */
+    .toast { 
+      position: fixed; 
+      top: 50%; 
+      left: 50%; 
+      transform: translate(-50%, -50%) scale(0.85); 
+      background: var(--green); 
+      color: #fff; 
+      padding: 14px 20px; 
+      border-radius: 12px; 
+      font-size: 13px; 
+      font-weight: 800; 
+      z-index: 3000; 
+      opacity: 0; 
+      pointer-events: none; 
+      transition: opacity 0.25s ease, transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); 
+      width: max-content; 
+      max-width: 92vw; 
+      text-align: center; 
+      white-space: nowrap; 
+      overflow: hidden; 
+      text-overflow: ellipsis; 
+      display: flex; 
+      align-items: center; 
+      justify-content: center;
+    }
+    
+    .toast.show { 
+      opacity: 1; 
+      transform: translate(-50%, -50%) scale(1); 
+    }
+    
+    .toast.error { 
+      background: #ef4444; 
+    }
 
-    .signature-modal-card { max-width: 500px; width: 100%; padding: 24px; text-align: center; }
-    .signature-canvas-wrapper { width: 100%; height: 350px; margin: 15px 0; background: #ffffff; border: 2px dashed var(--blue); border-radius: 12px; position: relative; overflow: hidden; }
-    #signaturePadFull { display: block; width: 100%; height: 100%; touch-action: none; cursor: crosshair; }
-    .signature-actions { display: flex; gap: 10px; margin-top: 15px; }
-    .signature-actions .btn-batal-reset, .signature-actions .primary { flex: 1; min-height: 48px; padding: 12px 16px; font-size: 14px; font-weight: 800; border-radius: 11px; display: flex; align-items: center; justify-content: center; }
-
-    .toast { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%) scale(0.85); background: var(--green); color: #fff; padding: 16px 26px; border-radius: 14px; font-size: 14px; z-index: 3000; opacity: 0; pointer-events: none; transition: opacity 0.25s ease, transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); max-width: 85%; text-align: center; font-weight: 800; display: flex; align-items: center; justify-content: center; gap: 10px; }
-    .toast.show { opacity: 1; transform: translate(-50%, -50%) scale(1); }
-    .toast.error { background: #ef4444; }
-    .toast svg { width: 22px; height: 22px; flex-shrink: 0; }
-
+    /* Animasi Putar Indikator Loading */
+    @keyframes spin { 
+      0% { transform: rotate(0deg); } 
+      100% { transform: rotate(360deg); } 
+    }
 
     /* ============================================================ */
     /* 11. CSS: RESPONSIVE (MOBILE vs DESKTOP)                      */
     /* ============================================================ */
     
+    /* Tampilan HP (Layar Kecil) */
     @media (max-width: 1023px) {
-      .content-area { padding: 0 10px 20px 10px !important; }
-      .preview-panel { width: 100%; max-width: 100%; margin: 0 0 18px; }
-      .panel { border-radius: 15px; margin-bottom: 18px; }
-      .panel-head { padding: 15px 15px 12px; }
-      .panel-body { padding: 15px; }
-      .panel-icon { width: 36px; height: 36px; }
-      .tariff-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 7px; }
-      .tariff { font-size: 10px; min-height: 42px; }
-      .preview-top { padding: 15px; }
-      .preview-actions { padding: 13px 14px; }
-      .preview-note { padding: 0 14px 14px; }
-      .modal { padding: 16px; }
-      .modal-card { border-radius: 20px; padding: 24px 20px; }
-      .toast { padding: 14px 20px; font-size: 13px; border-radius: 12px; }
-      .panel-footer { padding: 12px 15px; }
-      .signature-canvas-wrapper { height: 300px; }
-      .signature-actions .btn-batal-reset, .signature-actions .primary { font-size: 13px; }
+      .content-area { 
+        padding: 0 10px 20px 10px !important; 
+      }
+      .preview-panel { 
+        width: 100%; 
+        max-width: 100%; 
+        margin: 0 0 18px; 
+      }
+      .panel { 
+        border-radius: 15px; 
+        margin-bottom: 18px; 
+      }
+      .panel-head { 
+        padding: 15px 15px 12px; 
+      }
+      .panel-body { 
+        padding: 15px; 
+      }
+      .panel-icon { 
+        width: 36px; 
+        height: 36px; 
+      }
+      .tariff-grid { 
+        grid-template-columns: repeat(3, minmax(0, 1fr)); 
+        gap: 7px; 
+      }
+      .tariff { 
+        font-size: 10px; 
+        min-height: 42px; 
+      }
+      .preview-top { 
+        padding: 15px; 
+      }
+      .preview-actions { 
+        padding: 13px 14px; 
+      }
+      .preview-note { 
+        padding: 0 14px 14px; 
+      }
+      .modal { 
+        padding: 16px; 
+      }
+      .modal-card { 
+        border-radius: 20px; 
+        padding: 24px 20px; 
+      }
+      .toast { 
+        padding: 12px 16px; 
+        font-size: 12px; 
+        border-radius: 10px; 
+      }
+      .panel-footer { 
+        padding: 12px 15px; 
+      }
+      .signature-canvas-wrapper { 
+        height: 300px; 
+      }
+      .signature-actions .btn-batal-reset, 
+      .signature-actions .primary { 
+        font-size: 13px; 
+      }
     }
 
+    /* Tampilan Desktop / Tablet Besar */
     @media (min-width: 1024px) {
-      .app-container { max-width: 100%; height: auto; overflow-y: visible; }
-      .topbar-biru { padding: 30px 60px; }
-      .mobile-nav { display: none; }
-      .content-area { padding: 30px 40px; display: flex; flex-direction: column; align-items: center; gap: 30px; }
-      .content-page { display: block !important; width: 100%; max-width: 800px; margin: 0 auto; animation: none; }
-      .panel-footer button[onclick="switchTab(1)"] { display: none !important; }
-      .preview-actions .btn-back-icon { display: none !important; }
-      .preview-panel { box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1); }
-      .panel, .preview-panel { border-radius: 20px; }
+      .app-container { 
+        max-width: 100%; 
+        height: auto; 
+        overflow-y: visible; 
+      }
+      .topbar-biru { 
+        padding: 30px 60px; 
+      }
+      .mobile-nav { 
+        display: none; 
+      }
+      .content-area { 
+        padding: 30px 40px; 
+        display: flex; 
+        flex-direction: column; 
+        align-items: center; 
+        gap: 30px; 
+      }
+      .content-page { 
+        display: block !important; 
+        width: 100%; 
+        max-width: 800px; 
+        margin: 0 auto; 
+        animation: none; 
+      }
+      .panel-footer button[onclick="switchTab(1)"] { 
+        display: none !important; 
+      }
+      .preview-actions .btn-back-icon { 
+        display: none !important; 
+      }
+      .preview-panel { 
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1); 
+      }
+      .panel, .preview-panel { 
+        border-radius: 20px; 
+      }
     }
   </style>
 </head>
 <body>
 
   <div class="app-container" id="appContainer">
-
     <!-- ============================================================ -->
     <!-- 12. HTML: TOP BAR (TOGGLE MODE & PROFIL)                     -->
     <!-- ============================================================ -->
     <div class="top-bar" id="topBar">
-      
-      <!-- Tombol Toggle Mode (Ramping & Sebaris) -->
       <label class="theme-toggle-neu" title="Ubah Tema">
           <span class="switch-neu">
               <input type="checkbox" id="themeToggleSwitch" onchange="toggleTheme()">
               <span class="slider-neu">
-                  <!-- Teks di dalam track (sebaris) -->
                   <span class="mode-text-neu dark">DARK MODE</span>
                   <span class="mode-text-neu light">LIGHT MODE</span>
-                  
-                  <!-- Lingkaran Putih (Thumb) -->
                   <span class="thumb-neu">
                       <svg class="icon-sun-neu" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
                           <circle cx="12" cy="12" r="5"></circle>
@@ -548,7 +1512,6 @@
           </span>
       </label>
 
-      <!-- Profil Kreator -->
       <div class="top-bar-profile">
           <div class="top-bar-text">
               <div class="top-bar-role">Created by</div>
@@ -580,8 +1543,8 @@
       </header>
 
       <nav class="mobile-nav" id="mobileNav" aria-label="Navigasi aplikasi">
-        <button id="tabForm" class="active" onclick="switchTab(0)">Isi Form</button>
-        <button id="tabPreview" onclick="switchTab(1)">Lihat Surat</button>
+        <button id="tabForm" class="active" onclick="switchTab(0)">Form Surat</button>
+        <button id="tabPreview" onclick="switchTab(1)">Draf Surat</button>
       </nav>
     </div>
 
@@ -589,12 +1552,10 @@
     <!-- 14. HTML: AREA KONTEN (FORM & PREVIEW)                       -->
     <!-- ============================================================ -->
     <div class="content-area">
-      
       <!-- HALAMAN 1: FORM -->
       <div class="content-page active" id="page-form">
-        <section class="view-fade">
+        <section>
           
-          <!-- Panel Data Penghuni -->
           <div class="panel">
             <div class="panel-head">
               <div class="panel-icon">
@@ -610,7 +1571,7 @@
             </div>
             <div class="panel-body">
               <div class="field">
-                <label for="inputNama">Nama Lengkap</label>
+                <label for="inputNama">Nama</label>
                 <div class="input-wrap">
                   <input id="inputNama" placeholder="Masukkan nama penghuni" autocomplete="name">
                   <button class="clear-input" type="button" aria-label="Hapus nama">
@@ -622,7 +1583,7 @@
                 </div>
               </div>
               <div class="field">
-                <label for="inputAlamat">Alamat Tempat Tinggal</label>
+                <label for="inputAlamat">Alamat</label>
                 <div class="input-wrap">
                   <input id="inputAlamat" placeholder="Masukkan alamat lengkap penghuni" autocomplete="street-address">
                   <button class="clear-input" type="button" aria-label="Hapus alamat">
@@ -634,7 +1595,7 @@
                 </div>
               </div>
               <div class="field">
-                <label for="inputKtp">NIK</label>
+                <label for="inputKtp">No. KTP</label>
                 <div class="input-wrap">
                   <input id="inputKtp" inputmode="numeric" maxlength="16" placeholder="Masukkan 16 digit no. KTP">
                   <button class="clear-input" type="button" aria-label="Hapus nomor KTP">
@@ -646,7 +1607,7 @@
                 </div>
               </div>
               <div class="field">
-                <label for="inputTelp">Nomor Telepon / WhatsApp</label>
+                <label for="inputTelp">No. Telp / WhatsApp</label>
                 <div class="input-wrap">
                   <input id="inputTelp" type="tel" inputmode="tel" placeholder="Masukkan nomor yang dapat dihubungi">
                   <button class="clear-input" type="button" aria-label="Hapus nomor telepon">
@@ -660,7 +1621,6 @@
             </div>
           </div>
 
-          <!-- Panel Data Pelanggan -->
           <div class="panel">
             <div class="panel-head">
               <div class="panel-icon">
@@ -702,7 +1662,7 @@
               <div class="field">
                 <label for="inputAlamatPln">Alamat</label>
                 <div class="input-wrap">
-                  <input id="inputAlamatPln" placeholder="Masukkan alamat Pelanggan">
+                  <input id="inputAlamatPln" placeholder="Masukkan alamat pelanggan">
                   <button class="clear-input" type="button" aria-label="Hapus alamat pelanggan">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
                       <line x1="18" y1="6" x2="6" y2="18"></line>
@@ -714,7 +1674,7 @@
               <div class="field">
                 <label for="inputIdPel">ID pelanggan</label>
                 <div class="input-wrap">
-                  <input id="inputIdPel" inputmode="numeric" placeholder="Masukkan ID Pelanggan">
+                  <input id="inputIdPel" inputmode="numeric" maxlength="12" placeholder="Masukkan ID Pelanggan">
                   <button class="clear-input" type="button" aria-label="Hapus ID pelanggan">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
                       <line x1="18" y1="6" x2="6" y2="18"></line>
@@ -738,7 +1698,6 @@
             </div>
           </div>
 
-          <!-- Panel Berkas Dokumen (KTP & TTD) -->
           <div class="panel">
             <div class="panel-head">
               <div class="panel-icon">
@@ -755,7 +1714,7 @@
             </div>
             <div class="panel-body">
               
-              <!-- Upload KTP -->
+              <!-- Input Upload Foto KTP -->
               <div class="field">
                 <label>Foto KTP</label>
                 <div class="upload-box" id="uploadBox" role="button" tabindex="0" aria-label="Pilih foto KTP">
@@ -792,7 +1751,7 @@
                 <input type="file" id="inputGaleri" accept="image/*" hidden>
               </div>
               
-              <!-- Upload Tanda Tangan -->
+              <!-- Input Upload Tanda Tangan -->
               <div class="field">
                 <label>Tanda Tangan</label>
                 <div class="upload-box" id="signatureBox" role="button" tabindex="0" aria-label="Buat tanda tangan">
@@ -815,24 +1774,24 @@
             </div>
             
             <div class="panel-footer" style="justify-content: flex-end;">
-              <button type="button" class="primary" style="flex: 1; width: 100%;" onclick="switchTab(1)">Lihat Surat</button>
+              <button type="button" class="primary" style="flex: 1; width: 100%;" onclick="switchTab(1)">Selanjutnya</button>
             </div>
           </div>
-
         </section>
       </div>
 
       <!-- HALAMAN 2: PREVIEW -->
       <div class="content-page" id="page-preview">
-        <section class="view-fade">
+        <section>
           <div class="preview-panel">
             <div class="preview-top">
-              <div>
-                <h2>Pratinjau Surat</h2>
-                <div class="panel-desc" style="margin-top:4px;">Hasil surat diperbarui otomatis ketika isi form</div>
+              <h2>Review</h2>
+              <div class="status-indicator merah" id="statusIndicator">
+                <div class="status-text" id="statusText">Data belum lengkap</div>
               </div>
             </div>
 
+            <!-- Kertas Utama -->
             <div class="paper-area">
               <div class="paper-scaler" id="paperScaler">
                 <article class="paper" id="suratContainer">
@@ -917,22 +1876,21 @@
                   <polyline points="7 10 12 15 17 10"></polyline>
                   <line x1="12" y1="15" x2="12" y2="3"></line>
                 </svg>
-                Download Surat
+                Download
               </button>
             </div>
             <div class="preview-note">Periksa kembali semua data sebelum menyimpan, pastikan form dan berkas sudah lengkap dan sesuai.</div>
           </div>
         </section>
       </div>
-
     </div>
   </div>
 
   <!-- ============================================================ -->
-  <!-- 15. HTML: MODALS (POPUP)                                     -->
+  <!-- 15. HTML: MODALS (KUMPULAN POP-UP)                           -->
   <!-- ============================================================ -->
   
-  <!-- Modal Custom Tarif -->
+  <!-- Pop-Up Tambah Tarif Baru -->
   <div class="modal" id="modalCustomTarif" role="dialog" aria-modal="true">
     <div class="modal-card">
       <h3>Tambah Tarif Baru</h3>
@@ -945,7 +1903,7 @@
     </div>
   </div>
 
-  <!-- Modal Sumber Foto KTP -->
+  <!-- Pop-Up Pilih Sumber Foto KTP -->
   <div class="modal" id="sourceModal" role="dialog" aria-modal="true">
     <div class="modal-card">
       <button type="button" class="modal-close" onclick="closeModal('sourceModal')" aria-label="Tutup">
@@ -974,7 +1932,7 @@
     </div>
   </div>
 
-  <!-- Modal Crop Foto KTP -->
+  <!-- Pop-Up Potong (Crop) KTP -->
   <div class="modal" id="cropModal" role="dialog" aria-modal="true">
     <div class="modal-card" style="max-width: 480px;">
       <button type="button" class="modal-close" onclick="cancelCrop()" aria-label="Tutup">
@@ -1006,19 +1964,7 @@
     </div>
   </div>
 
-  <!-- Modal Konfirmasi Tanda Tangan -->
-  <div class="modal" id="confirmSignModal" role="dialog" aria-modal="true">
-    <div class="modal-card">
-      <h3>Buat Tanda Tangan</h3>
-      <p>Layar akan menampilkan area tanda tangan, ingin melanjutkan?</p>
-      <div class="modal-options">
-        <button type="button" class="btn-batal-reset" onclick="closeModal('confirmSignModal')">Batal</button>
-        <button type="button" class="btn-yakin-reset" style="background: var(--blue); border-color: var(--blue);" onclick="startDrawingSignature()">Lanjut</button>
-      </div>
-    </div>
-  </div>
-
-  <!-- Modal Area Tanda Tangan (Luas) -->
+  <!-- Pop-Up Kanvas Tanda Tangan -->
   <div class="modal" id="signatureModal" role="dialog" aria-modal="true">
     <div class="modal-card signature-modal-card">
       <button type="button" class="modal-close" onclick="closeSignatureModal()" aria-label="Tutup">
@@ -1041,87 +1987,91 @@
     </div>
   </div>
 
+  <!-- Layar Hitam (Loading Screen) Saat Proses Pengiriman -->
+  <div id="loadingOverlay" style="display: none; position: fixed; inset: 0; background: rgba(15, 23, 42, 0.85); z-index: 9999; flex-direction: column; align-items: center; justify-content: center; color: white; backdrop-filter: blur(5px);">
+    <div style="width: 50px; height: 50px; border: 5px solid rgba(255,255,255,0.3); border-top: 5px solid #ffffff; border-radius: 50%; animation: spin 1s linear infinite; margin-bottom: 20px;"></div>
+    <h3 style="font-size: 18px; margin-bottom: 8px; font-weight: 800;">Sedang Mengirim Data...</h3>
+    <p style="font-size: 13px; color: #cbd5e1; text-align: center; padding: 0 20px; line-height: 1.5;">Mohon tunggu sebentar,<br><b>jangan tutup aplikasi ini</b> sampai muncul notifikasi berhasil.</p>
+  </div>
+
+  <!-- Teks Pemberitahuan di Layar (Toast) -->
   <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
   <!-- ============================================================ -->
-  <!-- 16. JAVASCRIPT LOGIC                                         -->
+  <!-- 16. JAVASCRIPT: LOGIKA & SISTEM APLIKASI                     -->
   <!-- ============================================================ -->
   <script>
     "use strict";
 
+    // Konfigurasi Link Apps Script Google Drive
     const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyaSbeKt7Yfo11QUmYYzg0qbO6ezrLWTVJt3OcGyGCV3nZ7xma8cpNDbyfu_Nz-hupRAQ/exec";
 
+    // Variabel Global Pembantu
     const $ = id => document.getElementById(id);
     let cropper = null;
     let ktpDataUrl = "";
     let signatureDataUrl = "";
     let toastTimer;
 
-    /* --- 16.1: LOGIKA TEMA (DARK/LIGHT MODE) --- */
-    function getAutoTheme() {
+    // === BAGIAN: LOGIKA TEMA TERANG & GELAP ===
+    function getAutoTheme() { 
       const hour = new Date().getHours();
-      return (hour >= 18 || hour < 6) ? 'dark' : 'light';
+      return (hour >= 18 || hour < 6) ? 'dark' : 'light'; 
     }
-
-    function getPreferredTheme() {
-      const saved = localStorage.getItem('themeMode');
-      if (saved === 'dark' || saved === 'light') return saved;
-      return getAutoTheme();
+    
+    function getPreferredTheme() { 
+      const saved = localStorage.getItem('themeMode'); 
+      return (saved === 'dark' || saved === 'light') ? saved : getAutoTheme(); 
     }
-
+    
     function applyTheme(theme) {
       const isDark = theme === 'dark';
       const toggleSwitch = $('themeToggleSwitch');
-
-      if (isDark) {
-        document.body.classList.add('dark-mode');
-        if (toggleSwitch) toggleSwitch.checked = true;
-      } else {
-        document.body.classList.remove('dark-mode');
-        if (toggleSwitch) toggleSwitch.checked = false;
+      
+      if (isDark) { 
+        document.body.classList.add('dark-mode'); 
+        if (toggleSwitch) toggleSwitch.checked = true; 
+      } else { 
+        document.body.classList.remove('dark-mode'); 
+        if (toggleSwitch) toggleSwitch.checked = false; 
       }
     }
-
-    function initTheme() { applyTheme(getPreferredTheme()); }
-
+    
+    function initTheme() { 
+      applyTheme(getPreferredTheme()); 
+    }
+    
     function toggleTheme() {
-      const isDark = $('themeToggleSwitch').checked;
-      const newTheme = isDark ? 'dark' : 'light';
-      
-      // 1. Aktifkan class transisi agar semua warna memudar dengan mulus
+      const newTheme = $('themeToggleSwitch').checked ? 'dark' : 'light';
       document.body.classList.add('theme-transition');
-      
-      // 2. Ganti tema
       localStorage.setItem('themeMode', newTheme);
       applyTheme(newTheme);
       
-      // 3. Matikan class transisi setelah 450ms (sedikit lebih lama dari durasi animasi 0.4s)
-      setTimeout(() => {
-        document.body.classList.remove('theme-transition');
+      setTimeout(() => { 
+        document.body.classList.remove('theme-transition'); 
       }, 450);
     }
 
-    /* --- 16.2: LOGIKA NOTIFIKASI & HELPER --- */
-    function vibrate(ms = 15) {
-      if (navigator.vibrate) navigator.vibrate(ms);
+    // === BAGIAN: NOTIFIKASI & GETARAN ===
+    function vibrate(ms = 15) { 
+      if (navigator.vibrate) {
+        navigator.vibrate(ms); 
+      }
     }
 
     function showToast(message, isError = false) {
       const toast = $("toast");
       toast.classList.toggle("error", isError);
-      toast.innerHTML = `
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
-          ${isError ? '<line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line>' : '<polyline points="20 6 9 17 4 12"></polyline>'}
-        </svg>
-        <span>${message}</span>
-      `;
+      toast.textContent = message; 
       toast.classList.add("show");
       clearTimeout(toastTimer);
-      toastTimer = setTimeout(() => {
-        toast.classList.remove("show");
+      
+      toastTimer = setTimeout(() => { 
+        toast.classList.remove("show"); 
       }, isError ? 4000 : 2600);
     }
 
+    // === BAGIAN: LOGIKA PENGIRIMAN DATA (DRIVE) ===
     function blobToBase64(blob) {
       return new Promise((resolve, reject) => {
         const reader = new FileReader();
@@ -1131,7 +2081,6 @@
       });
     }
 
-    /* --- 16.3: LOGIKA KIRIM KE GOOGLE DRIVE --- */
     async function kirimKeDrive(payload) {
       const response = await fetch(APPS_SCRIPT_URL, {
         method: "POST",
@@ -1139,35 +2088,112 @@
         body: JSON.stringify(payload),
         redirect: "follow"
       });
-      if (!response.ok) throw new Error(`HTTP ${response.status}`);
+      
+      if (!response.ok) {
+        throw new Error(`HTTP ${response.status}`);
+      }
+      
       const text = await response.text();
       let result;
-      try { result = JSON.parse(text); } catch (e) { throw new Error("Respons server tidak valid: " + text.substring(0, 100)); }
-      if (!result.success) throw new Error(result.error || "Gagal menyimpan ke Drive");
+      
+      try { 
+        result = JSON.parse(text); 
+      } catch (e) { 
+        throw new Error("Respons server tidak valid: " + text.substring(0, 100)); 
+      }
+      
+      if (!result.success) {
+        throw new Error(result.error || "Gagal menyimpan ke Drive");
+      }
+      
       return result;
     }
 
-    /* --- 16.4: LOGIKA VALIDASI FORM --- */
-    function validasiSebelumSimpan() {
-      const nama = $("inputNama").value.trim();
-      const ktp = $("inputKtp").value.trim();
-      const namaPln = $("inputNamaPln").value.trim();
-      const idPel = $("inputIdPel").value.trim();
+    // === BAGIAN: LOGIKA VALIDASI FORMULIR ===
+    function resetInputErrors() {
+      document.querySelectorAll(".input-wrap input").forEach(el => el.classList.remove("input-error"));
+      $("uploadBox").classList.remove("upload-error");
+      $("signatureBox").classList.remove("upload-error");
+    }
 
-      if (!nama) { showToast("Data tidak lengkap!!", true); $("inputNama").focus(); return false; }
-      if (ktp.length !== 16) { showToast("NIK harus 16 digit!", true); $("inputKtp").focus(); return false; }
-      if (!namaPln) { showToast("Data tidak lengkap!!", true); $("inputNamaPln").focus(); return false; }
-      if (!idPel) { showToast("Data tidak lengkap!!", true); $("inputIdPel").focus(); return false; }
-      if (!ktpDataUrl) { showToast("Foto KTP wajib diupload!", true); return false; }
-      if (!signatureDataUrl) { showToast("Tanda tangan wajib diisi!", true); return false; }
+    function validasiSebelumSimpan() {
+      resetInputErrors(); 
+      
+      const nama = $("inputNama").value.trim();
+      const alamat = $("inputAlamat").value.trim();
+      const ktp = $("inputKtp").value.trim();
+      const telp = $("inputTelp").value.trim();
+      const namaPln = $("inputNamaPln").value.trim();
+      const alamatPln = $("inputAlamatPln").value.trim();
+      const idPel = $("inputIdPel").value.trim();
+      const tarif = $("inputTarif").value.trim();
+
+      if (!nama) { 
+        $("inputNama").classList.add("input-error"); 
+        showToast("Masukkan nama penghuni", true); 
+        $("inputNama").focus(); 
+        return false; 
+      }
+      if (!alamat) { 
+        $("inputAlamat").classList.add("input-error"); 
+        showToast("Masukkan alamat lengkap penghuni", true); 
+        $("inputAlamat").focus(); 
+        return false; 
+      }
+      if (ktp.length !== 16) { 
+        $("inputKtp").classList.add("input-error"); 
+        showToast("Masukkan 16 digit no.KTP", true); 
+        $("inputKtp").focus(); 
+        return false; 
+      }
+      if (!telp) { 
+        $("inputTelp").classList.add("input-error"); 
+        showToast("Masukkan nomer yang dapat dihubungi", true); 
+        $("inputTelp").focus(); 
+        return false; 
+      }
+      if (!namaPln) { 
+        $("inputNamaPln").classList.add("input-error"); 
+        showToast("Masukkan nama pelanggan", true); 
+        $("inputNamaPln").focus(); 
+        return false; 
+      }
+      if (!alamatPln) { 
+        $("inputAlamatPln").classList.add("input-error"); 
+        showToast("Masukkan alamat pelanggan", true); 
+        $("inputAlamatPln").focus(); 
+        return false; 
+      }
+      if (idPel.length !== 12) { 
+        $("inputIdPel").classList.add("input-error"); 
+        showToast("Masukkan ID Pelanggan 12 digit", true); 
+        $("inputIdPel").focus(); 
+        return false; 
+      }
+      if (!tarif) { 
+        showToast("Pilih Tarif / Daya", true); 
+        return false; 
+      }
+      if (!ktpDataUrl) { 
+        $("uploadBox").classList.add("upload-error"); 
+        showToast("KTP wajib diupload !", true); 
+        return false; 
+      }
+      if (!signatureDataUrl) { 
+        $("signatureBox").classList.add("upload-error"); 
+        showToast("TTD wajib diisi !", true); 
+        return false; 
+      }
+      
       return true;
     }
 
-    /* --- 16.5: LOGIKA SKALA KERTAS SURAT (MOBILE) --- */
+    // === BAGIAN: SISTEM NAVIGASI TAB & SKALA KERTAS ===
     function fitMobilePaper() {
       const paper = $("suratContainer");
       const scaler = $("paperScaler");
       const area = scaler.parentElement; 
+      
       if (!paper || !area) return;
 
       area.style.height = 'auto';
@@ -1181,17 +2207,12 @@
 
       const areaRect = area.getBoundingClientRect();
       const availableWidth = Math.max(1, areaRect.width - paddingLeft - paddingRight);
-      
       const scale = Math.min(1, availableWidth / 794);
+      
       scaler.style.transform = `scale(${scale})`;
-
-      const unscaledHeight = paper.offsetHeight; 
-      const scaledHeight = unscaledHeight * scale;
-
-      area.style.height = `${Math.ceil(scaledHeight + paddingTop + paddingBottom)}px`;
+      area.style.height = `${Math.ceil((paper.offsetHeight * scale) + paddingTop + paddingBottom)}px`;
     }
 
-    /* --- 16.6: LOGIKA PINDAH TAB --- */
     const mobileNav = $("mobileNav");
     const appContainer = $("appContainer"); 
     const pageForm = $("page-form");
@@ -1199,6 +2220,8 @@
 
     function switchTab(index) {
       vibrate(10);
+      
+      // Jika dibuka di desktop, biarkan dua-duanya terbuka berdampingan
       if (window.innerWidth >= 1024) return; 
 
       if (index === 0) {
@@ -1214,41 +2237,77 @@
         $("tabPreview").classList.add("active");
         $("tabForm").classList.remove("active");
         updatePreview();
+        cekStatusKelengkapan(); 
         requestAnimationFrame(fitMobilePaper); 
       }
       appContainer.scrollTo({ top: 0, behavior: 'smooth' });
     }
 
-    /* --- 16.7: LOGIKA UPDATE PRATINJAU SURAT --- */
+    function cekStatusKelengkapan() {
+      const nama = $("inputNama").value.trim();
+      const ktp = $("inputKtp").value.trim();
+      const namaPln = $("inputNamaPln").value.trim();
+      const idPel = $("inputIdPel").value.trim();
+      const tarif = $("inputTarif").value.trim();
+      const indikator = $("statusIndicator");
+      const teksStatus = $("statusText");
+
+      if (nama && ktp.length === 16 && namaPln && idPel && tarif && ktpDataUrl && signatureDataUrl) {
+        indikator.classList.remove("merah");
+        indikator.classList.add("hijau");
+        teksStatus.textContent = "Data sudah lengkap";
+      } else {
+        indikator.classList.remove("hijau");
+        indikator.classList.add("merah");
+        teksStatus.textContent = "Data belum lengkap";
+      }
+    }
+
     function updatePreview() {
       const map = {
-        inputNama: "prevNama",
-        inputAlamat: "prevAlamat",
-        inputKtp: "prevKtp",
+        inputNama: "prevNama", 
+        inputAlamat: "prevAlamat", 
+        inputKtp: "prevKtp", 
         inputTelp: "prevTelp",
-        inputNamaPln: "prevNamaPln",
-        inputAlamatPln: "prevAlamatPln",
-        inputIdPel: "prevIdPel",
+        inputNamaPln: "prevNamaPln", 
+        inputAlamatPln: "prevAlamatPln", 
+        inputIdPel: "prevIdPel", 
         inputTarif: "prevTarif"
       };
 
       Object.entries(map).forEach(([inputId, outputId]) => {
         const value = $(inputId).value.trim();
-        $(outputId).textContent = value ? (inputId.includes("Alamat") || inputId.includes("Nama") ? value.toLocaleUpperCase("id-ID") : value) : "...";
+        // Ubah huruf jadi kapital untuk nama dan alamat
+        if (value) {
+            if (inputId.includes("Alamat") || inputId.includes("Nama")) {
+                $(outputId).textContent = value.toLocaleUpperCase("id-ID");
+            } else {
+                $(outputId).textContent = value;
+            }
+        } else {
+            $(outputId).textContent = "...";
+        }
       });
 
       $("prevTandaTangan").textContent = $("inputNama").value.trim().toLocaleUpperCase("id-ID") || "...";
+      cekStatusKelengkapan();
     }
 
-    /* --- 16.8: LOGIKA INPUT TEKS & TOMBOL CLEAR (X) --- */
+    // === BAGIAN: SISTEM INPUT DATA (TEKS & TOMBOL) ===
     document.querySelectorAll(".input-wrap input").forEach(input => {
       const clearBtn = input.parentElement.querySelector(".clear-input");
-      function syncClear() { clearBtn.classList.toggle("visible", input.value.length > 0); }
+      
+      function syncClear() { 
+        clearBtn.classList.toggle("visible", input.value.length > 0); 
+      }
 
       input.addEventListener("input", () => {
+        // Blokir agar input nomor KTP & ID PLN hanya bisa diisi angka
         if (["inputKtp", "inputIdPel"].includes(input.id)) {
-          input.value = input.value.replace(/\D/g, "");
+            input.value = input.value.replace(/\D/g, "");
         }
+        
+        input.classList.remove("input-error");
         syncClear();
         updatePreview();
       });
@@ -1256,90 +2315,149 @@
       clearBtn.addEventListener("click", () => {
         vibrate(10);
         input.value = "";
+        input.classList.remove("input-error");
         syncClear();
         updatePreview();
         input.focus();
       });
+      
       syncClear();
     });
 
-    /* --- 16.9: LOGIKA PILIH TARIF / DAYA --- */
+    // Pilihan Kotak Tarif Bawaan
     document.getElementById('tariffGrid').addEventListener('click', function(e) {
       const button = e.target.closest('.tariff');
+      
       if (button && button.id !== 'btnCustomTarif') {
         vibrate(15);
         $("inputTarif").value = button.dataset.value;
+        
         document.querySelectorAll(".tariff").forEach(item => {
-          item.classList.remove("selected");
+          item.classList.remove("selected"); 
           item.setAttribute("aria-pressed", "false");
         });
+        
         button.classList.add("selected");
         button.setAttribute("aria-pressed", "true");
         updatePreview();
       }
     });
 
+    // Pembuatan Tarif Baru
     function bukaModalTarif() {
       vibrate(10);
       $('inputCustomTarif').value = '';
       openModal('modalCustomTarif');
-      setTimeout(() => $('inputCustomTarif').focus(), 100);
+      
+      setTimeout(() => {
+        $('inputCustomTarif').focus();
+      }, 100);
     }
 
     function simpanTarifBaru() {
       const nilaiBaru = $('inputCustomTarif').value.trim();
-      if (!nilaiBaru) { showToast("Tarif tidak boleh kosong!", true); return; }
+      
+      if (!nilaiBaru) { 
+        showToast("Tarif tidak boleh kosong!", true); 
+        return; 
+      }
+      
       vibrate(15);
+      
       const btnBaru = document.createElement('button');
       btnBaru.type = 'button';
       btnBaru.className = 'tariff selected';
       btnBaru.dataset.value = nilaiBaru + " VA";
       btnBaru.innerText = nilaiBaru;
+      
       $('btnCustomTarif').parentNode.insertBefore(btnBaru, $('btnCustomTarif'));
       $("inputTarif").value = btnBaru.dataset.value;
       updatePreview();
 
       document.querySelectorAll(".tariff").forEach(item => {
-        if (item !== btnBaru) item.classList.remove("selected");
-        item.setAttribute("aria-pressed", "false");
+        if (item !== btnBaru) {
+            item.classList.remove("selected");
+            item.setAttribute("aria-pressed", "false");
+        }
       });
+      
       btnBaru.setAttribute("aria-pressed", "true");
       closeModal('modalCustomTarif');
       showToast("Tarif berhasil ditambahkan");
     }
 
-    /* --- 16.10: LOGIKA TANGGAL OTOMATIS --- */
     function setAutomaticDate() {
-      const today = new Intl.DateTimeFormat("id-ID", {
-        timeZone: "Asia/Jakarta",
-        day: "numeric",
-        month: "long",
-        year: "numeric"
+      const today = new Intl.DateTimeFormat("id-ID", { 
+        timeZone: "Asia/Jakarta", 
+        day: "numeric", 
+        month: "long", 
+        year: "numeric" 
       }).format(new Date());
       $("prevTanggal").textContent = "Bekasi, " + today;
     }
 
-    function openModal(id) { vibrate(10); $(id).classList.add("open"); }
-    function closeModal(id) { $(id).classList.remove("open"); }
+    // === BAGIAN: SISTEM BUKA TUTUP JENDELA POP-UP (MODAL) ===
+    function openModal(id) { 
+      vibrate(10); 
+      $(id).classList.add("open"); 
+    }
+    
+    function closeModal(id) { 
+      $(id).classList.remove("open"); 
+    }
 
-    /* --- 16.11: LOGIKA FOTO KTP (UPLOAD & CROP) --- */
-    $("uploadBox").addEventListener("click", event => {
-      if (event.target.closest("#clearKtpBtn")) return;
-      openModal("sourceModal");
+    document.querySelectorAll(".modal").forEach(modal => {
+      modal.addEventListener("click", event => {
+        if (event.target === modal) { 
+            if (modal.id === "cropModal") {
+                cancelCrop(); 
+            } else {
+                closeModal(modal.id); 
+            }
+        }
+      });
     });
 
-    $("uploadBox").addEventListener("keydown", event => {
-      if (event.key === "Enter" || event.key === " ") { event.preventDefault(); openModal("sourceModal"); }
+    document.addEventListener("keydown", event => {
+      if (event.key === "Escape") {
+        closeModal("sourceModal"); 
+        closeModal("modalCustomTarif"); 
+        closeModal("signatureModal");
+        if ($("cropModal").classList.contains("open")) {
+            cancelCrop();
+        }
+      }
     });
 
-    $("clearKtpBtn").addEventListener("click", event => {
-      event.stopPropagation();
-      vibrate(15);
-      clearKtp();
+    // === BAGIAN: FOTO KTP & PROSES POTONG GAMBAR (CROPPER) ===
+    $("uploadBox").addEventListener("click", event => { 
+        if (!event.target.closest("#clearKtpBtn")) {
+            openModal("sourceModal"); 
+        }
+    });
+    
+    $("uploadBox").addEventListener("keydown", event => { 
+        if (event.key === "Enter" || event.key === " ") { 
+            event.preventDefault(); 
+            openModal("sourceModal"); 
+        } 
+    });
+    
+    $("clearKtpBtn").addEventListener("click", event => { 
+        event.stopPropagation(); 
+        vibrate(15); 
+        clearKtp(); 
     });
 
-    function triggerCamera() { closeModal("sourceModal"); $("inputKamera").click(); }
-    function triggerGallery() { closeModal("sourceModal"); $("inputGaleri").click(); }
+    function triggerCamera() { 
+        closeModal("sourceModal"); 
+        $("inputKamera").click(); 
+    }
+    
+    function triggerGallery() { 
+        closeModal("sourceModal"); 
+        $("inputGaleri").click(); 
+    }
 
     $("inputKamera").addEventListener("change", initCrop);
     $("inputGaleri").addEventListener("change", initCrop);
@@ -1347,121 +2465,163 @@
     function initCrop(event) {
       const file = event.target.files && event.target.files[0];
       if (!file) return;
-      if (!file.type.startsWith("image/")) { showToast("Pilih file gambar yang valid.", true); event.target.value = ""; return; }
-      if (file.size > 15 * 1024 * 1024) { showToast("Ukuran foto maksimal 15 MB.", true); event.target.value = ""; return; }
+      
+      if (!file.type.startsWith("image/")) { 
+        showToast("Pilih file gambar yang valid.", true); 
+        event.target.value = ""; 
+        return; 
+      }
+      
+      if (file.size > 15 * 1024 * 1024) { 
+        showToast("Ukuran foto maksimal 15 MB.", true); 
+        event.target.value = ""; 
+        return; 
+      }
+      
       const reader = new FileReader();
       reader.onload = () => {
         $("imageToCrop").src = reader.result;
         openModal("cropModal");
-        if (cropper) { cropper.destroy(); cropper = null; }
+        
+        if (cropper) { 
+            cropper.destroy(); 
+            cropper = null; 
+        }
+        
         $("imageToCrop").onload = () => {
           cropper = new Cropper($("imageToCrop"), {
-            aspectRatio: 1.585, viewMode: 1, autoCropArea: 0.9, responsive: true, background: false, movable: true, zoomable: true
+            aspectRatio: 1.585, 
+            viewMode: 1, 
+            autoCropArea: 0.9, 
+            responsive: true, 
+            background: false, 
+            movable: true, 
+            zoomable: true
           });
         };
       };
+      
       reader.onerror = () => showToast("Foto tidak bisa dibaca.", true);
       reader.readAsDataURL(file);
     }
 
-    function rotateImage(degree) { if (cropper) cropper.rotate(degree); }
+    function rotateImage(degree) { 
+        if (cropper) cropper.rotate(degree); 
+    }
 
     function performCrop() {
       vibrate(15);
       if (!cropper) return;
-      const cropped = cropper.getCroppedCanvas({
-        width: 1000, height: Math.round(1000 / 1.585), imageSmoothingEnabled: true, imageSmoothingQuality: "high", fillColor: "#ffffff"
+      
+      const cropped = cropper.getCroppedCanvas({ 
+          width: 1000, 
+          height: Math.round(1000 / 1.585), 
+          imageSmoothingEnabled: true, 
+          imageSmoothingQuality: "high", 
+          fillColor: "#ffffff" 
       });
-      if (!cropped) { showToast("Gagal memproses foto.", true); return; }
+      
+      if (!cropped) { 
+          showToast("Gagal memproses foto.", true); 
+          return; 
+      }
+      
       ktpDataUrl = cropped.toDataURL("image/jpeg", 0.92);
+      
       const output = document.createElement("img");
-      output.src = ktpDataUrl;
-      output.alt = "Foto KTP";
+      output.src = ktpDataUrl; 
+      output.alt = "Foto KTP"; 
       output.className = "ktp-output";
+      
       $("containerKtp").replaceChildren(output);
-      $("ktpBoxPreview").src = ktpDataUrl;
+      $("ktpBoxPreview").src = ktpDataUrl; 
       $("ktpBoxPreview").style.display = "block";
-      $("uploadContent").style.display = "none";
+      $("uploadContent").style.display = "none"; 
       $("clearKtpBtn").style.display = "flex";
+      $("uploadBox").classList.remove("upload-error");
+      
       closeModal("cropModal");
-      cropper.destroy();
+      cropper.destroy(); 
       cropper = null;
-      $("inputKamera").value = "";
+      $("inputKamera").value = ""; 
       $("inputGaleri").value = "";
+      
+      cekStatusKelengkapan();
     }
 
-    function cancelCrop() {
-      closeModal("cropModal");
-      if (cropper) { cropper.destroy(); cropper = null; }
-      $("inputKamera").value = "";
-      $("inputGaleri").value = "";
+    function cancelCrop() { 
+        closeModal("cropModal"); 
+        if (cropper) { 
+            cropper.destroy(); 
+            cropper = null; 
+        } 
+        $("inputKamera").value = ""; 
+        $("inputGaleri").value = ""; 
     }
 
     function clearKtp() {
       ktpDataUrl = "";
       $("containerKtp").replaceChildren();
-      $("ktpBoxPreview").removeAttribute("src");
+      $("ktpBoxPreview").removeAttribute("src"); 
       $("ktpBoxPreview").style.display = "none";
-      $("uploadContent").style.display = "block";
+      $("uploadContent").style.display = "block"; 
       $("clearKtpBtn").style.display = "none";
-      $("inputKamera").value = "";
+      $("inputKamera").value = ""; 
       $("inputGaleri").value = "";
+      
+      cekStatusKelengkapan();
     }
 
-    /* --- 16.12: LOGIKA TANDA TANGAN (POPUP LUAS) --- */
-    $("signatureBox").addEventListener("click", event => {
-      if (event.target.closest("#clearSignBtn")) return;
-      openModal("confirmSignModal");
+    // === BAGIAN: SISTEM TANDA TANGAN JARI ===
+    $("signatureBox").addEventListener("click", event => { 
+        if (!event.target.closest("#clearSignBtn")) {
+            startDrawingSignature(); 
+        }
     });
-
-    $("clearSignBtn").addEventListener("click", event => {
-      event.stopPropagation();
-      vibrate(15);
-      clearSignatureBox();
+    
+    $("clearSignBtn").addEventListener("click", event => { 
+        event.stopPropagation(); 
+        vibrate(15); 
+        clearSignatureBox(); 
     });
 
     function clearSignatureBox() {
       signatureDataUrl = "";
-      $("signaturePreview").removeAttribute("src");
+      $("signaturePreview").removeAttribute("src"); 
       $("signaturePreview").style.display = "none";
-      $("signatureContent").style.display = "flex";
+      $("signatureContent").style.display = "flex"; 
       $("clearSignBtn").style.display = "none";
-      $("prevTtd").removeAttribute("src");
+      $("prevTtd").removeAttribute("src"); 
       $("prevTtd").style.display = "none";
-    }
-
-    function startDrawingSignature() {
-      closeModal("confirmSignModal");
-      vibrate(20);
-      const sigModal = $("signatureModal");
-      sigModal.classList.add("open");
       
-      setTimeout(() => {
-        initFullSignaturePad();
-      }, 250); 
+      cekStatusKelengkapan();
     }
 
-    function closeSignatureModal() {
-      vibrate(10);
-      $("signatureModal").classList.remove("open");
+    function startDrawingSignature() { 
+        vibrate(20); 
+        $("signatureModal").classList.add("open"); 
+        setTimeout(initFullSignaturePad, 250); 
+    }
+    
+    function closeSignatureModal() { 
+        vibrate(10); 
+        $("signatureModal").classList.remove("open"); 
     }
 
     const canvasFull = $("signaturePadFull");
     const ctxFull = canvasFull.getContext("2d");
-    let isDrawingFull = false;
-    let lastPointFull = null;
-    let hasDrawnFull = false;
+    let isDrawingFull = false, lastPointFull = null, hasDrawnFull = false;
 
     function initFullSignaturePad() {
       const rect = canvasFull.parentElement.getBoundingClientRect(); 
       const dpr = Math.max(1, window.devicePixelRatio || 1);
       
-      canvasFull.width = rect.width * dpr;
+      canvasFull.width = rect.width * dpr; 
       canvasFull.height = rect.height * dpr;
       
       ctxFull.setTransform(dpr, 0, 0, dpr, 0, 0);
-      ctxFull.lineCap = "round";
-      ctxFull.lineJoin = "round";
+      ctxFull.lineCap = "round"; 
+      ctxFull.lineJoin = "round"; 
       ctxFull.strokeStyle = "#111827"; 
       ctxFull.lineWidth = 3; 
       
@@ -1471,146 +2631,159 @@
 
     function getPointFull(event) {
       const rect = canvasFull.getBoundingClientRect();
-      return {
-        x: event.clientX - rect.left,
-        y: event.clientY - rect.top
+      return { 
+          x: event.clientX - rect.left, 
+          y: event.clientY - rect.top 
       };
     }
 
     canvasFull.addEventListener("pointerdown", event => {
       if (event.button !== undefined && event.button !== 0) return;
-      event.preventDefault();
-      isDrawingFull = true;
-      lastPointFull = getPointFull(event);
+      event.preventDefault(); 
+      isDrawingFull = true; 
+      lastPointFull = getPointFull(event); 
       canvasFull.setPointerCapture(event.pointerId);
       
-      ctxFull.beginPath();
-      ctxFull.moveTo(lastPointFull.x, lastPointFull.y);
-      ctxFull.lineTo(lastPointFull.x + 0.01, lastPointFull.y + 0.01);
+      ctxFull.beginPath(); 
+      ctxFull.moveTo(lastPointFull.x, lastPointFull.y); 
+      ctxFull.lineTo(lastPointFull.x + 0.01, lastPointFull.y + 0.01); 
       ctxFull.stroke();
+      
       hasDrawnFull = true;
     });
 
     canvasFull.addEventListener("pointermove", event => {
-      if (!isDrawingFull) return;
+      if (!isDrawingFull) return; 
       event.preventDefault();
+      
       const point = getPointFull(event);
-      ctxFull.beginPath();
-      ctxFull.moveTo(lastPointFull.x, lastPointFull.y);
-      ctxFull.lineTo(point.x, point.y);
+      ctxFull.beginPath(); 
+      ctxFull.moveTo(lastPointFull.x, lastPointFull.y); 
+      ctxFull.lineTo(point.x, point.y); 
       ctxFull.stroke();
+      
       lastPointFull = point;
     });
 
-    function endDrawingFull() {
-      isDrawingFull = false;
-      lastPointFull = null;
+    function endDrawingFull() { 
+        isDrawingFull = false; 
+        lastPointFull = null; 
     }
-
-    canvasFull.addEventListener("pointerup", endDrawingFull);
-    canvasFull.addEventListener("pointercancel", endDrawingFull);
+    
+    canvasFull.addEventListener("pointerup", endDrawingFull); 
+    canvasFull.addEventListener("pointercancel", endDrawingFull); 
     canvasFull.addEventListener("lostpointercapture", endDrawingFull);
 
-    function clearFullSignaturePad() {
-      vibrate(10);
-      const rect = canvasFull.getBoundingClientRect();
-      ctxFull.clearRect(0, 0, canvasFull.width, canvasFull.height);
-      hasDrawnFull = false;
+    function clearFullSignaturePad() { 
+        vibrate(10); 
+        ctxFull.clearRect(0, 0, canvasFull.width, canvasFull.height); 
+        hasDrawnFull = false; 
     }
 
     function saveFullSignature() {
       vibrate(20);
-      if (!hasDrawnFull) {
-        showToast("Silakan gambar tanda tangan terlebih dahulu", true);
-        return;
+      
+      if (!hasDrawnFull) { 
+          showToast("Silakan gambar tanda tangan terlebih dahulu", true); 
+          return; 
       }
       
       const dataUrl = canvasFull.toDataURL("image/png");
       signatureDataUrl = dataUrl;
-
-      $("signaturePreview").src = dataUrl;
+      
+      $("signaturePreview").src = dataUrl; 
       $("signaturePreview").style.display = "block";
-      $("signatureContent").style.display = "none";
+      $("signatureContent").style.display = "none"; 
       $("clearSignBtn").style.display = "flex";
-
-      $("prevTtd").src = dataUrl;
+      $("prevTtd").src = dataUrl; 
       $("prevTtd").style.display = "block";
-
-      closeSignatureModal();
-      showToast("Tanda tangan berhasil disimpan");
+      $("signatureBox").classList.remove("upload-error");
+      
+      closeSignatureModal(); 
+      showToast("Tanda tangan berhasil disimpan"); 
+      cekStatusKelengkapan();
     }
 
-    /* --- 16.13: LOGIKA DOWNLOAD (UNDUH & KIRIM DRIVE) --- */
-    window.addEventListener("resize", () => {
-      fitMobilePaper();
-    });
-
-    window.addEventListener("orientationchange", () => {
-      setTimeout(() => {
-        fitMobilePaper();
-        if ($("signatureModal").classList.contains("open")) {
-          initFullSignaturePad();
-        }
-      }, 300);
+    // === BAGIAN: SISTEM PEMBUATAN PDF/GAMBAR (HTML2CANVAS) ===
+    window.addEventListener("resize", fitMobilePaper);
+    
+    window.addEventListener("orientationchange", () => { 
+        setTimeout(() => { 
+            fitMobilePaper(); 
+            if ($("signatureModal").classList.contains("open")) {
+                initFullSignaturePad(); 
+            }
+        }, 300); 
     });
 
     async function downloadImage() {
       vibrate(20);
+      
       if (!validasiSebelumSimpan()) return;
+      
       const button = $("downloadBtn");
       if (button.disabled) return;
+      
       const originalText = button.innerHTML;
-      button.disabled = true;
+      button.disabled = true; 
       button.innerHTML = "Menyiapkan...";
+      $("loadingOverlay").style.display = "flex";
 
       try {
         updatePreview();
+        
         if (document.fonts && document.fonts.ready) {
-          await document.fonts.ready;
+            await document.fonts.ready;
         }
 
+        // Trik konversi Logo PLN menjadi Base64 agar tidak error CORS saat dirender html2canvas
         const originalLogo = $("suratContainer").querySelector(".letter-logo");
         let logoDataUrl = originalLogo.src;
+        
         if (logoDataUrl && !logoDataUrl.startsWith("data:")) {
           try {
-            const tempImg = new Image();
-            tempImg.crossOrigin = "anonymous";
+            const tempImg = new Image(); 
+            tempImg.crossOrigin = "anonymous"; 
             tempImg.src = logoDataUrl;
+            
             await new Promise((resolve, reject) => {
               tempImg.onload = () => {
                 const canvasImg = document.createElement("canvas");
-                canvasImg.width = tempImg.naturalWidth;
+                canvasImg.width = tempImg.naturalWidth; 
                 canvasImg.height = tempImg.naturalHeight;
                 canvasImg.getContext("2d").drawImage(tempImg, 0, 0);
-                logoDataUrl = canvasImg.toDataURL("image/png");
+                logoDataUrl = canvasImg.toDataURL("image/png"); 
                 resolve();
               };
               tempImg.onerror = reject;
             });
-          } catch(e) { console.warn("Gagal konversi logo", e); }
+          } catch(e) { 
+              console.warn("Gagal konversi logo", e); 
+          }
         }
 
+        // Mempersiapkan kloning area surat untuk di-render di latar belakang
         const cloneWrapper = document.createElement("div");
-        cloneWrapper.style.position = "absolute";
-        cloneWrapper.style.top = "-9999px";
+        cloneWrapper.style.position = "absolute"; 
+        cloneWrapper.style.top = "-9999px"; 
         cloneWrapper.style.left = "-9999px";
-        cloneWrapper.style.width = "794px";
-        cloneWrapper.style.background = "#ffffff";
+        cloneWrapper.style.width = "794px"; 
+        cloneWrapper.style.background = "#ffffff"; 
         cloneWrapper.style.zIndex = "-1";
 
         const clonePaper = $("suratContainer").cloneNode(true);
         clonePaper.querySelector(".letter-logo").src = logoDataUrl;
         
         const cloneTtd = clonePaper.querySelector("#prevTtd");
-        if (signatureDataUrl) {
-          cloneTtd.src = signatureDataUrl;
-          cloneTtd.style.display = "block";
+        if (signatureDataUrl) { 
+            cloneTtd.src = signatureDataUrl; 
+            cloneTtd.style.display = "block"; 
         }
 
         const cloneKtpContainer = clonePaper.querySelector("#containerKtp");
         if (ktpDataUrl) {
-          const ktpImg = document.createElement("img");
-          ktpImg.src = ktpDataUrl;
+          const ktpImg = document.createElement("img"); 
+          ktpImg.src = ktpDataUrl; 
           ktpImg.className = "ktp-output";
           cloneKtpContainer.replaceChildren(ktpImg);
         }
@@ -1619,121 +2792,123 @@
         cloneWrapper.appendChild(clonePaper);
         document.body.appendChild(cloneWrapper);
 
+        // Tunggu sebentar agar elemen selesai dimuat sepenuhnya
         await new Promise(r => setTimeout(r, 150));
 
+        // INJEKSI PAKSA: Pastikan semua teks surat berjenis font Tinos dan berwarna Hitam Pekat
+        const textElements = clonePaper.querySelectorAll('p, span, div, strong, b, li');
+        textElements.forEach(el => {
+          el.style.fontFamily = "'Tinos', 'Times New Roman', serif";
+          el.style.color = "#000000"; 
+          el.style.letterSpacing = "normal";
+          el.style.wordSpacing = "normal";
+        });
+        
+        clonePaper.style.fontFamily = "'Tinos', 'Times New Roman', serif";
+        clonePaper.style.color = "#000000";
+
+        // Proses menggambar elemen HTML menjadi gambar
         const result = await html2canvas(clonePaper, {
-          scale: 2,
-          useCORS: true,
-          allowTaint: true,
+          scale: 3, 
+          useCORS: true, 
+          allowTaint: true, 
           backgroundColor: "#ffffff",
-          logging: false,
-          windowWidth: 794,
+          logging: false, 
+          windowWidth: 794, 
           windowHeight: clonePaper.offsetHeight
         });
 
+        // Menghapus elemen kloning sementara dari dokumen
         document.body.removeChild(cloneWrapper);
 
         const blob = await new Promise((resolve, reject) => {
-          result.toBlob(blob => {
-            if (blob) resolve(blob);
-            else reject(new Error("Gagal membuat file gambar."));
+          result.toBlob(blob => { 
+              if (blob) resolve(blob); 
+              else reject(new Error("Gagal membuat file gambar.")); 
           }, "image/jpeg", 0.92);
         });
 
-        // --- 1. BUAT NAMA FILE BERDASARKAN ID PELANGGAN & NAMA PELANGGAN ---
+        // Pembuatan Format Nama File Otomatis
         const idPel = $("inputIdPel").value.trim() || "TANPA_IDPEL";
         const namaPln = $("inputNamaPln").value.trim().toUpperCase().replace(/\s+/g, "_") || "TANPA_NAMA";
-        
-        // Format: 123456789012_ASEP_SAEPUDIN
         const safeName = `${idPel}_${namaPln}`.replace(/[<>:"/\\|?*\x00-\x1F]/g, "_");
 
-        // --- 2. PROSES DOWNLOAD KE HP ---
+        // Proses Unduh (Download) File secara lokal ke HP
         const url = URL.createObjectURL(blob);
         const link = document.createElement("a");
-        link.href = url;
+        link.href = url; 
         link.download = `SURAT_${safeName}.jpg`;
-        document.body.appendChild(link);
-        link.click();
+        document.body.appendChild(link); 
+        link.click(); 
         link.remove();
         setTimeout(() => URL.revokeObjectURL(url), 1500);
 
-        // --- 3. PROSES KIRIM KE DRIVE ---
+        // Proses Kirim Formulir ke Google Drive (Spreadsheet & Folder)
         button.innerHTML = "Mengirim ke Drive...";
         const suratBase64 = await blobToBase64(blob);
+        
         const payload = {
-          nama:       $("inputNama").value.trim().toUpperCase(),
-          alamat:     $("inputAlamat").value.trim().toUpperCase(),
-          ktp:        $("inputKtp").value.trim(),
-          telp:       $("inputTelp").value.trim(),
-          namaPln:    $("inputNamaPln").value.trim().toUpperCase(),
-          alamatPln:  $("inputAlamatPln").value.trim().toUpperCase(),
-          idPel:      idPel,
-          tarif:      $("inputTarif").value.trim().toUpperCase(),
-          ktpImage:   ktpDataUrl,
-          ttdImage:   signatureDataUrl,
+          nama: $("inputNama").value.trim().toUpperCase(),
+          alamat: $("inputAlamat").value.trim().toUpperCase(),
+          ktp: $("inputKtp").value.trim(),
+          telp: $("inputTelp").value.trim(),
+          namaPln: $("inputNamaPln").value.trim().toUpperCase(),
+          alamatPln: $("inputAlamatPln").value.trim().toUpperCase(),
+          idPel: idPel,
+          tarif: $("inputTarif").value.trim().toUpperCase(),
+          ktpImage: ktpDataUrl,
+          ttdImage: "", // Tanda tangan hanya ditempel, tidak dikirim terpisah
           suratImage: suratBase64,
-
-          // 🔽 TAMBAHAN UNTUK NAMA FILE DI DRIVE 🔽
-          fileName:      safeName,
-          ktpFileName:   `KTP_${safeName}`,
-          ttdFileName:   `TTD_${safeName}`,
+          fileName: safeName,
+          ktpFileName: `KTP_${safeName}`,
+          ttdFileName: `TTD_${safeName}`,
           suratFileName: `SURAT_${safeName}`
         };
         
         await kirimKeDrive(payload);
         
-        confetti({
-          particleCount: 150,
-          spread: 70,
-          origin: { y: 0.6 },
-          colors: ['#0D5DA6', '#10b981', '#f59e0b', '#ef4444']
+        // Animasi Konfeti Sukses
+        confetti({ 
+            particleCount: 150, 
+            spread: 70, 
+            origin: { y: 0.6 }, 
+            colors: ['#0D5DA6', '#10b981', '#f59e0b', '#ef4444'] 
         });
+        
         showToast("Berhasil disimpan ke Drive");
+        
       } catch (error) {
         console.error("Error simpan:", error);
         let pesan = "Gagal mengirim ke Drive.";
+        
         if (error.message && error.message.includes("Failed to fetch")) {
-          pesan = "Tidak bisa terhubung ke server. Periksa koneksi internet.";
+            pesan = "Tidak bisa terhubung ke server. Periksa koneksi internet.";
         } else if (error.message) {
-          pesan = "Gagal: " + error.message;
+            pesan = "Gagal: " + error.message;
         }
+        
         showToast(pesan, true);
         
         const leftOver = document.querySelector('div[style*="-9999px"]');
         if (leftOver) leftOver.remove();
+        
       } finally {
-        button.disabled = false;
+        button.disabled = false; 
         button.innerHTML = originalText;
+        $("loadingOverlay").style.display = "none";
       }
     }
 
-    /* --- 16.14: LOGIKA TUTUP MODAL & SHORTCUT --- */
-    document.querySelectorAll(".modal").forEach(modal => {
-      modal.addEventListener("click", event => {
-        if (event.target === modal) {
-          if (modal.id === "cropModal") cancelCrop();
-          else closeModal(modal.id);
-        }
-      });
+    // === BAGIAN: SISTEM MENYALAKAN (INISIALISASI) APLIKASI PERTAMA KALI ===
+    initTheme(); 
+    setAutomaticDate(); 
+    updatePreview(); 
+    cekStatusKelengkapan(); 
+    
+    requestAnimationFrame(() => { 
+        fitMobilePaper(); 
     });
-
-    document.addEventListener("keydown", event => {
-      if (event.key === "Escape") {
-        closeModal("sourceModal");
-        closeModal("modalCustomTarif");
-        closeModal("confirmSignModal");
-        closeModal("signatureModal");
-        if ($("cropModal").classList.contains("open")) cancelCrop();
-      }
-    });
-
-    /* --- 16.15: INISIALISASI SAAT APLIKASI DIBUKA --- */
-    initTheme();
-    setAutomaticDate();
-    updatePreview();
-    requestAnimationFrame(() => {
-      fitMobilePaper();
-    });
+    
   </script>
 </body>
 </html>
