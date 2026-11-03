@@ -3,11 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<meta name="theme-color" content="#0D5DA6" id="metaThemeColor">
+<meta name="theme-color" content="#0D5DA6">
 <title>BA Tertib Bayar | ULP Lemah Abang</title>
-<link rel="manifest" href="manifest.json">
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
@@ -18,7 +15,7 @@
 <style>
 /* ===== 1. RESET & BASE ===== */
 *,*::before,*::after{-webkit-tap-highlight-color:transparent!important;box-sizing:border-box;margin:0;padding:0}
-button{outline:none!important;border:none;background:none;cursor:pointer;font:inherit;transition:transform .2s cubic-bezier(0.4,0,0.2,1),background-color .2s ease,color .2s ease,border-color .2s ease,box-shadow .2s ease;-webkit-appearance:none;appearance:none}
+button{outline:none!important;border:none;background:none;cursor:pointer;font:inherit;transition:transform .2s cubic-bezier(0.4,0,0.2,1),background-color .2s ease,color .2s ease,filter .2s ease;-webkit-appearance:none;appearance:none}
 button:focus,button:active{outline:none!important;box-shadow:none!important}
 button:active{transform:scale(0.96) translateY(1px);filter:brightness(0.95)}
 input{font:inherit}
@@ -36,14 +33,6 @@ input{font:inherit}
   --shadow-card:0 8px 26px rgba(17,48,82,.065);
   --shadow-premium:0 16px 42px rgba(17,48,82,.12);
   --ease-premium:cubic-bezier(.22,1,.36,1);
-  --theme-dur:.5s;
-  --theme-ease:cubic-bezier(.4,0,.2,1);
-}
-body.dark-mode{
-  --bg:#0b1524;--bg-card:#14243a;--bg-input:#102036;
-  --text:#edf4fc;--muted:#9aacc1;--border:rgba(177,200,225,.18);
-  --shadow-card:0 9px 28px rgba(0,0,0,.22);
-  --shadow-premium:0 17px 44px rgba(0,0,0,.30);
 }
 
 /* ===== 3. BODY ===== */
@@ -58,23 +47,6 @@ body{
 @media(min-width:1024px){body{overflow:auto;align-items:flex-start}}
 body.modal-open{overflow:hidden}
 body.modal-open .app-container{overflow:hidden}
-body::after{
-  content:'';position:fixed;inset:0;pointer-events:none;z-index:-1;
-  background:
-    radial-gradient(ellipse at 8% 0%,rgba(33,111,151,.12),transparent 34%),
-    radial-gradient(ellipse at 96% 14%,rgba(31,130,111,.08),transparent 28%),
-    linear-gradient(180deg,#101d2b 0%,#0b1522 100%);
-  opacity:0;
-}
-@media(prefers-reduced-motion:no-preference){body::after{transition:opacity var(--theme-dur) var(--theme-ease)}}
-body.dark-mode::after{opacity:1}
-@media(prefers-reduced-motion:no-preference){
-  body.theme-transition,body.theme-transition::before,body.theme-transition::after,body.theme-transition *,body.theme-transition *::before,body.theme-transition *::after{
-    transition:background-color var(--theme-dur) var(--theme-ease),color var(--theme-dur) var(--theme-ease),border-color var(--theme-dur) var(--theme-ease),box-shadow var(--theme-dur) var(--theme-ease),fill var(--theme-dur) var(--theme-ease),stroke var(--theme-dur) var(--theme-ease),opacity var(--theme-dur) var(--theme-ease);
-    transition-delay:0s;
-  }
-}
-body.no-transition,body.no-transition *,body.no-transition *::before,body.no-transition *::after{transition:none!important}
 
 /* ===== 4. APP CONTAINER ===== */
 .app-container{
@@ -89,114 +61,98 @@ body.no-transition,body.no-transition *,body.no-transition *::before,body.no-tra
   padding:11px clamp(16px,3vw,34px);position:sticky;top:0;z-index:100;flex-shrink:0;
   color:#183b5a!important;border-bottom:1px solid rgba(194,211,227,.75);
   box-shadow:0 3px 15px rgba(29,62,91,.055)!important;
-  background:radial-gradient(ellipse at 8% 0%,rgba(255,255,255,.82),transparent 38%),linear-gradient(105deg,#d9efff 0%,#edf8ff 38%,#ffffff 76%,#e4f3ff 100%);
+  /* FLIP GRADASI: Putih di kiri (atas logo), pudar ke biru di kanan */
+  background: linear-gradient(135deg, #ffffff 0%, #f2f9ff 45%, #c4e3f7 100%);
+  backdrop-filter: blur(10px);
 }
-.top-bar::before{
-  content:'';position:absolute;inset:0;z-index:0;pointer-events:none;
-  background:linear-gradient(105deg,#101f2f 0%,#111f2d 38%,#101d2b 76%,#111e2d 100%);
-  opacity:0;
+
+.top-bar-left-group { display: flex; align-items: center; transition: all 0.3s ease; flex-shrink: 0;}
+
+/* Lingkaran Progress */
+.circular-progress-wrapper {
+  position: relative; width: 0; height: 34px; opacity: 0; overflow: hidden; display: flex; align-items: center; justify-content: center;
+  transition: width 0.4s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.3s ease, margin-right 0.4s ease;
 }
-@media(prefers-reduced-motion:no-preference){.top-bar::before{transition:opacity var(--theme-dur) var(--theme-ease)}}
-body.dark-mode .top-bar::before{opacity:1}
-.top-bar > *{position:relative;z-index:1}
+.circular-progress-wrapper.show { width: 34px; opacity: 1; margin-right: 10px; }
+.progress-ring { width: 34px; height: 34px; position: absolute; }
+.progress-ring__circle-bg { stroke: #d8e2ed; }
+.progress-ring__circle { 
+  transform: rotate(-90deg); transform-origin: 50% 50%; 
+  stroke-dasharray: 94.25; stroke-dashoffset: 94.25; 
+  transition: stroke-dashoffset 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+.progress-percent { 
+  font-size: 8.5px; font-weight: 800; color: #12466f; z-index: 1; 
+  display: flex; align-items: center; justify-content: center; width: 100%; height: 100%; 
+}
+
+/* Jam & Tanggal */
+.top-bar-time { display: flex; flex-direction: column; justify-content: center; transition: transform 0.3s ease; }
+.clock-display { font-size: 10px; font-weight: 800; color: #174b73; letter-spacing: 0.5px; line-height: 1.15; }
+.date-display { font-size: 10px; font-weight: 800; color: #174b73; letter-spacing: .35px; white-space: nowrap; margin-top: 1px; line-height: 1.15; text-transform: uppercase; }
+
+/* Profil Kanan */
 .top-bar-profile{display:flex;align-items:center;gap:8px;flex-shrink:0;margin-left:auto}
 .top-bar-text{display:flex;flex-direction:column;align-items:flex-end;text-align:right;line-height:1.15}
 .top-bar-role{font-size:9px;font-weight:600;color:#4f7e9e;letter-spacing:1.1px;text-transform:uppercase}
-body.dark-mode .top-bar-role{color:#91a9bd}
 .top-bar-name{font-size:11px;font-weight:800;color:#174b73;white-space:nowrap;margin-top:1px;letter-spacing:.35px}
-body.dark-mode .top-bar-name{color:#edf5fc}
 .top-bar-avatar{width:34px;height:34px;border-radius:50%;object-fit:cover;border:2px solid #fff;box-shadow:0 2px 9px rgba(26,91,139,.18)}
 
-/* ===== 6. THEME TOGGLE ===== */
-.theme-toggle-flat{
-  position:relative;display:flex;align-items:center;justify-content:space-between;
-  width:62px;height:32px;padding:0 7px;
-  border:1px solid rgba(101,145,181,.28);
-  border-radius:999px;
-  background:linear-gradient(135deg,#dceeff 0%,#a8d5f5 48%,#6c91d8 100%);
-  box-shadow:0 3px 10px rgba(25,66,104,.12);
-  overflow:hidden;isolation:isolate;cursor:pointer;
-  transition:background .45s ease,box-shadow .35s ease,transform .25s ease;
-}
-.theme-toggle-flat:hover{background:linear-gradient(135deg,rgba(255,255,255,.32),rgba(255,255,255,.15));box-shadow:0 6px 16px rgba(0,22,48,.18)}
-.theme-toggle-flat:active{transform:scale(.96)}
-.theme-toggle-thumb{
-  position:absolute;z-index:-1;left:3px;top:3px;width:26px;height:26px;border-radius:50%;
-  background:linear-gradient(145deg,#fff 0%,#f5f9ff 100%);
-  box-shadow:0 2px 7px rgba(23,58,103,.22),inset 0 1px 1px #fff;
-  transition:transform .48s cubic-bezier(.2,.85,.25,1.25),background .4s ease,box-shadow .4s ease;
-}
-.theme-toggle-flat svg{position:relative;inset:auto;width:17px;height:17px;flex:0 0 17px;opacity:1;filter:drop-shadow(0 1px 1px rgba(20,48,80,.16));transition:transform .48s cubic-bezier(.2,.85,.25,1.25),filter .3s ease}
-.theme-toggle-flat .icon-sun{transform:scale(1) rotate(0)}
-.theme-toggle-flat .icon-moon{transform:scale(.82) rotate(-18deg);opacity:.72}
-body.dark-mode .theme-toggle-flat{background:linear-gradient(135deg,#182b52 0%,#263b72 52%,#4656a1 100%);box-shadow:inset 0 2px 5px rgba(0,0,0,.28),0 5px 16px rgba(0,0,0,.28)}
-body.dark-mode .theme-toggle-thumb{transform:translateX(30px);background:linear-gradient(145deg,#f5f7ff 0%,#dbe5ff 100%);box-shadow:0 2px 9px rgba(0,0,0,.3),inset 0 1px 1px #fff}
-body.dark-mode .theme-toggle-flat .icon-sun{transform:scale(.82) rotate(18deg);opacity:.72}
-body.dark-mode .theme-toggle-flat .icon-moon{transform:scale(1) rotate(0);opacity:1}
-@media(prefers-reduced-motion:reduce){.theme-toggle-flat,.theme-toggle-thumb,.theme-toggle-flat svg{transition:none!important}}
-
-/* ===== 7. HERO ===== */
+/* ===== 6. HERO ===== */
 .sticky-header{position:relative;flex-shrink:0;background:var(--bg)}
 .topbar-biru{
-  position:relative;overflow:hidden;isolation:isolate;
-  padding:22px 18px 38px;
+  position:relative;overflow:hidden;isolation:isolate; padding:22px 18px 38px;
   background:
     radial-gradient(ellipse at 8% 0%,rgba(255,255,255,.78),transparent 36%),
     radial-gradient(ellipse at 90% 20%,rgba(255,255,255,.56),transparent 28%),
-    linear-gradient(130deg,#55b3ec 0%,#8bcdf2 34%,#d7efff 70%,#ffffff 100%);
-  border-bottom:1px solid rgba(103,166,207,.28);
-  box-shadow:inset 0 1px 0 rgba(255,255,255,.62);
+    linear-gradient(225deg,#55b3ec 0%,#8bcdf2 34%,#d7efff 70%,#ffffff 100%);
+  border-bottom:1px solid rgba(103,166,207,.28); box-shadow:inset 0 1px 0 rgba(255,255,255,.62);
 }
-.topbar-biru::before{
-  content:'';position:absolute;inset:0;z-index:0;pointer-events:none;
-  background:
-    radial-gradient(circle at 88% 18%,rgba(214,157,82,.10),transparent 18%),
-    radial-gradient(circle at 76% 100%,rgba(42,159,142,.12),transparent 25%),
-    linear-gradient(112deg,#14283b 0%,#172d40 54%,#193747 100%);
-  opacity:0;
+
+/* Shimmer Sweep */
+.topbar-biru::before {
+  content: ''; position: absolute; top: 0; left: -100%; width: 50%; height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.6), transparent);
+  transform: skewX(-25deg); animation: headerShimmer 8s ease-in-out infinite;
+  pointer-events: none; z-index: 0;
 }
-@media(prefers-reduced-motion:no-preference){.topbar-biru::before{transition:opacity var(--theme-dur) var(--theme-ease)}}
-body.dark-mode .topbar-biru::before{opacity:1}
+@keyframes headerShimmer {
+  0% { left: -100%; }
+  20% { left: 200%; }
+  100% { left: 200%; }
+}
+
 .topbar-biru::after{
   content:"";position:absolute;width:360px;height:360px;right:-95px;top:-245px;
   border:1px solid rgba(255,255,255,.52);border-radius:50%;pointer-events:none;z-index:0;
   box-shadow:0 0 0 14px rgba(255,255,255,.07),0 0 0 30px rgba(255,255,255,.045);
 }
-body.dark-mode .topbar-biru::after{border-color:rgba(156,203,220,.10);box-shadow:none}
-.brand{position:relative;z-index:1;max-width:1180px;margin:auto;display:flex;align-items:center;justify-content:space-between;gap:10px}
-.brand-mark{
-  display:flex;align-items:center;justify-content:center;flex-shrink:0;
-  width:58px;height:58px;padding:6px;
-  background:linear-gradient(145deg,rgba(255,255,255,.92),rgba(235,248,255,.72));
-  border:1px solid rgba(255,255,255,.88);border-radius:15px;
-  box-shadow:0 8px 22px rgba(38,112,163,.14),inset 0 1px 0 #fff;
-  backdrop-filter:blur(10px);transition:background .4s ease,border-color .4s ease,box-shadow .4s ease;
-}
-.brand-mark img{height:100%;max-width:100%;border-radius:10px;object-fit:contain;display:block}
-body.dark-mode .brand-mark{background:linear-gradient(145deg,#21394d,#1a3043);border-color:#38566d;box-shadow:0 7px 20px rgba(0,0,0,.18),inset 0 1px 0 rgba(255,255,255,.06)}
-.brand-text{text-align:right;flex:1;display:flex;flex-direction:column;align-items:flex-end}
-.brand-title{font-size:clamp(19px,5vw,25px);font-weight:800;color:#12466f;margin:0;line-height:1.1;letter-spacing:.4px;text-shadow:0 1px 0 rgba(255,255,255,.65);transition:color .4s ease,text-shadow .4s ease}
-body.dark-mode .brand-title{color:#edf6fc;text-shadow:none}
-.brand-sub{font-size:8px;font-weight:600;color:#397da8;margin:4px 0 8px;letter-spacing:1px;text-transform:uppercase;transition:color .4s ease}
-body.dark-mode .brand-sub{color:#a4c1d2}
-.user-badge{
-  display:inline-flex;align-items:center;gap:8px;padding:5px 10px;border-radius:50px;
-  background:linear-gradient(105deg,rgba(255,255,255,.72),rgba(232,248,255,.64));
-  border:1px solid rgba(255,255,255,.82);
-  box-shadow:0 4px 12px rgba(41,111,155,.08),inset 0 1px 0 rgba(255,255,255,.9);
-  backdrop-filter:blur(8px);transition:background .4s ease,border-color .4s ease,box-shadow .4s ease;
-}
-.user-info .name{font-size:10px;font-weight:700;color:#17658b;letter-spacing:1.2px;transition:color .4s ease}
-body.dark-mode .user-badge{background:linear-gradient(110deg,rgba(42,105,143,.25),rgba(31,126,108,.19));border-color:rgba(99,157,170,.3)}
-body.dark-mode .user-info .name{color:#a7e0d4}
+.brand{position:relative;z-index:1;max-width:1180px;margin:auto;display:flex;align-items:center;justify-content:space-between;gap:12px}
+.brand-mark{display:flex;align-items:center;justify-content:center;flex-shrink:0;width:65px;height:65px;position:relative;}
+.brand-mark img{height:125%;width:125%;object-fit:contain;display:block;position:relative;z-index:1;}
 
-/* ===== 8. MOBILE NAV ===== */
+.brand-title{
+  font-size:clamp(21px,5.5vw,26px);font-weight:800;color:#12466f;margin:0;line-height:1.1;letter-spacing:.4px;
+  text-shadow:0 1px 0 rgba(255,255,255,.65);
+}
+.brand-text{text-align:right;flex:1;display:flex;flex-direction:column;align-items:flex-end; margin-right:2px;}
+.brand-sub{font-size:9px;font-weight:600;color:#397da8;margin:5px 0 9px;letter-spacing:1.2px;text-transform:uppercase;}
+
+/* Badge Glassmorphism iOS (Putih Transparan) */
+.user-badge{
+  display:inline-flex;align-items:center;gap:8px;padding:6px 12px;border-radius:50px;
+  background: rgba(255, 255, 255, 0.65);
+  border: 1px solid rgba(255, 255, 255, 0.9);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05), inset 0 1px 0 rgba(255, 255, 255, 0.8);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}
+.user-info .name{font-size:11px;font-weight:800;color:#12466f;letter-spacing:1.2px;}
+
+/* ===== 7. MOBILE NAV ===== */
 .mobile-nav{
-  display:grid;grid-template-columns:1fr 1fr;position:relative;z-index:10;
-  width:auto;
-  /* UBAH JARAK KIRI-KANAN JADI 8px */
-  margin:-23px 8px 22px;
-  padding:5px;
+  display:grid;grid-template-columns:1fr 1fr;position:relative;z-index:10; width:auto;
+  margin:-23px 8px 22px; padding:5px;
   border:1px solid rgba(176,202,222,.8);border-radius:15px;
   background:linear-gradient(120deg,#fff 0%,#f5fbff 58%,#f2fbf8 100%);
   box-shadow:0 8px 20px rgba(31,89,128,.10);
@@ -204,7 +160,8 @@ body.dark-mode .user-info .name{color:#a7e0d4}
 .mobile-nav::before{
   content:'';position:absolute;top:5px;bottom:5px;left:5px;
   width:calc(50% - 5px);border-radius:11px;
-  background:linear-gradient(110deg,#0878c9 0%,#219bd0 58%,#18a58f 100%);
+  background:linear-gradient(110deg,#0878c9 0%,#219bd0 100%);
+  box-shadow:0 2px 6px rgba(8,120,201,.2);
   transition:transform .4s cubic-bezier(.25,1,.5,1);z-index:1;
 }
 .mobile-nav.show-preview::before{transform:translateX(100%)}
@@ -213,12 +170,9 @@ body.dark-mode .user-info .name{color:#a7e0d4}
   font-size:11px;font-weight:800;letter-spacing:.55px;position:relative;z-index:2;transition:color .3s;
 }
 .mobile-nav button.active{color:#fff}
-body.dark-mode .mobile-nav{border:1px solid rgba(89,125,155,.45);background:linear-gradient(120deg,#172b40,#193343)}
-body.dark-mode .mobile-nav::before{background:linear-gradient(110deg,#176fc0,#248eae 58%,#168879)}
 
-/* ===== 9. CONTENT / PAGE ===== */
-/* UBAH JARAK KIRI-KANAN JADI 8px AGAR SEJAJAR DENGAN TAB */
-.content-area{padding:0 8px 24px}
+/* ===== 8. CONTENT / PAGE ===== */
+.content-area{padding:0 8px 24px; transition: padding-top 0.3s ease;}
 .content-page{display:none;width:100%}
 .content-page.active{display:block}
 .content-page.active.slide-left{animation:slideInLeft .35s var(--ease-premium) forwards}
@@ -229,13 +183,12 @@ body.dark-mode .mobile-nav::before{background:linear-gradient(110deg,#176fc0,#24
 @keyframes slideInRight{from{opacity:0;transform:translateX(-30px)}to{opacity:1;transform:translateX(0)}}
 @keyframes pageSlideIn{from{opacity:0;transform:translateY(-6px)}to{opacity:1;transform:translateY(0)}}
 
-/* ===== 10. DRAFT RECOVERY ===== */
+/* ===== 9. DRAFT RECOVERY ===== */
 .draft-recovery{display:none;align-items:center;justify-content:space-between;gap:10px;padding:10px 12px;margin:0 0 13px;border:1px solid rgba(13,93,166,.22);border-radius:12px;background:var(--blue-light);color:var(--blue);font-size:10px;line-height:1.45}
-body.dark-mode .draft-recovery{background:rgba(13,93,166,.18);color:#93c5fd}
 .draft-recovery.show{display:flex;animation:pageSlideIn .3s var(--ease-premium)}
 .draft-recovery button{color:inherit;font-weight:800;text-decoration:underline;white-space:nowrap}
 
-/* ===== 11. PANEL ===== */
+/* ===== 10. PANEL ===== */
 .panel{
   position:relative;overflow:hidden;margin-bottom:13px;
   border:1px solid rgba(211,222,232,.95);border-radius:17px;
@@ -248,10 +201,6 @@ body.dark-mode .draft-recovery{background:rgba(13,93,166,.18);color:#93c5fd}
 .panel:has(.input-wrap input:focus,.custom-tariff-input:focus,select:focus,textarea:focus){
   border-color:rgba(20,112,181,.30);
   box-shadow:0 10px 30px rgba(15,88,145,.095),0 0 0 3px rgba(20,112,181,.045);
-}
-body.dark-mode .panel:has(.input-wrap input:focus,.custom-tariff-input:focus,select:focus,textarea:focus){
-  border-color:rgba(91,168,224,.45);
-  box-shadow:0 10px 30px rgba(0,0,0,.23),0 0 0 3px rgba(68,151,211,.08);
 }
 .panel-head{
   position:relative;isolation:isolate;overflow:hidden;
@@ -266,10 +215,8 @@ body.dark-mode .panel:has(.input-wrap input:focus,.custom-tariff-input:focus,sel
   opacity:0;transition:opacity .28s ease;pointer-events:none;
 }
 .panel:has(.input-wrap input:focus,.custom-tariff-input:focus,select:focus,textarea:focus) .panel-head::after{opacity:1}
-body.dark-mode .panel-head::after{background:linear-gradient(105deg,rgba(23,43,64,0) 0%,rgba(39,72,98,.10) 30%,rgba(54,105,140,.20) 60%,rgba(65,139,181,.31) 84%,rgba(91,167,207,.38) 100%)}
 @media(prefers-reduced-motion:reduce){.panel-head::after{transition:none!important}}
-body.dark-mode .panel{background:var(--bg-card);border-color:var(--border)}
-body.dark-mode .panel-head{background:linear-gradient(110deg,#172a3d 0%,#182d40 72%,#19353e 100%);border-bottom-color:var(--border)}
+
 .panel-icon{
   width:40px;height:40px;flex-shrink:0;border-radius:12px;
   display:grid;place-items:center;
@@ -279,27 +226,33 @@ body.dark-mode .panel-head{background:linear-gradient(110deg,#172a3d 0%,#182d40 
   transition:background .25s ease,border-color .25s ease,transform .25s ease,box-shadow .25s ease;
 }
 .panel-icon svg{width:32px!important;height:32px!important;overflow:visible;filter:drop-shadow(0 2px 2px rgba(20,65,105,.12))}
-.panel-icon .ikon-pln{width:26px!important;height:26px!important}
 .panel:has(.input-wrap input:focus,.custom-tariff-input:focus,select:focus,textarea:focus) .panel-icon{
   background:linear-gradient(145deg,#e7f5ff 0%,#d4ebff 100%);
   border-color:#8fc4ef;
   box-shadow:0 5px 16px rgba(34,126,194,.16),inset 0 1px 0 #fff;
   transform:translateY(-1px);
 }
-body.dark-mode .panel-icon{background:linear-gradient(145deg,#1d3855 0%,#213f60 100%);border-color:#365a7c;box-shadow:inset 0 1px 0 rgba(255,255,255,.06),0 5px 14px rgba(0,0,0,.16)}
-body.dark-mode .panel:has(.input-wrap input:focus,.custom-tariff-input:focus,select:focus,textarea:focus) .panel-icon{background:linear-gradient(145deg,#24496c 0%,#28547d 100%);border-color:#5796c7}
-.panel-title{font-size:12px;font-weight:800;letter-spacing:1px;color:#1b4667;transition:color .3s}
-.panel-desc{font-size:10.5px;color:#7b8fa2;margin-top:5px;line-height:1.6;transition:color .3s}
-body.dark-mode .panel-title{color:#e5effa}
+.panel.is-completed .panel-icon {
+  background: linear-gradient(145deg,#ecfdf5 0%,#d1fae5 100%);
+  border-color: #6ee7b7;
+  box-shadow: 0 5px 16px rgba(16,185,129,.15), inset 0 1px 0 #fff;
+  animation: iconPop 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+}
+@keyframes iconPop {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.1); }
+  100% { transform: scale(1); }
+}
+
+.panel-title{font-size:12px;font-weight:800;letter-spacing:1px;color:#1b4667;}
+.panel-desc{font-size:10.5px;color:#7b8fa2;margin-top:5px;line-height:1.6;}
 .panel-body{padding:17px 16px 19px}
 .panel-footer{display:flex;gap:10px;padding:12px 15px;background:linear-gradient(100deg,#f8fbfd,#f5faf9);border-top:1px solid #e9eff5;justify-content:flex-end}
-body.dark-mode .panel-footer{background:linear-gradient(100deg,#14263a,#162d38);border-color:var(--border)}
 
-/* ===== 12. FIELDS & INPUTS ===== */
+/* ===== 11. FIELDS & INPUTS ===== */
 .field{margin-bottom:17px}
 .field:last-child{margin-bottom:0}
 .field label{display:block;font-size:10.5px;font-weight:800;color:#334b65;margin-bottom:8px;letter-spacing:.25px}
-body.dark-mode .field label{color:#e5effa}
 .field-grid-2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
 .field-grid-2 .field{margin-bottom:0}
 @media(max-width:360px){.field-grid-2{grid-template-columns:1fr}}
@@ -308,18 +261,15 @@ body.dark-mode .field label{color:#e5effa}
 .field-grid-2 .input-wrap input{padding-right:13px}
 .input-wrap input:not([type="tel"]){text-transform:uppercase}
 .input-wrap input::placeholder{color:#9aa9ba;text-transform:none;font-weight:400}
-.input-wrap input:focus{outline:none;border-color:#2782c3!important;background:#fff;box-shadow:0 0 0 4px rgba(18,112,183,.10)}
+.input-wrap input:focus{outline:none;border-color:#2782c3!important;background:#fff;box-shadow:0 0 0 2px rgba(18,112,183,.10)}
 .input-wrap input.input-error{border-color:var(--red)!important;background:rgba(239,68,68,.05)!important}
-body.dark-mode .input-wrap input{background:#0f1e31;color:#edf4fc;border-color:#344b64}
-body.dark-mode .input-wrap input::placeholder{color:#8498af}
-body.dark-mode .input-wrap input:focus{border-color:#fff!important}
 .clear-input{position:absolute;right:10px;top:50%;transform:translateY(-50%);width:27px;height:27px;border-radius:50%;color:var(--muted);background:var(--bg);display:none;place-items:center;transition:background-color .2s,color .2s}
 .clear-input svg{width:14px;height:14px;stroke-width:3}
 .clear-input.visible{display:grid}
 .clear-input:hover{background:var(--border);color:var(--text)}
 .clear-input:active{transform:translateY(-50%)!important}
 
-/* ===== 13. FIELD HINTS ===== */
+/* ===== 12. FIELD HINTS ===== */
 .field-hint{display:flex;align-items:center;gap:5px;margin-top:0;font-size:10px;font-weight:600;color:var(--muted);line-height:1.4;padding-left:2px;max-height:0;opacity:0;overflow:hidden;pointer-events:none;transition:max-height .28s cubic-bezier(.4,0,.2,1),margin-top .28s cubic-bezier(.4,0,.2,1),opacity .22s,color .2s}
 .field-hint.show{max-height:40px;margin-top:6px;opacity:1}
 .field-hint::before{content:'';display:inline-block;width:4px;height:4px;border-radius:50%;background:currentColor;opacity:.6;flex-shrink:0}
@@ -333,17 +283,15 @@ body.dark-mode .input-wrap input:focus{border-color:#fff!important}
 @keyframes fieldShake{0%,100%{transform:translateX(0)}20%{transform:translateX(-5px)}40%{transform:translateX(5px)}60%{transform:translateX(-3px)}80%{transform:translateX(3px)}}
 @keyframes iconWiggle{0%,100%{transform:rotate(0)}25%{transform:rotate(-8deg)}75%{transform:rotate(8deg)}}
 
-/* ===== 14. TARIFF GRID ===== */
+/* ===== 13. TARIFF GRID ===== */
 .tariff-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:7px}
 .tariff{min-height:44px;border:1.4px solid #dce5ef;border-radius:12px;background:#fbfcfe;color:#60758d;font-size:9px;font-weight:800;padding:8px 4px;transition:all .22s var(--ease-premium)}
 .tariff:hover{border-color:#4b94c8;background:#f0f7fd}
-body:not(.dark-mode) .tariff.selected{color:#fff;background:linear-gradient(120deg,#087bc7 0%,#219fd0 58%,#23ad9a 100%);border-color:#168fc0;box-shadow:0 6px 15px rgba(15,128,177,.22)}
-body:not(.dark-mode) #btnCustomTarif{color:#0875b4!important;background:linear-gradient(120deg,#eaf6ff 0%,#d8f1ff 55%,#e1f8f1 100%)!important;border:1.5px dashed #65b6d8!important}
-body.dark-mode .tariff{background:#102036;border-color:#344b64;color:#b2c2d3}
-body.dark-mode .tariff.selected{color:#fff;background:linear-gradient(120deg,#176fc0,#248aa9 58%,#168879);border-color:#3a91b5}
+.tariff.selected{color:#fff;background:linear-gradient(120deg,#0878c9 0%,#219bd0 100%);border-color:#0878c9;box-shadow:0 6px 15px rgba(8,120,201,.22)}
+#btnCustomTarif{color:#60758d!important;background:#fbfcfe!important;border:1.4px dashed #b9cde0!important}
 
-/* ===== 15. UPLOAD BOX ===== */
-.upload-box{position:relative;min-height:145px;border:1.5px dashed #b9cde0;border-radius:16px;background:linear-gradient(145deg,#fbfdff 0%,#f0f8fc 62%,#effaf7 100%);display:flex;justify-content:center;align-items:center;text-align:center;padding:23px;cursor:pointer;overflow:hidden;transition:all .25s var(--ease-premium)}
+/* ===== 14. UPLOAD BOX ===== */
+.upload-box{position:relative;min-height:145px;border:1.5px dashed #b9cde0;border-radius:16px;background:linear-gradient(145deg,#fbfdff,#f2f7fc);display:flex;justify-content:center;align-items:center;text-align:center;padding:23px;cursor:pointer;overflow:hidden;transition:all .25s var(--ease-premium)}
 .upload-box:hover{border-color:#2684c4;background:linear-gradient(145deg,#f1f9ff 0%,#e9f6fb 62%,#e8f8f2 100%);box-shadow:inset 0 0 0 3px rgba(38,132,196,.045)}
 .upload-box.upload-error{border-color:var(--red)!important;background:rgba(239,68,68,.05)!important}
 .upload-icon{margin-bottom:12px;display:flex;justify-content:center;align-items:center}
@@ -358,38 +306,45 @@ body.dark-mode .tariff.selected{color:#fff;background:linear-gradient(120deg,#17
 #signatureContent{display:flex;flex-direction:column;align-items:center;justify-content:center;width:100%;height:100%}
 .corner-clear{display:none;position:absolute;right:8px;top:8px;z-index:3;width:31px;height:31px;border-radius:50%;background:#ef4444;color:#fff;align-items:center;justify-content:center;box-shadow:0 3px 10px rgba(0,0,0,.16)}
 .corner-clear svg{width:16px;height:16px;stroke-width:3}
-body.dark-mode .upload-box,body.dark-mode #signatureBox{background:linear-gradient(145deg,#14283b,#17303d);border-color:#46627d}
-body.dark-mode .upload-title{color:#a8bbcf}
 
-/* ===== 16. BUTTONS ===== */
+/* ===== 15. BUTTONS ===== */
 .primary,.secondary{min-height:48px;padding:13px 19px;border-radius:12px;font-size:11px;font-weight:800;letter-spacing:.3px}
-body:not(.dark-mode) .primary{color:#fff;background:linear-gradient(112deg,#0878c9 0%,#168fd0 48%,#16a58f 100%);border:1px solid rgba(13,112,170,.35);box-shadow:0 7px 17px rgba(13,112,170,.22),inset 0 1px 0 rgba(255,255,255,.22)}
-body:not(.dark-mode) .primary:hover{background:linear-gradient(112deg,#0867ae 0%,#117dbb 48%,#128d7b 100%);transform:translateY(-1px);box-shadow:0 10px 22px rgba(13,112,170,.28)}
+.primary{color:#fff;background:linear-gradient(112deg,#0878c9 0%,#168fd0 48%,#16a58f 100%);border:1px solid rgba(13,112,170,.35);box-shadow:0 7px 17px rgba(13,112,170,.22),inset 0 1px 0 rgba(255,255,255,.22)}
+.primary:hover{background:linear-gradient(112deg,#0867ae 0%,#117dbb 48%,#128d7b 100%);transform:translateY(-1px);box-shadow:0 10px 22px rgba(13,112,170,.28)}
 .primary:active{transform:scale(0.97) translateY(2px)!important}
 .secondary{color:#60748b;background:#f5f8fb;border:1px solid #dce5ef}
 .secondary:hover{background:var(--border)}
-body.dark-mode .primary{background:linear-gradient(112deg,#176fc0 0%,#277fc4 50%,#178d83 100%);border-color:#277fc4;box-shadow:0 7px 18px rgba(0,0,0,.22)}
-body.dark-mode .secondary{background:#1b3048;border-color:#344b64;color:#d3dfeb}
-.btn-lihat-surat{position:relative;display:flex;align-items:center;justify-content:center;width:100%;flex:1}
-.btn-lihat-surat svg{position:absolute;right:16px;top:50%;transform:translateY(-50%);width:16px;height:16px;stroke-width:3}
-body:not(.dark-mode) #downloadBtn{background:linear-gradient(112deg,#079b79 0%,#10b58a 52%,#35c49b 100%)!important;border-color:#079b79!important;box-shadow:0 7px 18px rgba(8,157,119,.23),inset 0 1px 0 rgba(255,255,255,.24);display:flex;align-items:center;justify-content:center;gap:8px}
-body:not(.dark-mode) #downloadBtn:hover{background:linear-gradient(112deg,#078568 0%,#0c9c78 52%,#25ad87 100%)!important}
-body.dark-mode #downloadBtn{background:linear-gradient(112deg,#087e68 0%,#11977a 55%,#25a58a 100%)!important;border-color:#15977c!important}
+
+.btn-lihat-surat{position:relative;display:flex;align-items:center;justify-content:center;width:100%;flex:1;font-size:12.5px!important;font-weight:800;border:none!important;box-shadow:none!important;background:linear-gradient(112deg,#0878c9 0%,#219bd0 100%)!important;color:#fff!important;border-radius:12px;padding:14px 19px;transition:filter .2s ease!important;}
+.btn-lihat-surat:hover{filter:brightness(0.95);transform:none!important;}
+.btn-lihat-surat svg{position:absolute;right:16px;top:50%;transform:translateY(-50%);width:18px;height:18px;stroke-width:3;}
+
+#downloadBtn{background: #10b981!important;color:#fff!important;font-size:12.5px!important;font-weight:800;border:none!important;box-shadow:none!important;display:flex;align-items:center;justify-content:center;gap:8px;transition:filter .2s ease!important;}
+#downloadBtn:hover{filter:brightness(0.95);transform:none!important;}
+
 .btn-spinner{width:16px;height:16px;border:2px solid rgba(255,255,255,.4);border-top-color:#fff;border-radius:50%;animation:spin .7s linear infinite;display:none}
 #downloadBtn.loading .btn-spinner{display:block}
 @keyframes spin{0%{transform:rotate(0)}100%{transform:rotate(360deg)}}
 
-/* ===== 17. PREVIEW / PAPER ===== */
+/* ===== 16. PREVIEW / PAPER & ZOOM ===== */
 .preview-panel{width:100%;background:#fff;border:1px solid #dce5ef;border-radius:20px;box-shadow:var(--shadow-card);overflow:hidden;margin-bottom:18px}
 .preview-top{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:18px 21px;background:linear-gradient(105deg,#fff 0%,#f8fbfd 70%,#f1f8f7 100%);border-bottom:1px solid #e9eff5;flex-wrap:wrap}
-.preview-top h2{font-size:13px;margin:0;font-weight:800;color:#173b5e;transition:color .3s}
-.preview-tools{display:flex;align-items:center;gap:6px;margin-left:auto}
-.zoom-control{width:32px;height:32px;display:grid;place-items:center;border-radius:9px;background:var(--bg-input);border:1px solid var(--border);color:var(--text);font-size:15px;font-weight:800}
-.zoom-control:hover{border-color:var(--blue);color:var(--blue)}
-.zoom-label{min-width:42px;text-align:center;font-size:10px;color:var(--muted);font-weight:800;font-variant-numeric:tabular-nums}
-.paper-area{padding:16px 10px;background:radial-gradient(circle at 12% 12%,rgba(54,142,182,.08),transparent 28%),#edf2f6;display:flex;justify-content:center;align-items:flex-start;overflow-x:hidden;overflow-y:hidden;width:100%;min-height:100px;transition:height .25s ease-out}
+.preview-top h2{font-size:13px;margin:0;font-weight:800;color:#173b5e;}
+
+/* Tombol Zoom Minimalis (Icon Center) */
+.preview-tools{display:flex;align-items:center;gap:2px;margin-left:auto;background:#f1f5f9;border-radius:8px;padding:3px;}
+.zoom-control{
+  width:28px;height:28px;
+  display:flex; align-items:center; justify-content:center; /* Center align */
+  border-radius:6px;background:transparent;border:none;color:#64748b;
+  font-size:14px;font-weight:800;transition:all .2s;
+}
+.zoom-control svg { width: 16px; height: 16px; fill: currentColor; }
+.zoom-control:hover{background:#e2e8f0;color:#0f172a;}
+.zoom-label{min-width:38px;text-align:center;font-size:10px;color:#64748b;font-weight:800;font-variant-numeric:tabular-nums;display:flex;align-items:center;justify-content:center;}
+
+.paper-area{padding:16px 10px;background:radial-gradient(circle at 12% 12%,rgba(54,142,182,.08),transparent 28%),#edf2f6;display:flex;justify-content:center;align-items:flex-start;overflow-x:hidden;overflow-y:hidden;width:100%;min-height:100px;transition:height .25s ease-out;}
 .paper-area.zoom-overflow{overflow-x:auto}
-body.dark-mode .paper-area{background:radial-gradient(circle at 12% 12%,rgba(54,142,182,.08),transparent 28%),#0c1726}
 .paper-scaler{transform-origin:top center;transition:transform .25s ease-out;opacity:0;animation:paperFadeIn .35s ease-out forwards;will-change:transform}
 @keyframes paperFadeIn{from{opacity:0}to{opacity:1}}
 .paper{width:794px;min-width:794px;max-width:794px;flex-shrink:0;min-height:1123px;padding:60px 70px;margin:0 auto;background:#fff;color:#000;box-shadow:0 12px 34px rgba(22,43,66,.18);font-family:'Tinos','Times New Roman',serif!important;font-size:14px;line-height:1.5;border-radius:3px}
@@ -413,106 +368,101 @@ body.dark-mode .paper-area{background:radial-gradient(circle at 12% 12%,rgba(54,
 .signature-name{font-weight:bold;text-align:center}
 .preview-actions{display:flex;flex-direction:column;gap:10px;padding:17px 21px;background:linear-gradient(100deg,#f8fbfd,#f5faf9);border-top:1px solid #e9eff5}
 .preview-actions .primary{width:100%}
-.preview-note{padding:0 21px 18px;color:var(--muted);font-size:10px;line-height:1.6;background:linear-gradient(100deg,#f8fbfd,#f5faf9)}
-body.dark-mode .preview-panel{background:var(--bg-card);border-color:var(--border)}
-body.dark-mode .preview-top{background:linear-gradient(105deg,#172a3d,#182e3d 70%,#19383d);border-color:var(--border)}
-body.dark-mode .preview-top h2{color:#e5effa}
-body.dark-mode .preview-actions,body.dark-mode .preview-note{background:linear-gradient(100deg,#14263a,#162d38);border-color:var(--border)}
 
-/* ===== 18. MODAL ===== */
+/* ===== 17. MODAL ===== */
 .modal{display:none;position:fixed;inset:0;z-index:1000;background:rgba(10,27,44,.56);backdrop-filter:blur(7px);-webkit-backdrop-filter:blur(7px);align-items:center;justify-content:center;padding:12px}
 .modal.open{display:flex;animation:modalBackdropIn .22s ease-out both}
-body.dark-mode .modal{background:rgba(0,9,18,.68)!important}
 .modal-card{position:relative;width:min(100%,420px);max-width:420px;max-height:88vh;overflow:auto;background:#fff;border:1px solid #e4edf3;border-radius:15px;padding:18px 16px 16px;box-shadow:0 18px 52px rgba(4,27,48,.20);animation:modalCardIn .34s cubic-bezier(.2,.85,.25,1.12) both;transform-origin:center center}
 .modal-card::before{display:none!important}
-body.dark-mode .modal-card{background:#1a2d40;border-color:#30495e;box-shadow:0 18px 52px rgba(0,0,0,.38)}
 @keyframes modalBackdropIn{from{opacity:0}to{opacity:1}}
 @keyframes modalCardIn{from{opacity:0;transform:translateY(12px) scale(.965)}to{opacity:1;transform:translateY(0) scale(1)}}
 .modal-close{position:absolute;z-index:2;right:13px;top:13px;width:29px;height:29px;border-radius:50%;color:#71889a;background:#f2f6f9;border:1px solid #e5edf2;display:grid;place-items:center;padding:0;box-shadow:none;transition:transform .22s ease,background .22s ease,color .22s ease}
 .modal-close:hover{transform:rotate(90deg);background:#eaf4fa;border-color:#cfe4f0;color:#286d99}
 .modal-close svg{width:16px;height:16px;stroke-width:3}
-body.dark-mode .modal-close{background:#263d51;border-color:#3a5368;color:#c2d5e2}
 .modal-heading{display:flex;align-items:center;gap:9px;padding:0 30px 11px 0;margin:0 0 2px;border-bottom:1px solid #edf2f6}
 .modal-icon{display:grid;place-items:center;flex:0 0 36px;width:36px;height:36px;border-radius:10px;background:#edf7fc;border:1px solid #dcecf5;box-shadow:none}
 .modal-icon svg{width:21px;height:21px;display:block;filter:none}
 .modal-heading-copy{display:flex;flex-direction:column;gap:4px;min-width:0}
 .modal-heading h3{font-size:16px;font-weight:800;line-height:1.25;letter-spacing:-.2px;color:#214763;margin:0}
 .modal-card>p{margin:10px 0 13px;font-size:12.5px;line-height:1.55;color:#718496}
-body.dark-mode .modal-heading{border-bottom-color:#30485b}
-body.dark-mode .modal-heading h3{color:#e9f3fa}
-body.dark-mode .modal-card>p{color:#a9bdcc}
-body.dark-mode .modal-icon{background:#213d54;border-color:#35566e}
 
-/* ===== 19. MODAL OPTIONS / TARIFF / CROP / SIGNATURE ===== */
+/* ===== 18. MODAL OPTIONS / TARIFF / CROP / SIGNATURE ===== */
 .modal-options{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:3px}
-.modal-options button{min-height:74px;display:flex;flex-direction:column;justify-content:center;align-items:center;gap:7px;border-radius:13px;font-size:13px;font-weight:850;box-shadow:none;transition:transform .22s ease,filter .22s ease}
-.modal-options button svg{width:25px;height:25px}
-.modal-options button:hover{transform:translateY(-1px)}
+/* Layout tombol kamera/galeri: sejajar (row) */
+.modal-options button{min-height:52px;display:flex;flex-direction:row;justify-content:center;align-items:center;gap:8px;border-radius:13px;font-size:13px;font-weight:800;box-shadow:none;transition:transform .22s ease,filter .22s ease;border:none;color:#fff!important;}
+.modal-options button svg{width:20px;height:20px;fill:currentColor;}
+.modal-options button:hover{transform:translateY(-1px);filter:brightness(0.95);}
 .modal-options button:active{transform:scale(.975)}
-.modal-options .btn-kamera{background:#eaf6fd;color:#1479b2;border:1px solid #cde7f5}
-.modal-options .btn-galeri{background:#eaf8f2;color:#148268;border:1px solid #ccebdc}
-body.dark-mode .modal-options .btn-kamera{background:#1d4058;border-color:#315d79;color:#9bd8f3}
-body.dark-mode .modal-options .btn-galeri{background:#1d443b;border-color:#315e50;color:#9be0c4}
+.modal-options .btn-kamera{background:linear-gradient(135deg,#4AA8E8 0%,#1479B2 100%)}
+.modal-options .btn-galeri{background:linear-gradient(135deg,#3DCBA0 0%,#148268 100%)}
+
 .custom-tariff-input{width:100%;height:45px;border:1.4px solid #d9e6ef;background:#f5f9fc;border-radius:13px;padding:0 15px;color:var(--text);font-weight:600;font-size:14px;margin-bottom:16px;transition:border-color .3s,box-shadow .3s,background .3s}
 .custom-tariff-input:focus{outline:none;background:#fff;border-color:#38a2d5;box-shadow:0 0 0 4px rgba(43,151,207,.12)}
-body.dark-mode .custom-tariff-input{background:#102238;border-color:#34516b;color:#edf6fd}
-body.dark-mode .custom-tariff-input:focus{background:#142b42;border-color:#49a9d8}
 .modal-tariff-actions{display:flex;gap:9px;margin-top:13px}
 .modal-tariff-actions button{flex:1;height:43px;border-radius:11px;font-size:13px;font-weight:800;display:flex;align-items:center;justify-content:center;box-shadow:none;transition:transform .18s ease,box-shadow .18s ease,filter .18s ease}
 .btn-batal-tarif,.btn-batal-reset{background:#f3f6f8;border:1px solid #e2eaf0;color:#61788b}
 .btn-simpan-tarif{background:linear-gradient(100deg,#1688c7,#209bc2);color:#fff;border:0}
-body.dark-mode .btn-batal-tarif,body.dark-mode .btn-batal-reset{background:#263c50;border-color:#3b5368;color:#d1e0ea}
 #cropModal .modal-card{max-width:470px!important}
 .crop-frame{height:min(40vh,300px);min-height:190px;overflow:hidden;background:#111;border-radius:12px;border:1px solid #dce8ef;margin:12px 0}
 .crop-frame img{display:block;max-width:100%}
 .crop-tools{display:flex;gap:7px;margin-bottom:12px}
 .crop-tools button{flex:1;display:flex;align-items:center;justify-content:center;gap:6px;padding:10px;font-weight:700;min-height:38px;border-radius:10px;background:#f1f6f9;border:1px solid #e1eaf0;color:#526f84;transition:transform .18s ease,background .18s ease}
 .crop-tools button:hover{transform:translateY(-1px)}
-body.dark-mode #cropModal .crop-tools button{background:#263e52;border-color:#3b566b;color:#d1e0ea}
 .btn-apply-crop{width:100%;height:43px;background:#1688c7;color:#fff;border-radius:11px;font-size:13px;font-weight:800;display:flex;align-items:center;justify-content:center;margin-top:10px;box-shadow:none;transition:transform .18s ease,filter .18s ease}
+
+/* Signature Modal Update */
 .signature-modal-card{max-width:500px!important;width:100%;padding:22px 15px 17px;text-align:left}
 .signature-canvas-wrapper{width:100%;height:min(39vh,290px);min-height:190px;margin:13px 0 11px;background:repeating-linear-gradient(0deg,#fff,#fff 34px,#f6f9fb 35px);border:1px dashed #9fc5dc;border-radius:12px;position:relative;overflow:hidden;box-shadow:none}
 #signaturePadFull{display:block;width:100%;height:100%;touch-action:none;cursor:crosshair}
+/* TRASH ICON: Pindah ke kanan bawah */
+.clear-ttd-btn {
+  position: absolute; bottom: 8px; right: 8px; width: 32px; height: 32px;
+  background: rgba(239,68,68,.1); color: #ef4444; border-radius: 8px;
+  display: flex; align-items: center; justify-content: center; z-index: 10;
+  border: 1px solid rgba(239,68,68,.2); transition: all 0.2s;
+}
+.clear-ttd-btn:hover { background: rgba(239,68,68,.2); }
+.clear-ttd-btn svg { width: 18px; height: 18px; }
 .signature-actions{display:flex;gap:8px;margin-top:15px}
 .signature-actions>*{flex:1;min-height:43px;padding:12px 16px;font-size:13px;font-weight:800;border-radius:11px;display:flex;align-items:center;justify-content:center;box-shadow:none}
 .signature-actions .primary{background:#1688c7;box-shadow:none}
-body.dark-mode .signature-canvas-wrapper{background:#fff;border-color:#65a9d2}
 
-/* ===== 20. SUCCESS MODAL + CONFETTI ===== */
+/* ===== 19. SUCCESS MODAL + CONFETTI ===== */
 .success-modal-card{max-width:390px;text-align:center;padding:23px 22px 20px;background:#fff;position:relative;overflow:hidden}
-body.dark-mode .success-modal-card{background:#1a342e}
 .success-mark{width:66px;height:66px;margin:2px auto 13px;border-radius:50%;display:grid;place-items:center;color:#149b72;background:#e7f8f0;border:0;box-shadow:0 0 0 10px rgba(16,185,129,.15),0 10px 30px rgba(16,185,129,.4);position:relative;z-index:2;animation:popIn .5s cubic-bezier(0.175,.885,.32,1.275) forwards,successGlow 2s infinite alternate}
 .success-mark svg{width:38px;height:38px;stroke-width:2.6;color:#149b72;filter:none}
 @keyframes popIn{from{transform:scale(.85);opacity:0}to{transform:scale(1);opacity:1}}
 @keyframes successGlow{from{box-shadow:0 0 0 10px rgba(16,185,129,.1),0 10px 30px rgba(16,185,129,.3)}to{box-shadow:0 0 0 20px rgba(16,185,129,.05),0 15px 40px rgba(16,185,129,.6)}}
 .success-modal-card h3{font-size:19px;color:#205b48;margin-bottom:7px;position:relative;z-index:2}
 .success-modal-card .success-sub{font-size:12.5px;color:#71877e;line-height:1.6;margin-bottom:14px;position:relative;z-index:2}
-body.dark-mode .success-modal-card h3{color:#c7f2df}
-body.dark-mode .success-modal-card .success-sub{color:#a8c9bb}
 .success-details{text-align:left;padding:11px 13px;border-radius:11px;background:#f5faf7;border:1px solid #e5f0e9;margin-bottom:14px;position:relative;z-index:2}
 .success-detail-row{display:flex;justify-content:space-between;gap:12px;padding:7px 0;border-bottom:1px solid #e5f0e9;font-size:11px}
 .success-detail-row:last-child{border-bottom:0}
 .success-detail-row span:first-child{color:var(--muted)}
 .success-detail-row strong{text-align:right;overflow-wrap:anywhere}
-body.dark-mode .success-details{background:#203b34;border-color:#34564a}
-body.dark-mode .success-detail-row{border-bottom-color:#34564a}
+
+#confirmModal .success-details {
+  background: #f3f6f8;
+  border-color: #e2eaf0;
+}
+#confirmModal .success-detail-row { border-bottom-color: #e2eaf0; }
+
 .success-actions{display:flex;flex-direction:row;gap:8px;position:relative;z-index:2}
 .success-actions>button{flex:1;min-height:42px;border-radius:11px;font-size:13px;font-weight:850;box-shadow:none;transition:transform .18s ease,filter .18s ease}
 .success-actions>button:hover{transform:translateY(-1px)}
 .success-actions .secondary{background:#f1f5f7;border:1px solid #e3ebef;color:#587084}
 .success-actions .btn-share{background:linear-gradient(135deg,#10b981,#059669);border:none;box-shadow:0 4px 12px rgba(16,185,129,.3);color:#fff}
-body.dark-mode .success-actions .secondary{background:#334155;color:#cbd5e1;border:none}
 .confetti-container{position:absolute;top:0;left:0;width:100%;height:100%;pointer-events:none;overflow:hidden;z-index:10}
 .confetti{position:absolute;width:8px;height:16px;background-color:#f00;opacity:0;animation:fall 2.5s linear forwards}
 @keyframes fall{0%{transform:translateY(-20px) rotate(0);opacity:1}100%{transform:translateY(400px) rotate(720deg);opacity:0}}
 
-/* ===== 21. TOAST ===== */
+/* ===== 20. TOAST ===== */
 .toast{position:fixed;top:max(10px,env(safe-area-inset-top));left:50%;transform:translate(-50%,-120%) scale(.95);background:linear-gradient(110deg,#079b79,#23b98f);color:#fff;padding:11px 15px;border-radius:11px;font-size:12.5px;font-weight:750;z-index:3000;opacity:0;pointer-events:none;border:1px solid rgba(255,255,255,.25);transition:opacity .22s ease,transform .22s ease-out;width:max-content;max-width:min(92vw,440px);text-align:center;white-space:normal;box-shadow:0 8px 22px rgba(7,44,61,.16),inset 0 1px 0 rgba(255,255,255,.22)}
 .toast.show{opacity:1;transform:translate(-50%,0) scale(1);animation:toastArrive .22s ease-out both}
-.toast.error{background:linear-gradient(110deg,#e45458,#f27b67);box-shadow:0 8px 22px rgba(116,32,35,.22),inset 0 1px 0 rgba(255,255,255,.18)}
+.toast.error{background:#d32f2f;box-shadow:0 8px 22px rgba(116,32,35,.3)}
 @keyframes toastArrive{from{opacity:0;transform:translate(-50%,-12px)}to{opacity:1;transform:translate(-50%,0)}}
 
-/* ===== 22. LOADING OVERLAY ===== */
+/* ===== 21. LOADING OVERLAY ===== */
 #loadingOverlay{display:none;position:fixed;inset:0;background:radial-gradient(circle at center,rgba(13,93,166,.95) 0%,rgba(11,18,32,.98) 100%);z-index:9999;flex-direction:column;align-items:center;justify-content:center;color:#fff;backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);padding:20px;text-align:center}
 #loadingOverlay::before,#loadingOverlay::after{content:'';position:absolute;top:50%;left:50%;width:60px;height:60px;border-radius:50%;border:2px solid rgba(56,189,248,.3);transform:translate(-50%,-50%);animation:ripple 2s infinite cubic-bezier(0.4,0,0.2,1);z-index:1}
 #loadingOverlay::after{animation-delay:1s;border-color:rgba(16,185,129,.3)}
@@ -522,13 +472,13 @@ body.dark-mode .success-actions .secondary{background:#334155;color:#cbd5e1;bord
 #loadingOverlay h3{font-size:17px;font-weight:750;margin-bottom:8px;color:#fff;position:relative;z-index:2}
 #loadingOverlay p{font-size:12px;color:#c4d9e7;line-height:1.7;position:relative;z-index:2}
 
-/* ===== 23. MEDIA QUERIES ===== */
+/* ===== 22. MEDIA QUERIES ===== */
 @media(max-width:600px){
   .top-bar{padding:10px 12px}
   .topbar-biru{padding:23px 18px 42px}
-  .brand-mark{width:58px;height:58px;padding:6px;border-radius:15px}
-  .brand-title{font-size:clamp(19px,5vw,25px)}
-  .brand-sub{font-size:8px;letter-spacing:1px;margin:4px 0 8px}
+  .brand-mark{width:60px;height:60px;}
+  .brand-title{font-size:clamp(20px,5.5vw,26px)}
+  .brand-sub{font-size:9.8px;letter-spacing:1px;margin:4px 0 8px}
   .panel{border-radius:17px;margin-bottom:13px}
   .panel-head{padding:16px 16px 13px}
   .panel-body{padding:17px 16px 19px}
@@ -545,7 +495,7 @@ body.dark-mode .success-actions .secondary{background:#334155;color:#cbd5e1;bord
   .modal-icon svg{width:21px;height:21px}
   .modal-heading h3{font-size:16px}
   .modal-card>p{margin:10px 0 13px}
-  .modal-options button{min-height:74px}
+  .modal-options button{min-height:52px}
   #cropModal .crop-frame{height:36vh;min-height:175px}
   .signature-canvas-wrapper{height:36vh;min-height:175px}
   .success-modal-card{padding:27px 18px 19px}
@@ -571,6 +521,7 @@ body.dark-mode .success-actions .secondary{background:#334155;color:#cbd5e1;bord
   *,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}
   .panel-icon,.panel-head::after{transition:none!important}
   .modal-card,.modal-close,.modal-options button,.success-mark,.toast.show{animation:none!important;transition:none!important}
+  .topbar-biru::before { animation: none !important; display: none !important; }
 }
 @media(prefers-reduced-motion:no-preference){
   .panel{animation:premiumPanelIn .42s var(--ease-premium) both}
@@ -581,37 +532,40 @@ body.dark-mode .success-actions .secondary{background:#334155;color:#cbd5e1;bord
 }
 </style>
 </head>
-<body class="no-transition">
-<!-- SVG global defs -->
+<body>
 <svg aria-hidden="true" width="0" height="0" style="position:absolute;overflow:hidden"><defs><linearGradient id="miBlue" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#55C8F0"/><stop offset="1" stop-color="#1685C8"/></linearGradient></defs></svg>
 
 <div class="app-container" id="appContainer">
 
-<!-- ===== TOP BAR ===== -->
+<!-- ===== TOP BAR REVISI ===== -->
 <div class="top-bar">
-  <button class="theme-toggle-flat" onclick="toggleTheme()" aria-label="Ubah Tema" id="themeToggleBtn" title="Ganti tema">
-    <span class="theme-toggle-thumb" aria-hidden="true"></span>
-    <svg class="icon-sun" viewBox="0 0 32 32" aria-hidden="true">
-      <defs>
-        <linearGradient id="sunCoreGrad" x1="7" y1="5" x2="25" y2="27" gradientUnits="userSpaceOnUse"><stop stop-color="#FFF3A6"/><stop offset=".55" stop-color="#FFC84A"/><stop offset="1" stop-color="#FF8A32"/></linearGradient>
-        <linearGradient id="sunRayGrad" x1="16" y1="1" x2="16" y2="31" gradientUnits="userSpaceOnUse"><stop stop-color="#FFF2A0"/><stop offset="1" stop-color="#FF9A3D"/></linearGradient>
-      </defs>
-      <g stroke="url(#sunRayGrad)" stroke-width="2.5" stroke-linecap="round">
-        <path d="M16 2.5v3M16 26.5v3M2.5 16h3M26.5 16h3M6.45 6.45l2.15 2.15m14.8 14.8 2.15 2.15m0-19.1-2.15 2.15m-14.8 14.8-2.15 2.15"/>
-      </g>
-      <circle cx="16" cy="16" r="8.1" fill="url(#sunCoreGrad)" stroke="#F59E0B" stroke-width="1.2"/>
-      <path d="M11.5 13.2c1.1-2.1 3.2-3.1 5.4-2.8" stroke="#FFF9D8" stroke-width="1.8" stroke-linecap="round" opacity=".9"/>
-    </svg>
-    <svg class="icon-moon" viewBox="0 0 32 32" aria-hidden="true">
-      <defs>
-        <linearGradient id="moonGrad" x1="7" y1="4" x2="25" y2="29" gradientUnits="userSpaceOnUse"><stop stop-color="#C7E8FF"/><stop offset=".5" stop-color="#78B8F4"/><stop offset="1" stop-color="#6575D8"/></linearGradient>
-        <linearGradient id="starGrad" x1="22" y1="3" x2="27" y2="10" gradientUnits="userSpaceOnUse"><stop stop-color="#FFF5B8"/><stop offset="1" stop-color="#FFC34D"/></linearGradient>
-      </defs>
-      <path d="M23.9 20.2A12.1 12.1 0 0 1 11.8 8.1c0-1.2.2-2.4.5-3.5A12.7 12.7 0 1 0 27.4 19.7c-1.1.4-2.3.5-3.5.5Z" fill="url(#moonGrad)" stroke="#5D83D7" stroke-width="1.2" stroke-linejoin="round"/>
-      <path d="m23.8 3.2.9 2.3 2.3.9-2.3.9-.9 2.3-.9-2.3-2.3-.9 2.3-.9.9-2.3Z" fill="url(#starGrad)"/>
-      <circle cx="7" cy="11" r="1.1" fill="#A9D8FF"/><circle cx="25.8" cy="14" r=".9" fill="#FFF0AE"/>
-    </svg>
-  </button>
+  <div class="top-bar-left-group">
+    
+    <!-- Lingkaran Progress (Ukuran 34px) -->
+    <div class="circular-progress-wrapper" id="circularProgress">
+      <svg class="progress-ring" width="34" height="34" viewBox="0 0 34 34">
+        <defs>
+          <linearGradient id="progressGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stop-color="#0878c9" />
+            <stop offset="100%" stop-color="#10b981" />
+          </linearGradient>
+        </defs>
+        <circle class="progress-ring__circle-bg" stroke="#d8e2ed" stroke-width="3" fill="transparent" r="15" cx="17" cy="17"/>
+        <circle class="progress-ring__circle" id="progressCircle" stroke="url(#progressGrad)" stroke-width="3" fill="transparent" r="15" cx="17" cy="17"/>
+      </svg>
+      <span class="progress-percent" id="progressPercent">0%</span>
+    </div>
+
+    <!-- Jam & Tanggal -->
+    <div class="top-bar-time">
+      <div class="time-info">
+        <div class="clock-display" id="clockDisplay">00:00:00</div>
+        <div class="date-display" id="dateDisplay">SENIN, 01 JAN 2026</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Profil Kanan -->
   <div class="top-bar-profile">
     <div class="top-bar-text">
       <div class="top-bar-role">Created by</div>
@@ -645,14 +599,13 @@ body.dark-mode .success-actions .secondary{background:#334155;color:#cbd5e1;bord
 <div class="content-page active" id="page-form">
 <section>
 
-  <!-- Draft recovery banner (muncul hanya jika ada draft tersimpan) -->
   <div class="draft-recovery" id="draftRecovery" role="status">
     <span>Draft sebelumnya ditemukan. Data lokal siap dipulihkan.</span>
     <button type="button" onclick="restoreDraft(true)">Pulihkan</button>
   </div>
 
   <!-- Panel 1: DATA PENGHUNI -->
-  <div class="panel">
+  <div class="panel" id="panel1">
     <div class="panel-head">
       <div class="panel-icon"><svg viewBox="0 0 48 48" aria-hidden="true">
         <defs>
@@ -681,7 +634,7 @@ body.dark-mode .success-actions .secondary{background:#334155;color:#cbd5e1;bord
   </div>
 
   <!-- Panel 2: DATA PELANGGAN -->
-  <div class="panel">
+  <div class="panel" id="panel2">
     <div class="panel-head">
       <div class="panel-icon"><svg viewBox="0 0 48 48" aria-hidden="true">
         <defs>
@@ -716,7 +669,7 @@ body.dark-mode .success-actions .secondary{background:#334155;color:#cbd5e1;bord
   </div>
 
   <!-- Panel 3: BERKAS DOKUMEN -->
-  <div class="panel">
+  <div class="panel" id="panel3">
     <div class="panel-head">
       <div class="panel-icon"><svg viewBox="0 0 48 48" aria-hidden="true">
         <defs>
@@ -739,12 +692,10 @@ body.dark-mode .success-actions .secondary{background:#334155;color:#cbd5e1;bord
           <button class="corner-clear" id="clearKtpBtn" type="button" aria-label="Hapus foto KTP"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
           <div id="uploadContent">
             <div class="upload-icon"><svg viewBox="0 0 48 48" fill="none"><rect x="6" y="12" width="36" height="28" rx="4" fill="#38BDF8"/><rect x="6" y="12" width="36" height="28" rx="4" fill="url(#paint0_linear_cam)"/><path d="M16 12L19 7H29L32 12H16Z" fill="#0284C7"/><circle cx="24" cy="26" r="9" fill="#F0F9FF"/><circle cx="24" cy="26" r="7" fill="#0F172A"/><circle cx="24" cy="26" r="4" fill="#38BDF8"/><circle cx="22" cy="24" r="1.5" fill="#FFF"/><rect x="34" y="16" width="4" height="2" rx="1" fill="#F0F9FF"/><defs><linearGradient id="paint0_linear_cam" x1="24" y1="12" x2="24" y2="40" gradientUnits="userSpaceOnUse"><stop stop-color="#7DD3FC"/><stop offset="1" stop-color="#38BDF8"/></linearGradient></defs></svg></div>
-            <div class="upload-title">ketuk untuk upload foto<br>ambil dari kamera langsung atau galeri</div>
+            <div class="upload-title">ketuk untuk upload foto</div>
           </div>
           <img class="upload-preview" id="ktpBoxPreview" alt="Pratinjau foto KTP">
         </div>
-        <input type="file" id="inputKamera" accept="image/*" capture="environment" hidden>
-        <input type="file" id="inputGaleri" accept="image/*" hidden>
       </div>
       <div class="field"><label>Tanda Tangan</label>
         <div class="upload-box" id="signatureBox" role="button" tabindex="0" aria-label="Buat tanda tangan">
@@ -756,8 +707,8 @@ body.dark-mode .success-actions .secondary{background:#334155;color:#cbd5e1;bord
     </div>
   </div>
 
-  <!-- Panel 4: PETUGAS & PENGAWAS -->
-  <div class="panel">
+  <!-- Panel 4: PETUGAS & PENGAWAS (VERTIKAL) -->
+  <div class="panel" id="panel4">
     <div class="panel-head">
       <div class="panel-icon"><svg viewBox="0 0 48 48" aria-hidden="true">
         <defs>
@@ -790,13 +741,11 @@ body.dark-mode .success-actions .secondary{background:#334155;color:#cbd5e1;bord
       <div><div class="panel-title">PETUGAS &amp; PENGAWAS</div><div class="panel-desc">Informasi data petugas input dan pengawas</div></div>
     </div>
     <div class="panel-body">
-      <div class="field-grid-2">
-        <div class="field"><label for="inputPetugas" class="sr-only">Nama petugas</label><div class="input-wrap"><input id="inputPetugas" placeholder="Nama petugas" autocomplete="name"></div></div>
-        <div class="field"><label for="inputPengawas" class="sr-only">Nama pengawas</label><div class="input-wrap"><input id="inputPengawas" placeholder="Nama pengawas" autocomplete="name"></div></div>
-      </div>
+      <div class="field"><label for="inputPetugas">Petugas</label><div class="input-wrap"><input id="inputPetugas" placeholder="Masukkan nama petugas input " autocomplete="name"></div></div>
+      <div class="field" style="margin-top:17px;"><label for="inputPengawas">Pengawas</label><div class="input-wrap"><input id="inputPengawas" placeholder="Masukkan nama pengawas " autocomplete="name"></div></div>
     </div>
     <div class="panel-footer">
-      <button type="button" class="primary btn-lihat-surat" onclick="switchTab(1)">
+      <button type="button" class="primary btn-lihat-surat" id="btnLihatSurat" onclick="switchTab(1)">
         <span>LIHAT SURAT</span>
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
       </button>
@@ -810,16 +759,20 @@ body.dark-mode .success-actions .secondary{background:#334155;color:#cbd5e1;bord
 <div class="content-page" id="page-preview">
 <section>
   <div class="preview-panel">
+    
     <div class="preview-top">
       <h2>Pratinjau Surat</h2>
       <div class="preview-tools" aria-label="Kontrol zoom surat">
         <button class="zoom-control" type="button" onclick="changePreviewZoom(-0.1)" aria-label="Perkecil surat">−</button>
         <span class="zoom-label" id="zoomLabel">100%</span>
         <button class="zoom-control" type="button" onclick="changePreviewZoom(0.1)" aria-label="Perbesar surat">+</button>
-        <button class="zoom-control" type="button" onclick="resetPreviewZoom()" aria-label="Sesuaikan ukuran" title="Fit">↔</button>
+        <!-- Ikon Zoom In Map (Google Material) -->
+        <button class="zoom-control" type="button" onclick="resetPreviewZoom()" aria-label="Sesuaikan ukuran" title="Fit">
+          <svg viewBox="0 0 24 24"><path d="M9 3H3v6h2V5h4V3zm12 0h-6v2h4v4h2V3zM3 21h6v-2H5v-4H3v6zm16-2v-4h2v6h-6v-2h4z"/></svg>
+        </button>
       </div>
     </div>
-    <div class="paper-area">
+    <div class="paper-area" id="paperArea">
       <div class="paper-scaler" id="paperScaler">
         <article class="paper" id="suratContainer">
           <div class="letter-head">
@@ -838,7 +791,7 @@ body.dark-mode .success-actions .secondary{background:#334155;color:#cbd5e1;bord
           <div class="data-grid">
             <div class="data-label">Atas nama pelanggan</div><div class="data-colon">:</div><div class="data-value" id="prevNamaPln">...</div>
             <div class="data-label">Alamat</div><div class="data-colon">:</div><div class="data-value" id="prevAlamatPln">...</div>
-            <div class="data-label">ID</div><div class="data-colon">:</div><div class="data-value" id="prevIdPel">...</div>
+            <div class="data-label">ID Pelanggan</div><div class="data-colon">:</div><div class="data-value" id="prevIdPel">...</div>
             <div class="data-label">Tarif / Daya</div><div class="data-colon">:</div><div class="data-value" id="prevTarif">...</div>
           </div>
           <p>Dengan ini saya menyatakan:</p>
@@ -866,13 +819,34 @@ body.dark-mode .success-actions .secondary{background:#334155;color:#cbd5e1;bord
         <span class="btn-text">KIRIM FILE</span>
       </button>
     </div>
-    <div class="preview-note">Periksa kembali semua data sebelum menyimpan, pastikan form dan berkas sudah lengkap dan sesuai.</div>
   </div>
 </section>
 </div>
 
 </div><!-- /content-area -->
 </div><!-- /app-container -->
+
+<!-- ===== MODAL: KONFIRMASI KIRIM ===== -->
+<div class="modal" id="confirmModal" role="dialog" aria-modal="true" aria-labelledby="confirmTitle">
+  <div class="modal-card">
+    <button type="button" class="modal-close" onclick="closeModal('confirmModal')" aria-label="Tutup"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="m18 6-12 12M6 6l12 12"/></svg></button>
+    <div class="modal-heading">
+      <span class="modal-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9" fill="url(#miBlue)" stroke="#1687C5" stroke-width="1.2"/><path d="M12 7v6m0 4h.01" stroke="#fff" stroke-width="2" stroke-linecap="round"/></svg></span>
+      <span class="modal-heading-copy"><h3 id="confirmTitle">Konfirmasi Kirim</h3></span>
+    </div>
+    <p>Periksa kembali data berikut. Setelah dikirim, dokumen akan langsung masuk ke Google Drive dan tidak dapat diubah.</p>
+    <div class="success-details">
+      <div class="success-detail-row"><span>Nama Pelanggan</span><strong id="confirmNama">-</strong></div>
+      <div class="success-detail-row"><span>Alamat Pelanggan</span><strong id="confirmAlamat">-</strong></div>
+      <div class="success-detail-row"><span>IDPEL</span><strong id="confirmIdPel">-</strong></div>
+      <div class="success-detail-row"><span>Tarif / Daya</span><strong id="confirmTarif">-</strong></div>
+    </div>
+    <div class="modal-tariff-actions">
+      <button type="button" class="btn-batal-tarif" onclick="closeModal('confirmModal')">Batal</button>
+      <button type="button" class="btn-simpan-tarif" onclick="lanjutKirim()">Ya, Kirim</button>
+    </div>
+  </div>
+</div>
 
 <!-- ===== MODAL: TARIF CUSTOM ===== -->
 <div class="modal" id="modalCustomTarif" role="dialog" aria-modal="true">
@@ -896,13 +870,25 @@ body.dark-mode .success-actions .secondary{background:#334155;color:#cbd5e1;bord
   <div class="modal-card">
     <button type="button" class="modal-close" onclick="closeModal('sourceModal')" aria-label="Tutup"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
     <div class="modal-heading">
-      <span class="modal-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none"><path d="M4 7.5h3l1.6-2h6.8l1.6 2h3A1.8 1.8 0 0 1 22 9.3v9A1.7 1.7 0 0 1 20.3 20H3.7A1.7 1.7 0 0 1 2 18.3v-9A1.8 1.8 0 0 1 4 7.5Z" fill="url(#miBlue)" stroke="#1687C5" stroke-width="1.2"/><circle cx="12" cy="13.5" r="4" fill="#fff" stroke="#1687C5" stroke-width="1.4"/><circle cx="12" cy="13.5" r="2" fill="#83D7F3"/></svg></span>
+      <span class="modal-icon" aria-hidden="true"><svg viewBox="0 0 48 48" fill="none"><rect x="6" y="12" width="36" height="28" rx="4" fill="#38BDF8"/><rect x="6" y="12" width="36" height="28" rx="4" fill="url(#paint0_linear_cam)"/><path d="M16 12L19 7H29L32 12H16Z" fill="#0284C7"/><circle cx="24" cy="26" r="9" fill="#F0F9FF"/><circle cx="24" cy="26" r="7" fill="#0F172A"/><circle cx="24" cy="26" r="4" fill="#38BDF8"/><circle cx="22" cy="24" r="1.5" fill="#FFF"/><rect x="34" y="16" width="4" height="2" rx="1" fill="#F0F9FF"/><defs><linearGradient id="paint0_linear_cam" x1="24" y1="12" x2="24" y2="40" gradientUnits="userSpaceOnUse"><stop stop-color="#7DD3FC"/><stop offset="1" stop-color="#38BDF8"/></linearGradient></defs></svg></span>
       <span class="modal-heading-copy"><h3>Pilih sumber foto</h3></span>
     </div>
-    <p>Ambil foto KTP menggunakan kamera atau pilih gambar yang sudah tersedia di perangkat.</p>
+    <p>Ambil foto KTP menggunakan kamera <br>atau pilih galeri jika sudah tersedia di perangkat.</p>
+    
     <div class="modal-options">
-      <button class="btn-kamera" type="button" onclick="triggerCamera()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>Kamera</button>
-      <button class="btn-galeri" type="button" onclick="triggerGallery()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>Galeri</button>
+      <!-- Tombol Kamera (SVG sejajar dengan teks) -->
+      <button class="btn-kamera" type="button" style="position: relative; overflow: hidden;">
+        <input type="file" id="inputKamera" accept="image/*" capture="environment" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; opacity: 0; z-index: 10; cursor: pointer;">
+        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 15.2a3.2 3.2 0 1 0 0-6.4 3.2 3.2 0 0 0 0 6.4z"/><path d="M9 2L7.17 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2h-3.17L15 2H9zm3 15c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5z"/></svg>
+        Kamera
+      </button>
+
+      <!-- Tombol Galeri (SVG sejajar dengan teks) -->
+      <button class="btn-galeri" type="button" style="position: relative; overflow: hidden;">
+        <input type="file" id="inputGaleri" accept="image/*" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; opacity: 0; z-index: 10; cursor: pointer;">
+        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M21 19V5c0-1.1-.9-2-2-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2zM8.5 13.5l2.5 3.01L14.5 12l4.5 6H5l3.5-4.5z"/></svg>
+        Galeri
+      </button>
     </div>
   </div>
 </div>
@@ -934,9 +920,14 @@ body.dark-mode .success-actions .secondary{background:#334155;color:#cbd5e1;bord
       <span class="modal-heading-copy"><h3>Tanda Tangan</h3></span>
     </div>
     <p style="margin-bottom:5px;">Silahkan tanda tangan menggunakan jari<br>pada kotak di bawah ini.</p>
-    <div class="signature-canvas-wrapper"><canvas id="signaturePadFull" aria-label="Area untuk menggambar tanda tangan"></canvas></div>
+    <div class="signature-canvas-wrapper">
+      <!-- Tombol Trash di kanan bawah -->
+      <button type="button" class="clear-ttd-btn" onclick="clearFullSignaturePad()" aria-label="Hapus Tanda Tangan">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
+      </button>
+      <canvas id="signaturePadFull" aria-label="Area untuk menggambar tanda tangan"></canvas>
+    </div>
     <div class="signature-actions">
-      <button type="button" class="btn-batal-reset" onclick="clearFullSignaturePad()">Hapus</button>
       <button type="button" class="primary" onclick="saveFullSignature()">Simpan</button>
     </div>
   </div>
@@ -963,7 +954,7 @@ body.dark-mode .success-actions .secondary{background:#334155;color:#cbd5e1;bord
       <div class="success-detail-row"><span>Status Drive</span><strong style="color:#059669">Tersimpan</strong></div>
     </div>
     <div class="success-actions">
-      <button type="button" class="secondary" onclick="closeModal('successModal')">Selesai</button>
+      <button type="button" class="secondary" onclick="selesaiDanReset()">Selesai</button>
       <button type="button" class="primary btn-share" onclick="shareSurat()">Share</button>
     </div>
   </div>
@@ -974,18 +965,20 @@ body.dark-mode .success-actions .secondary{background:#334155;color:#cbd5e1;bord
 <script>
 "use strict";
 
-/* ===== PWA SERVICE WORKER ===== */
 if ('serviceWorker' in navigator) {
-  window.addEventListener('load', () => {
-    navigator.serviceWorker.register('sw.js').catch(err => console.warn('ServiceWorker registration failed:', err));
+  navigator.serviceWorker.getRegistrations().then(function(registrations) {
+    for(let registration of registrations) { registration.unregister(); }
   });
 }
 
-/* ===== KONSTANTA & STATE ===== */
 const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyaSbeKt7Yfo11QUmYYzg0qbO6ezrLWTVJt3OcGyGCV3nZ7xma8cpNDbyfu_Nz-hupRAQ/exec";
 const DRAFT_STORAGE_KEY = "baTertibBayarDraft_v3";
 const $ = id => document.getElementById(id);
 const stripDigits = v => String(v || "").replace(/\D/g, "");
+const appContainer = $("appContainer");
+const pageForm = $("page-form");
+const pagePreview = $("page-preview");
+const mobileNav = $("mobileNav");
 
 let cropper = null;
 let ktpDataUrl = "";
@@ -999,43 +992,30 @@ let lastDateStr = "";
 let lastFocusedBeforeModal = null;
 let lastSuratBlob = null;
 let lastSuratFileName = "";
+let isFormSubmitted = false;
+let progressShown = false;
+let isDismissedAfterFull = false;
 
-/* ===== 1. THEME (smooth transition via overlay + theme-transition class) ===== */
-function getAutoTheme() {
-  const h = new Date().getHours();
-  return (h >= 18 || h < 6) ? 'dark' : 'light';
+/* ===== WIDGET WAKTU & CUACA ===== */
+let clockTimer = null;
+function updateDateTime() {
+  const now = new Date();
+  const hours = now.getHours();
+  const minutes = String(now.getMinutes()).padStart(2, '0');
+  const seconds = String(now.getSeconds()).padStart(2, '0');
+  const days = ['MINGGU', 'SENIN', 'SELASA', 'RABU', 'KAMIS', 'JUMAT', 'SABTU'];
+  const months = ['JAN', 'FEB', 'MAR', 'APR', 'MEI', 'JUN', 'JUL', 'AGS', 'SEP', 'OKT', 'NOV', 'DES'];
+  
+  $('clockDisplay').textContent = `${String(hours).padStart(2, '0')}:${minutes}:${seconds}`;
+  $('dateDisplay').textContent = `${days[now.getDay()]}, ${now.getDate()} ${months[now.getMonth()]} ${now.getFullYear()}`;
 }
-function getPreferredTheme() {
-  const s = localStorage.getItem('themeMode');
-  return (s === 'dark' || s === 'light') ? s : getAutoTheme();
-}
-function applyTheme(theme) {
-  const isDark = theme === 'dark';
-  document.body.classList.toggle('dark-mode', isDark);
-  const meta = $('metaThemeColor');
-  if (meta) meta.setAttribute('content', isDark ? '#0b1220' : '#0D5DA6');
-}
-function initTheme() {
-  applyTheme(getPreferredTheme());
-  // Lepas "no-transition" setelah frame pertama supaya tidak flash saat init
-  requestAnimationFrame(() => {
-    requestAnimationFrame(() => {
-      document.body.classList.remove('no-transition');
-    });
-  });
-}
-function toggleTheme() {
-  const isCurrentlyDark = document.body.classList.contains('dark-mode');
-  const nt = isCurrentlyDark ? 'light' : 'dark';
-  document.body.classList.add('theme-transition');
-  localStorage.setItem('themeMode', nt);
-  applyTheme(nt);
-  setTimeout(() => document.body.classList.remove('theme-transition'), 520);
-}
+function startClock() { if (!clockTimer) { updateDateTime(); clockTimer = setInterval(updateDateTime, 1000); } }
+function stopClock() { if (clockTimer) { clearInterval(clockTimer); clockTimer = null; } }
+document.addEventListener("visibilitychange", () => { if (document.hidden) stopClock(); else startClock(); });
+startClock();
 
 /* ===== 2. UI HELPERS ===== */
 function vibrate(ms = 15) { if (navigator.vibrate) navigator.vibrate(ms); }
-
 function showToast(message, isError = false) {
   const toast = $("toast");
   toast.classList.toggle("error", isError);
@@ -1044,31 +1024,23 @@ function showToast(message, isError = false) {
   clearTimeout(toastTimer);
   toastTimer = setTimeout(() => toast.classList.remove("show"), isError ? 4000 : 2600);
 }
-
 function openModal(id) {
   vibrate(10);
   lastFocusedBeforeModal = document.activeElement;
   const m = $(id);
   m.classList.add("open");
   document.body.classList.add("modal-open");
-  setTimeout(() => {
-    const f = m.querySelector('button:not([disabled]), input:not([type=hidden]):not([disabled]), [tabindex]:not([tabindex="-1"])');
-    if (f) f.focus();
-  }, 60);
+  setTimeout(() => { const f = m.querySelector('button:not([disabled]), input:not([type=hidden]):not([disabled]), [tabindex]:not([tabindex="-1"])'); if (f) f.focus(); }, 60);
 }
 function closeModal(id) {
-  const m = $(id);
-  if (!m) return;
+  const m = $(id); if (!m) return;
   m.classList.remove("open");
   if (!document.querySelector('.modal.open')) document.body.classList.remove("modal-open");
-  if (lastFocusedBeforeModal && typeof lastFocusedBeforeModal.focus === 'function') {
-    try { lastFocusedBeforeModal.focus(); } catch (e) {}
-  }
+  if (lastFocusedBeforeModal && typeof lastFocusedBeforeModal.focus === 'function') { try { lastFocusedBeforeModal.focus(); } catch (e) {} }
 }
 
 document.addEventListener("keydown", e => {
-  const openModalEl = document.querySelector('.modal.open');
-  if (!openModalEl) return;
+  const openModalEl = document.querySelector('.modal.open'); if (!openModalEl) return;
   if (e.key === "Escape") {
     if (openModalEl.id === "cropModal") cancelCrop();
     else if (openModalEl.id === "signatureModal") closeSignatureModal();
@@ -1099,29 +1071,19 @@ function resetInputErrors() {
   $("uploadBox").classList.remove("upload-error");
   $("signatureBox").classList.remove("upload-error");
 }
-
 function shakePanel(panelId) {
-  const p = $(panelId);
-  if (!p) return;
-  const icon = p.querySelector('.panel-icon');
-  if (!icon) return;
-  icon.style.animation = 'none';
-  void icon.offsetHeight;
+  const p = $(panelId); if (!p) return;
+  const icon = p.querySelector('.panel-icon'); if (!icon) return;
+  icon.style.animation = 'none'; void icon.offsetHeight;
   icon.style.animation = 'iconWiggle .45s ease-in-out';
   setTimeout(() => { icon.style.animation = ''; }, 500);
 }
-
 function tungguScrollStabil(cb) {
   let done = false;
   const fin = () => { if (done) return; done = true; appContainer.removeEventListener("scrollend", fin); cb(); };
-  if ("onscrollend" in window) {
-    appContainer.addEventListener("scrollend", fin, { once: true });
-    setTimeout(fin, 400);
-  } else {
-    requestAnimationFrame(() => requestAnimationFrame(() => setTimeout(fin, 16)));
-  }
+  if ("onscrollend" in window) { appContainer.addEventListener("scrollend", fin, { once: true }); setTimeout(fin, 400); }
+  else { requestAnimationFrame(() => requestAnimationFrame(() => setTimeout(fin, 16))); }
 }
-
 function pindahKeFormTanpaScroll() {
   pageForm.classList.remove("slide-left");
   pageForm.classList.add("active", "no-anim");
@@ -1131,76 +1093,45 @@ function pindahKeFormTanpaScroll() {
   $("tabPreview").classList.remove("active");
   requestAnimationFrame(() => requestAnimationFrame(() => pageForm.classList.remove("no-anim")));
 }
-
 function scrollInstanLaluShake(targetId, isUploadBox) {
-  const el = $(targetId);
-  if (!el) return;
-  const stickyOffset = 180;
-  const rect = el.getBoundingClientRect();
-  const appRect = appContainer.getBoundingClientRect();
+  const el = $(targetId); if (!el) return;
+  const stickyOffset = 180; const rect = el.getBoundingClientRect(); const appRect = appContainer.getBoundingClientRect();
   const targetScrollTop = appContainer.scrollTop + (rect.top - appRect.top) - stickyOffset;
-  const prev = appContainer.style.scrollBehavior;
-  appContainer.style.scrollBehavior = 'auto';
-  appContainer.scrollTop = Math.max(0, targetScrollTop);
-  appContainer.style.scrollBehavior = prev || '';
+  const prev = appContainer.style.scrollBehavior; appContainer.style.scrollBehavior = 'auto';
+  appContainer.scrollTop = Math.max(0, targetScrollTop); appContainer.style.scrollBehavior = prev || '';
   void appContainer.offsetHeight;
   tungguScrollStabil(() => {
-    if (isUploadBox) {
-      el.classList.add("upload-attention");
-      setTimeout(() => el.classList.remove("upload-attention"), 450);
-    } else {
+    if (isUploadBox) { el.classList.add("upload-attention"); setTimeout(() => el.classList.remove("upload-attention"), 450); }
+    else {
       const wrap = el.closest(".input-wrap");
-      if (wrap) {
-        wrap.classList.add("input-attention");
-        setTimeout(() => wrap.classList.remove("input-attention"), 450);
-      }
+      if (wrap) { wrap.classList.add("input-attention"); setTimeout(() => wrap.classList.remove("input-attention"), 450); }
       setTimeout(() => { try { el.focus({ preventScroll: true }); } catch (e) { el.focus(); } }, 60);
     }
   });
 }
-
 function focusFieldError(targetId, stayInPreview = false) {
   const isUploadBox = targetId === "uploadBox" || targetId === "signatureBox";
   if (window.innerWidth < 1024 && pagePreview.classList.contains("active")) {
     if (stayInPreview) { requestAnimationFrame(() => scrollInstanLaluShake(targetId, isUploadBox)); return; }
     pindahKeFormTanpaScroll();
     requestAnimationFrame(() => requestAnimationFrame(() => scrollInstanLaluShake(targetId, isUploadBox)));
-  } else {
-    scrollInstanLaluShake(targetId, isUploadBox);
-  }
+  } else { scrollInstanLaluShake(targetId, isUploadBox); }
 }
-
 function focusTariffGrid() {
-  const grid = $("tariffGrid");
-  if (!grid) return;
-  const field = grid.closest(".field");
-  if (!field) return;
+  const grid = $("tariffGrid"); if (!grid) return;
+  const field = grid.closest(".field"); if (!field) return;
   const apply = () => {
-    const stickyOffset = 180;
-    const rect = field.getBoundingClientRect();
-    const appRect = appContainer.getBoundingClientRect();
-    const prev = appContainer.style.scrollBehavior;
-    appContainer.style.scrollBehavior = 'auto';
+    const stickyOffset = 180; const rect = field.getBoundingClientRect(); const appRect = appContainer.getBoundingClientRect();
+    const prev = appContainer.style.scrollBehavior; appContainer.style.scrollBehavior = 'auto';
     appContainer.scrollTop = Math.max(0, appContainer.scrollTop + (rect.top - appRect.top) - stickyOffset);
-    appContainer.style.scrollBehavior = prev || '';
-    void appContainer.offsetHeight;
-    tungguScrollStabil(() => {
-      field.classList.add("field-attention");
-      setTimeout(() => field.classList.remove("field-attention"), 450);
-    });
+    appContainer.style.scrollBehavior = prev || ''; void appContainer.offsetHeight;
+    tungguScrollStabil(() => { field.classList.add("field-attention"); setTimeout(() => field.classList.remove("field-attention"), 450); });
   };
   if (window.innerWidth < 1024 && pagePreview.classList.contains("active")) {
-    pindahKeFormTanpaScroll();
-    requestAnimationFrame(() => requestAnimationFrame(apply));
-  } else {
-    apply();
-  }
+    pindahKeFormTanpaScroll(); requestAnimationFrame(() => requestAnimationFrame(apply));
+  } else { apply(); }
 }
-
-function isPhoneValid(raw) {
-  const d = stripDigits(raw);
-  return /^(\+?62|0)8[1-9][0-9]{6,11}$/.test(d);
-}
+function isPhoneValid(raw) { const d = stripDigits(raw); return /^(\+?62|0)8[1-9][0-9]{6,11}$/.test(d); }
 
 function validasiSebelumSimpan() {
   resetInputErrors();
@@ -1213,17 +1144,13 @@ function validasiSebelumSimpan() {
   const idPel = stripDigits($("inputIdPel").value);
   const tarif = $("inputTarif").value.trim();
   const petugas = $("inputPetugas").value.trim();
+  const pengawas = $("inputPengawas").value.trim();
 
   if (!nama) { $("inputNama").classList.add("input-error"); shakePanel("page-form"); focusFieldError("inputNama"); return false; }
   if (!alamat) { $("inputAlamat").classList.add("input-error"); focusFieldError("inputAlamat"); return false; }
   if (ktp.length !== 16) { $("inputKtp").classList.add("input-error"); focusFieldError("inputKtp"); return false; }
   if (!telp) { $("inputTelp").classList.add("input-error"); focusFieldError("inputTelp"); return false; }
-  if (!isPhoneValid(telp)) {
-    $("inputTelp").classList.add("input-error");
-    showToast("Nomor telepon tidak valid (contoh: 0812-3456-7890)", true);
-    focusFieldError("inputTelp");
-    return false;
-  }
+  if (!isPhoneValid(telp)) { $("inputTelp").classList.add("input-error"); showToast("Nomor telepon tidak valid (contoh: 0812-3456-7890)", true); focusFieldError("inputTelp"); return false; }
   if (!namaPln) { $("inputNamaPln").classList.add("input-error"); focusFieldError("inputNamaPln"); return false; }
   if (!alamatPln) { $("inputAlamatPln").classList.add("input-error"); focusFieldError("inputAlamatPln"); return false; }
   if (idPel.length !== 12) { $("inputIdPel").classList.add("input-error"); focusFieldError("inputIdPel"); return false; }
@@ -1231,269 +1158,227 @@ function validasiSebelumSimpan() {
   if (!ktpDataUrl) { $("uploadBox").classList.add("upload-error"); focusFieldError("uploadBox"); return false; }
   if (!signatureDataUrl) { $("signatureBox").classList.add("upload-error"); focusFieldError("signatureBox"); return false; }
   if (!petugas) { $("inputPetugas").classList.add("input-error"); focusFieldError("inputPetugas"); return false; }
+  if (!pengawas) { $("inputPengawas").classList.add("input-error"); focusFieldError("inputPengawas"); return false; }
+  
   return true;
 }
 
-/* ===== 4. HINT DIGIT (KTP & IDPEL) ===== */
-const hintLocks = {
-  inputKtp: { locked: false, greenTimer: null },
-  inputIdPel: { locked: false, greenTimer: null }
-};
+/* ===== 4. HINT DIGIT ===== */
+const hintLocks = { inputKtp: { locked: false, greenTimer: null }, inputIdPel: { locked: false, greenTimer: null } };
 function showHint(id) { const h = $(id); if (h) h.classList.add("show"); }
-function hideHint(id) { const h = $(id); if (!h) return; h.classList.remove("show", "valid", "warning"); }
-function initHintText(id, n) { const h = $(id); if (h) h.textContent = `Wajib ${n} digit angka`; }
-function unlockHint(inputId) {
-  const s = hintLocks[inputId];
-  if (!s) return;
-  s.locked = false;
-  if (s.greenTimer) { clearTimeout(s.greenTimer); s.greenTimer = null; }
-}
+function unlockHint(inputId) { const s = hintLocks[inputId]; if (!s) return; s.locked = false; if (s.greenTimer) { clearTimeout(s.greenTimer); s.greenTimer = null; } }
 function updateDigitHint(inputId, hintId, required) {
-  const el = $(inputId), hint = $(hintId);
-  if (!el || !hint) return;
-  const s = hintLocks[inputId];
-  if (s && s.locked) return;
+  const el = $(inputId), hint = $(hintId); if (!el || !hint) return;
+  const s = hintLocks[inputId]; if (s && s.locked) return;
   const len = stripDigits(el.value).length;
   hint.classList.remove("valid", "warning");
-  if (len === 0) {
-    hint.textContent = `Wajib ${required} digit angka`;
-    showHint(hintId);
-  } else if (len < required) {
-    hint.textContent = `${len}/${required} digit — kurang ${required - len}`;
-    hint.classList.add("warning");
-    showHint(hintId);
-  } else {
-    hint.textContent = `${required} digit lengkap`;
-    hint.classList.add("valid");
-    showHint(hintId);
+  if (len === 0) { hint.textContent = `Wajib ${required} digit angka`; showHint(hintId); }
+  else if (len < required) { hint.textContent = `${len}/${required} digit — kurang ${required - len}`; hint.classList.add("warning"); showHint(hintId); }
+  else {
+    hint.textContent = `${required} digit lengkap`; hint.classList.add("valid"); showHint(hintId);
     if (s) {
       clearTimeout(s.greenTimer);
-      s.greenTimer = setTimeout(() => {
-        hint.classList.remove("show");
-        s.locked = true;
-        s.greenTimer = null;
-        setTimeout(() => hint.classList.remove("valid"), 300);
-      }, 1800);
+      s.greenTimer = setTimeout(() => { hint.classList.remove("show"); s.locked = true; s.greenTimer = null; setTimeout(() => hint.classList.remove("valid"), 300); }, 1800);
     }
   }
 }
 
 /* ===== 5. MASK ===== */
-function maskIdpel(v) {
-  const d = stripDigits(v).slice(0, 12);
-  return d.replace(/(\d{4})(?=\d)/g, '$1 ');
-}
+function maskIdpel(v) { const d = stripDigits(v).slice(0, 12); return d.replace(/(\d{4})(?=\d)/g, '$1 '); }
 function maskPhone(v) {
   const d = stripDigits(v).slice(0, 15);
-  if (d.length <= 4) return d;
-  if (d.length <= 8) return d.slice(0, 4) + '-' + d.slice(4);
+  if (d.length <= 4) return d; if (d.length <= 8) return d.slice(0, 4) + '-' + d.slice(4);
   if (d.length <= 12) return d.slice(0, 4) + '-' + d.slice(4, 8) + '-' + d.slice(8);
   return d.slice(0, 4) + '-' + d.slice(4, 8) + '-' + d.slice(8, 12) + '-' + d.slice(12);
+}
+
+/* ===== FITUR PROGRESS & STATE ===== */
+function updateFormState() {
+  if (isFormSubmitted) return;
+
+  const vNama = $("inputNama").value.trim().length > 0;
+  const vAlamat = $("inputAlamat").value.trim().length > 0;
+  const vKtp = stripDigits($("inputKtp").value).length === 16;
+  const vTelp = isPhoneValid($("inputTelp").value);
+  const vNamaPln = $("inputNamaPln").value.trim().length > 0;
+  const vAlamatPln = $("inputAlamatPln").value.trim().length > 0;
+  const vIdPel = stripDigits($("inputIdPel").value).length === 12;
+  const vTarif = $("inputTarif").value.trim().length > 0;
+  const vKtpImg = ktpDataUrl.length > 0;
+  const vTtd = signatureDataUrl.length > 0;
+  const vPetugas = $("inputPetugas").value.trim().length > 0;
+  const vPengawas = $("inputPengawas").value.trim().length > 0;
+
+  $("panel1").classList.toggle("is-completed", (vNama && vAlamat && vKtp && vTelp));
+  $("panel2").classList.toggle("is-completed", (vNamaPln && vAlamatPln && vIdPel && vTarif));
+  $("panel3").classList.toggle("is-completed", (vKtpImg && vTtd));
+  $("panel4").classList.toggle("is-completed", (vPetugas && vPengawas));
+
+  const checks = [vNama, vAlamat, vKtp, vTelp, vNamaPln, vAlamatPln, vIdPel, vTarif, vKtpImg, vTtd, vPetugas, vPengawas];
+  const filledCount = checks.filter(Boolean).length;
+  const percent = Math.round((filledCount / checks.length) * 100);
+  
+  const circleWrapper = $("circularProgress");
+  const isPreviewPage = pagePreview.classList.contains("active");
+
+  if (percent < 100) {
+    isDismissedAfterFull = false; 
+    if (filledCount > 0 || progressShown) {
+      circleWrapper.classList.add("show");
+    }
+    $("progressPercent").textContent = percent + "%";
+    const circumference = 94.25; 
+    $("progressCircle").style.strokeDashoffset = circumference - (percent / 100) * circumference;
+  } else {
+    if (isPreviewPage) {
+      isDismissedAfterFull = true; 
+    }
+    
+    if (isDismissedAfterFull) {
+      circleWrapper.classList.remove("show"); 
+    } else {
+      circleWrapper.classList.add("show"); 
+      $("progressPercent").textContent = percent + "%";
+      $("progressCircle").style.strokeDashoffset = 0;
+    }
+  }
 }
 
 /* ===== 6. DRAFT AUTO-SAVE ===== */
 function getDraftPayload() {
   const fields = ["inputNama", "inputAlamat", "inputKtp", "inputTelp", "inputNamaPln", "inputAlamatPln", "inputIdPel", "inputTarif", "inputPetugas", "inputPengawas"];
-  const values = {};
-  fields.forEach(id => { const el = $(id); if (el) values[id] = el.value; });
+  const values = {}; fields.forEach(id => { const el = $(id); if (el) values[id] = el.value; });
   return { version: 3, savedAt: Date.now(), values };
 }
 function saveDraft() {
+  if (isFormSubmitted) return;
   clearTimeout(draftSaveTimer);
-  draftSaveTimer = setTimeout(() => {
-    try {
-      sessionStorage.setItem(DRAFT_STORAGE_KEY, JSON.stringify(getDraftPayload()));
-    } catch (e) {
-      console.warn("Draft gagal disimpan:", e);
-    }
-  }, 600);
+  draftSaveTimer = setTimeout(() => { try { sessionStorage.setItem(DRAFT_STORAGE_KEY, JSON.stringify(getDraftPayload())); } catch (e) { console.warn("Draft gagal disimpan:", e); } }, 600);
 }
-function hasDraftContent(d) {
-  if (!d || !d.values) return false;
-  return Object.values(d.values).some(v => String(v || "").trim());
-}
+function hasDraftContent(d) { if (!d || !d.values) return false; return Object.values(d.values).some(v => String(v || "").trim()); }
 function applyDraft(draft) {
   if (!draft || !draft.values) return false;
-  Object.entries(draft.values).forEach(([id, val]) => {
-    const el = $(id);
-    if (el && typeof val === "string") el.value = val;
-  });
+  Object.entries(draft.values).forEach(([id, val]) => { const el = $(id); if (el && typeof val === "string") el.value = val; });
   const savedTariff = $("inputTarif").value;
   let match = Array.from(document.querySelectorAll(".tariff")).find(b => b.dataset.value === savedTariff);
   if (savedTariff && !match) {
     document.querySelectorAll('.tariff[data-custom="1"]').forEach(b => b.remove());
-    const btn = document.createElement("button");
-    btn.type = "button";
-    btn.className = "tariff";
-    btn.dataset.value = savedTariff;
-    btn.dataset.custom = "1";
-    btn.textContent = savedTariff.replace(/\s*VA$/i, "");
-    $("btnCustomTarif").parentNode.insertBefore(btn, $("btnCustomTarif"));
-    match = btn;
+    const btn = document.createElement("button"); btn.type = "button"; btn.className = "tariff"; btn.dataset.value = savedTariff; btn.dataset.custom = "1"; btn.textContent = savedTariff.replace(/\s*VA$/i, "");
+    $("btnCustomTarif").parentNode.insertBefore(btn, $("btnCustomTarif")); match = btn;
   }
   document.querySelectorAll(".tariff").forEach(b => {
-    if (!b.dataset.value) return;
-    const sel = b === match;
-    b.classList.toggle("selected", sel);
-    b.setAttribute("aria-pressed", sel ? "true" : "false");
+    if (!b.dataset.value) return; const sel = b === match; b.classList.toggle("selected", sel); b.setAttribute("aria-pressed", sel ? "true" : "false");
   });
-  updatePreview();
+  updatePreview(); updateFormState();
   return true;
 }
 function restoreDraft(showMsg = false) {
   try {
-    const raw = sessionStorage.getItem(DRAFT_STORAGE_KEY);
-    if (!raw) return false;
-    const d = JSON.parse(raw);
-    if (!hasDraftContent(d)) return false;
-    const ok = applyDraft(d);
-    $("draftRecovery").classList.remove("show");
+    const raw = sessionStorage.getItem(DRAFT_STORAGE_KEY); if (!raw) return false;
+    const d = JSON.parse(raw); if (!hasDraftContent(d)) return false;
+    const ok = applyDraft(d); $("draftRecovery").classList.remove("show");
     if (showMsg && ok) showToast("Draft berhasil dipulihkan");
     return ok;
   } catch (e) { console.warn("Draft gagal dipulihkan:", e); return false; }
 }
-function clearDraft() {
-  clearTimeout(draftSaveTimer);
-  try { sessionStorage.removeItem(DRAFT_STORAGE_KEY); } catch (e) {}
-}
+function clearDraft() { clearTimeout(draftSaveTimer); try { sessionStorage.removeItem(DRAFT_STORAGE_KEY); } catch (e) {} }
 
 /* ===== 7. PREVIEW & PAPER ===== */
 function setAutomaticDate() {
   const today = new Intl.DateTimeFormat("id-ID", { timeZone: "Asia/Jakarta", day: "numeric", month: "long", year: "numeric" }).format(new Date());
-  const str = "Bekasi, " + today;
-  if (str === lastDateStr) return;
-  lastDateStr = str;
-  $("prevTanggal").textContent = str;
+  const str = "Bekasi, " + today; if (str === lastDateStr) return;
+  lastDateStr = str; $("prevTanggal").textContent = str;
 }
-
 function updatePreview() {
-  const map = {
-    inputNama: "prevNama", inputAlamat: "prevAlamat", inputKtp: "prevKtp", inputTelp: "prevTelp",
-    inputNamaPln: "prevNamaPln", inputAlamatPln: "prevAlamatPln", inputIdPel: "prevIdPel", inputTarif: "prevTarif"
-  };
+  const map = { inputNama: "prevNama", inputAlamat: "prevAlamat", inputKtp: "prevKtp", inputTelp: "prevTelp", inputNamaPln: "prevNamaPln", inputAlamatPln: "prevAlamatPln", inputIdPel: "prevIdPel", inputTarif: "prevTarif" };
   Object.entries(map).forEach(([iid, oid]) => {
     const val = $(iid).value.trim();
     if (val) {
       if (iid.includes("Alamat") || iid.includes("Nama")) $(oid).textContent = val.toLocaleUpperCase("id-ID");
       else if (iid === "inputIdPel") $(oid).textContent = maskIdpel(val);
       else $(oid).textContent = val;
-    } else {
-      $(oid).textContent = "...";
-    }
+    } else { $(oid).textContent = "..."; }
   });
   $("prevTandaTangan").textContent = $("inputNama").value.trim().toLocaleUpperCase("id-ID") || "...";
   setAutomaticDate();
 }
-
 function fitMobilePaper() {
-  const paper = $("suratContainer"), scaler = $("paperScaler");
-  const area = scaler ? scaler.parentElement : null;
+  const paper = $("suratContainer"), scaler = $("paperScaler"); const area = scaler ? scaler.parentElement : null;
   if (!paper || !scaler || !area) return;
   if (window.innerWidth < 1024 && !pagePreview.classList.contains("active")) return;
-  scaler.style.transform = 'none';
-  area.style.height = 'auto';
-  void paper.offsetHeight;
-  const st = getComputedStyle(area);
-  const pl = parseFloat(st.paddingLeft) || 0, pr = parseFloat(st.paddingRight) || 0;
-  const pt = parseFloat(st.paddingTop) || 0, pb = parseFloat(st.paddingBottom) || 0;
-  const areaRect = area.getBoundingClientRect();
-  const availW = Math.max(1, areaRect.width - pl - pr);
+  scaler.style.transform = 'none'; area.style.height = 'auto'; void paper.offsetHeight;
+  const st = getComputedStyle(area); const pl = parseFloat(st.paddingLeft) || 0, pr = parseFloat(st.paddingRight) || 0; const pt = parseFloat(st.paddingTop) || 0, pb = parseFloat(st.paddingBottom) || 0;
+  const areaRect = area.getBoundingClientRect(); const availW = Math.max(1, areaRect.width - pl - pr);
   if (availW < 10) { setTimeout(fitMobilePaper, 100); return; }
-  const paperH = paper.offsetHeight;
-  fittedPreviewScale = Math.min(1, availW / 794);
-  const scale = fittedPreviewScale * previewZoom;
-  area.classList.toggle('zoom-overflow', scale > 1.001);
-  scaler.style.transform = `scale(${scale})`;
+  const paperH = paper.offsetHeight; fittedPreviewScale = Math.min(1, availW / 794); const scale = fittedPreviewScale * previewZoom;
+  area.classList.toggle('zoom-overflow', scale > 1.001); scaler.style.transform = `scale(${scale})`;
   area.style.height = `${Math.ceil((paperH * scale) + pt + pb)}px`;
   $("zoomLabel").textContent = `${Math.round(previewZoom * 100)}%`;
 }
-function changePreviewZoom(d) {
-  previewZoom = Math.max(0.7, Math.min(1.8, Math.round((previewZoom + d) * 10) / 10));
-  fitMobilePaper();
-  $("zoomLabel").textContent = `${Math.round(previewZoom * 100)}%`;
-}
+function changePreviewZoom(d) { previewZoom = Math.max(0.7, Math.min(1.8, Math.round((previewZoom + d) * 10) / 10)); fitMobilePaper(); $("zoomLabel").textContent = `${Math.round(previewZoom * 100)}%`; }
 function resetPreviewZoom() { previewZoom = 1; fitMobilePaper(); $("zoomLabel").textContent = "100%"; }
 
 /* ===== 8. TAB NAVIGATION ===== */
-const mobileNav = $("mobileNav"), appContainer = $("appContainer");
-const pageForm = $("page-form"), pagePreview = $("page-preview");
-
 function switchTab(i) {
-  vibrate(10);
-  if (window.innerWidth >= 1024) return;
+  vibrate(10); if (window.innerWidth >= 1024) return;
+  
   if (i === 0) {
-    pageForm.classList.remove("slide-left");
-    pageForm.classList.add("active", "slide-right");
+    pageForm.classList.remove("slide-left"); pageForm.classList.add("active", "slide-right");
     pagePreview.classList.remove("active", "slide-left", "slide-right");
-    mobileNav.classList.remove("show-preview");
-    $("tabForm").classList.add("active");
-    $("tabPreview").classList.remove("active");
+    mobileNav.classList.remove("show-preview"); $("tabForm").classList.add("active"); $("tabPreview").classList.remove("active");
     appContainer.scrollTo({ top: 0, behavior: 'smooth' });
   } else {
-    updatePreview();
-    pagePreview.classList.remove("slide-right");
-    pagePreview.classList.add("active", "slide-left");
+    updatePreview(); updateFormState();
+    
+    pagePreview.classList.remove("slide-right"); pagePreview.classList.add("active", "slide-left");
     pageForm.classList.remove("active", "slide-left", "slide-right");
-    mobileNav.classList.add("show-preview");
-    $("tabPreview").classList.add("active");
-    $("tabForm").classList.remove("active");
+    mobileNav.classList.add("show-preview"); $("tabPreview").classList.add("active"); $("tabForm").classList.remove("active");
     appContainer.scrollTo({ top: 0, behavior: 'auto' });
+
     requestAnimationFrame(() => requestAnimationFrame(() => {
-      fitMobilePaper();
-      setTimeout(fitMobilePaper, 320);
+      fitMobilePaper(); setTimeout(fitMobilePaper, 320);
     }));
   }
+  
+  setTimeout(() => updateFormState(), 50); 
 }
 
 /* ===== 9. INPUT LISTENERS ===== */
 document.querySelectorAll(".input-wrap input").forEach(input => {
   const clearBtn = input.parentElement.querySelector(".clear-input");
-  const hintMap = {
-    inputKtp: { id: "hintKtp", len: 16 },
-    inputIdPel: { id: "hintIdPel", len: 12 }
-  };
+  const hintMap = { inputKtp: { id: "hintKtp", len: 16 }, inputIdPel: { id: "hintIdPel", len: 12 } };
   const hintInfo = hintMap[input.id];
 
   function syncClear() { if (clearBtn) clearBtn.classList.toggle("visible", input.value.length > 0); }
 
   input.addEventListener("input", () => {
-    if (input.id === "inputKtp") {
-      input.value = stripDigits(input.value).slice(0, 16);
-      unlockHint(input.id);
-    } else if (input.id === "inputIdPel") {
-      input.value = maskIdpel(input.value);
-      unlockHint(input.id);
-    } else if (input.id === "inputTelp") {
-      input.value = maskPhone(input.value);
-    }
+    if (input.id === "inputKtp") { input.value = stripDigits(input.value).slice(0, 16); unlockHint(input.id); }
+    else if (input.id === "inputIdPel") { input.value = maskIdpel(input.value); unlockHint(input.id); }
+    else if (input.id === "inputTelp") { input.value = maskPhone(input.value); }
+    
     input.classList.remove("input-error");
     syncClear();
     updatePreview();
+    updateFormState();
     saveDraft();
+    
     if (hintInfo) updateDigitHint(input.id, hintInfo.id, hintInfo.len);
   });
 
   if (hintInfo) {
     input.addEventListener("focus", () => updateDigitHint(input.id, hintInfo.id, hintInfo.len));
     input.addEventListener("blur", () => {
-      const s = hintLocks[input.id];
-      if (!s || s.locked) return;
+      const s = hintLocks[input.id]; if (!s || s.locked) return;
       if (s.greenTimer) { clearTimeout(s.greenTimer); s.greenTimer = null; }
-      const h = $(hintInfo.id);
-      if (h) { h.classList.remove("show"); setTimeout(() => h.classList.remove("valid", "warning"), 300); }
+      const h = $(hintInfo.id); if (h) { h.classList.remove("show"); setTimeout(() => h.classList.remove("valid", "warning"), 300); }
       if (stripDigits(input.value).length === hintInfo.len) s.locked = true;
     });
   }
 
   if (clearBtn) {
     clearBtn.addEventListener("click", () => {
-      vibrate(10);
-      if (hintInfo) unlockHint(input.id);
-      input.value = "";
-      input.classList.remove("input-error");
-      syncClear();
-      updatePreview();
-      saveDraft();
+      vibrate(10); if (hintInfo) unlockHint(input.id);
+      input.value = ""; input.classList.remove("input-error"); syncClear(); updatePreview(); updateFormState(); saveDraft();
       if (hintInfo) updateDigitHint(input.id, hintInfo.id, hintInfo.len);
       input.focus();
     });
@@ -1503,297 +1388,146 @@ document.querySelectorAll(".input-wrap input").forEach(input => {
 
 /* ===== 10. TARIF SELECTOR ===== */
 $("tariffGrid").addEventListener('click', e => {
-  const b = e.target.closest('.tariff');
-  if (!b || b.id === 'btnCustomTarif' || !b.dataset.value) return;
-  vibrate(15);
-  $("inputTarif").value = b.dataset.value;
-  document.querySelectorAll(".tariff").forEach(x => {
-    if (!x.dataset.value) return;
-    x.classList.remove("selected");
-    x.setAttribute("aria-pressed", "false");
-  });
-  b.classList.add("selected");
-  b.setAttribute("aria-pressed", "true");
-  updatePreview();
-  saveDraft();
+  const b = e.target.closest('.tariff'); if (!b || b.id === 'btnCustomTarif' || !b.dataset.value) return;
+  vibrate(15); $("inputTarif").value = b.dataset.value;
+  document.querySelectorAll(".tariff").forEach(x => { if (!x.dataset.value) return; x.classList.remove("selected"); x.setAttribute("aria-pressed", "false"); });
+  b.classList.add("selected"); b.setAttribute("aria-pressed", "true");
+  updatePreview(); updateFormState(); saveDraft();
 });
-
-function bukaModalTarif() {
-  $('inputCustomTarif').value = '';
-  openModal('modalCustomTarif');
-  setTimeout(() => $('inputCustomTarif').focus(), 100);
-}
+function bukaModalTarif() { $('inputCustomTarif').value = ''; openModal('modalCustomTarif'); setTimeout(() => $('inputCustomTarif').focus(), 100); }
 function simpanTarifBaru() {
-  const v = $('inputCustomTarif').value.trim();
-  if (!v) { showToast("Tarif tidak boleh kosong!", true); return; }
-  vibrate(15);
-  document.querySelectorAll('.tariff[data-custom="1"]').forEach(x => x.remove());
-  const btn = document.createElement('button');
-  btn.type = 'button';
-  btn.className = 'tariff selected';
-  btn.dataset.value = v + " VA";
-  btn.dataset.custom = '1';
-  btn.setAttribute('role', 'radio');
-  btn.setAttribute('aria-pressed', 'true');
-  btn.textContent = v;
-  $('btnCustomTarif').parentNode.insertBefore(btn, $('btnCustomTarif'));
-  $("inputTarif").value = btn.dataset.value;
-  document.querySelectorAll(".tariff").forEach(x => {
-    if (x !== btn && x.dataset.value) {
-      x.classList.remove("selected");
-      x.setAttribute("aria-pressed", "false");
-    }
-  });
-  closeModal('modalCustomTarif');
-  updatePreview();
-  saveDraft();
-  showToast("Tarif berhasil ditambahkan");
+  const v = $('inputCustomTarif').value.trim(); if (!v) { showToast("Tarif tidak boleh kosong!", true); return; }
+  vibrate(15); document.querySelectorAll('.tariff[data-custom="1"]').forEach(x => x.remove());
+  const btn = document.createElement('button'); btn.type = 'button'; btn.className = 'tariff selected'; btn.dataset.value = v + " VA"; btn.dataset.custom = '1'; btn.setAttribute('role', 'radio'); btn.setAttribute('aria-pressed', 'true'); btn.textContent = v;
+  $('btnCustomTarif').parentNode.insertBefore(btn, $('btnCustomTarif')); $("inputTarif").value = btn.dataset.value;
+  document.querySelectorAll(".tariff").forEach(x => { if (x !== btn && x.dataset.value) { x.classList.remove("selected"); x.setAttribute("aria-pressed", "false"); } });
+  closeModal('modalCustomTarif'); updatePreview(); updateFormState(); saveDraft(); showToast("Tarif berhasil ditambahkan");
 }
 
 /* ===== 11. UPLOAD & CROP KTP ===== */
-$("uploadBox").addEventListener("click", e => {
-  if (!e.target.closest("#clearKtpBtn")) openModal("sourceModal");
-});
-$("uploadBox").addEventListener("keydown", e => {
-  if (e.key === "Enter" || e.key === " ") { e.preventDefault(); openModal("sourceModal"); }
-});
+$("uploadBox").addEventListener("click", e => { if (!e.target.closest("#clearKtpBtn")) openModal("sourceModal"); });
+$("uploadBox").addEventListener("keydown", e => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); openModal("sourceModal"); } });
 $("clearKtpBtn").addEventListener("click", e => { e.stopPropagation(); vibrate(15); clearKtp(); });
-
-function triggerCamera() { closeModal("sourceModal"); $("inputKamera").click(); }
-function triggerGallery() { closeModal("sourceModal"); $("inputGaleri").click(); }
-$("inputKamera").addEventListener("change", initCrop);
-$("inputGaleri").addEventListener("change", initCrop);
+$("inputKamera").addEventListener("change", initCrop); $("inputGaleri").addEventListener("change", initCrop);
 
 function initCrop(e) {
-  const file = e.target.files && e.target.files[0];
-  if (!file) return;
+  const file = e.target.files && e.target.files[0]; if (!file) return;
   if (!file.type.startsWith("image/")) { showToast("Pilih file gambar yang valid.", true); e.target.value = ""; return; }
   if (file.size > 15 * 1024 * 1024) { showToast("Ukuran foto maksimal 15 MB.", true); e.target.value = ""; return; }
+  closeModal("sourceModal");
   const reader = new FileReader();
   reader.onload = () => {
-    $("imageToCrop").src = reader.result;
-    openModal("cropModal");
+    $("imageToCrop").src = reader.result; openModal("cropModal");
     if (cropper) { cropper.destroy(); cropper = null; }
-    $("imageToCrop").onload = () => {
-      cropper = new Cropper($("imageToCrop"), {
-        aspectRatio: 1.585, viewMode: 1, autoCropArea: 0.9, responsive: true,
-        background: false, movable: true, zoomable: true
-      });
-    };
+    $("imageToCrop").onload = () => { cropper = new Cropper($("imageToCrop"), { aspectRatio: 1.585, viewMode: 1, autoCropArea: 0.9, responsive: true, background: false, movable: true, zoomable: true }); };
   };
-  reader.onerror = () => showToast("Foto tidak bisa dibaca.", true);
-  reader.readAsDataURL(file);
+  reader.onerror = () => showToast("Foto tidak bisa dibaca.", true); reader.readAsDataURL(file);
 }
 function rotateImage(deg) { if (cropper) cropper.rotate(deg); }
 
 function performCrop() {
-  vibrate(15);
-  if (!cropper) return;
-  const c = cropper.getCroppedCanvas({
-    width: 1000, height: Math.round(1000 / 1.585),
-    imageSmoothingEnabled: true, imageSmoothingQuality: "high", fillColor: "#ffffff"
-  });
+  vibrate(15); if (!cropper) return;
+  const c = cropper.getCroppedCanvas({ width: 1000, height: Math.round(1000 / 1.585), imageSmoothingEnabled: true, imageSmoothingQuality: "high", fillColor: "#ffffff" });
   if (!c) { showToast("Gagal memproses foto.", true); return; }
   ktpDataUrl = c.toDataURL("image/jpeg", 0.9);
-  const out = document.createElement("img");
-  out.src = ktpDataUrl; out.alt = "Foto KTP"; out.className = "ktp-output";
-  $("containerKtp").replaceChildren(out);
-  const preview = $("ktpBoxPreview");
-  preview.src = ktpDataUrl;
-  preview.style.display = "block";
-  preview.classList.remove("pop");
-  void preview.offsetWidth;
-  preview.classList.add("pop");
-  $("uploadContent").style.display = "none";
-  $("clearKtpBtn").style.display = "flex";
-  $("uploadBox").classList.remove("upload-error");
-  closeModal("cropModal");
-  cropper.destroy(); cropper = null;
-  $("inputKamera").value = ""; $("inputGaleri").value = "";
-  saveDraft();
+  const out = document.createElement("img"); out.src = ktpDataUrl; out.alt = "Foto KTP"; out.className = "ktp-output"; $("containerKtp").replaceChildren(out);
+  const preview = $("ktpBoxPreview"); preview.src = ktpDataUrl; preview.style.display = "block"; preview.classList.remove("pop"); void preview.offsetWidth; preview.classList.add("pop");
+  $("uploadContent").style.display = "none"; $("clearKtpBtn").style.display = "flex"; $("uploadBox").classList.remove("upload-error");
+  closeModal("cropModal"); cropper.destroy(); cropper = null; $("inputKamera").value = ""; $("inputGaleri").value = "";
+  updateFormState(); saveDraft();
 }
-function cancelCrop() {
-  closeModal("cropModal");
-  if (cropper) { cropper.destroy(); cropper = null; }
-  $("inputKamera").value = ""; $("inputGaleri").value = "";
-}
+function cancelCrop() { closeModal("cropModal"); if (cropper) { cropper.destroy(); cropper = null; } $("inputKamera").value = ""; $("inputGaleri").value = ""; }
 function clearKtp() {
-  ktpDataUrl = "";
-  $("containerKtp").replaceChildren();
-  $("ktpBoxPreview").removeAttribute("src");
-  $("ktpBoxPreview").style.display = "none";
-  $("uploadContent").style.display = "block";
-  $("clearKtpBtn").style.display = "none";
-  $("inputKamera").value = ""; $("inputGaleri").value = "";
-  saveDraft();
+  ktpDataUrl = ""; $("containerKtp").replaceChildren(); $("ktpBoxPreview").removeAttribute("src"); $("ktpBoxPreview").style.display = "none";
+  $("uploadContent").style.display = "block"; $("clearKtpBtn").style.display = "none"; $("inputKamera").value = ""; $("inputGaleri").value = "";
+  updateFormState(); saveDraft();
 }
 
 /* ===== 12. SIGNATURE PAD ===== */
-const canvasFull = $("signaturePadFull");
-const ctxFull = canvasFull.getContext("2d");
-let isDrawingFull = false;
-let lastPointFull = null;
-let hasDrawnFull = false;
+const canvasFull = $("signaturePadFull"); const ctxFull = canvasFull.getContext("2d");
+let isDrawingFull = false; let lastPointFull = null; let hasDrawnFull = false;
 
 function initFullSignaturePad(preserveExisting = true) {
-  const rect = canvasFull.parentElement.getBoundingClientRect();
-  const dpr = Math.max(1, window.devicePixelRatio || 1);
-  canvasFull.width = rect.width * dpr;
-  canvasFull.height = rect.height * dpr;
-  ctxFull.setTransform(dpr, 0, 0, dpr, 0, 0);
-  ctxFull.lineCap = "round";
-  ctxFull.lineJoin = "round";
-  ctxFull.strokeStyle = "#111827";
-  ctxFull.lineWidth = 3;
-  ctxFull.clearRect(0, 0, canvasFull.width, canvasFull.height);
-  hasDrawnFull = false;
+  const rect = canvasFull.parentElement.getBoundingClientRect(); const dpr = Math.max(1, window.devicePixelRatio || 1);
+  canvasFull.width = rect.width * dpr; canvasFull.height = rect.height * dpr;
+  ctxFull.setTransform(dpr, 0, 0, dpr, 0, 0); ctxFull.lineCap = "round"; ctxFull.lineJoin = "round"; ctxFull.strokeStyle = "#111827"; ctxFull.lineWidth = 3;
+  ctxFull.clearRect(0, 0, canvasFull.width, canvasFull.height); hasDrawnFull = false;
   if (preserveExisting && signatureDataUrl) {
     const img = new Image();
     img.onload = () => {
-      const cw = canvasFull.width, ch = canvasFull.height;
-      const scale = Math.min(cw / img.width, ch / img.height) * 0.9;
+      const cw = canvasFull.width, ch = canvasFull.height; const scale = Math.min(cw / img.width, ch / img.height) * 0.9;
       const dw = img.width * scale, dh = img.height * scale;
-      ctxFull.drawImage(img, (cw - dw) / 2 / dpr, (ch - dh) / 2 / dpr, dw / dpr, dh / dpr);
-      hasDrawnFull = true;
+      ctxFull.drawImage(img, (cw - dw) / 2 / dpr, (ch - dh) / 2 / dpr, dw / dpr, dh / dpr); hasDrawnFull = true;
     };
     img.src = signatureDataUrl;
   }
 }
-
-function getPointFull(e) {
-  const r = canvasFull.getBoundingClientRect();
-  return { x: e.clientX - r.left, y: e.clientY - r.top };
-}
+function getPointFull(e) { const r = canvasFull.getBoundingClientRect(); return { x: e.clientX - r.left, y: e.clientY - r.top }; }
 
 canvasFull.addEventListener("pointerdown", e => {
   if (e.button !== undefined && e.button !== 0) return;
-  e.preventDefault();
-  isDrawingFull = true;
-  lastPointFull = getPointFull(e);
-  canvasFull.setPointerCapture(e.pointerId);
-  ctxFull.beginPath();
-  ctxFull.moveTo(lastPointFull.x, lastPointFull.y);
-  ctxFull.lineTo(lastPointFull.x + 0.01, lastPointFull.y + 0.01);
-  ctxFull.stroke();
-  hasDrawnFull = true;
+  e.preventDefault(); isDrawingFull = true; lastPointFull = getPointFull(e); canvasFull.setPointerCapture(e.pointerId);
+  ctxFull.beginPath(); ctxFull.moveTo(lastPointFull.x, lastPointFull.y); ctxFull.lineTo(lastPointFull.x + 0.01, lastPointFull.y + 0.01); ctxFull.stroke(); hasDrawnFull = true;
 });
 canvasFull.addEventListener("pointermove", e => {
-  if (!isDrawingFull) return;
-  e.preventDefault();
-  const p = getPointFull(e);
-  const midX = (lastPointFull.x + p.x) / 2;
-  const midY = (lastPointFull.y + p.y) / 2;
-  ctxFull.quadraticCurveTo(lastPointFull.x, lastPointFull.y, midX, midY);
-  ctxFull.lineTo(midX, midY);
-  ctxFull.stroke();
-  lastPointFull = p;
+  if (!isDrawingFull) return; e.preventDefault(); const p = getPointFull(e);
+  const midX = (lastPointFull.x + p.x) / 2; const midY = (lastPointFull.y + p.y) / 2;
+  ctxFull.quadraticCurveTo(lastPointFull.x, lastPointFull.y, midX, midY); ctxFull.lineTo(midX, midY); ctxFull.stroke(); lastPointFull = p;
 });
 function endDrawingFull() { isDrawingFull = false; lastPointFull = null; }
-canvasFull.addEventListener("pointerup", endDrawingFull);
-canvasFull.addEventListener("pointercancel", endDrawingFull);
-canvasFull.addEventListener("lostpointercapture", endDrawingFull);
+canvasFull.addEventListener("pointerup", endDrawingFull); canvasFull.addEventListener("pointercancel", endDrawingFull); canvasFull.addEventListener("lostpointercapture", endDrawingFull);
 
-function clearFullSignaturePad() {
-  vibrate(10);
-  ctxFull.clearRect(0, 0, canvasFull.width, canvasFull.height);
-  hasDrawnFull = false;
-}
+function clearFullSignaturePad() { vibrate(10); ctxFull.clearRect(0, 0, canvasFull.width, canvasFull.height); hasDrawnFull = false; }
 
-$("signatureBox").addEventListener("click", e => {
-  if (!e.target.closest("#clearSignBtn")) startDrawingSignature();
-});
+$("signatureBox").addEventListener("click", e => { if (!e.target.closest("#clearSignBtn")) startDrawingSignature(); });
 $("clearSignBtn").addEventListener("click", e => { e.stopPropagation(); vibrate(15); clearSignatureBox(); });
 
 function clearSignatureBox() {
-  signatureDataUrl = "";
-  $("signaturePreview").removeAttribute("src");
-  $("signaturePreview").style.display = "none";
-  $("signatureContent").style.display = "flex";
-  $("clearSignBtn").style.display = "none";
-  $("prevTtd").removeAttribute("src");
-  $("prevTtd").style.display = "none";
-  saveDraft();
+  signatureDataUrl = ""; $("signaturePreview").removeAttribute("src"); $("signaturePreview").style.display = "none";
+  $("signatureContent").style.display = "flex"; $("clearSignBtn").style.display = "none"; $("prevTtd").removeAttribute("src"); $("prevTtd").style.display = "none";
+  updateFormState(); saveDraft();
 }
-function startDrawingSignature() { vibrate(20); openModal("signatureModal"); setTimeout(() => initFullSignaturePad(true), 260); }
+function startDrawingSignature() {
+  vibrate(20); openModal("signatureModal"); const card = document.querySelector("#signatureModal .modal-card"); let inited = false;
+  const run = () => { if (inited) return; inited = true; initFullSignaturePad(true); };
+  if (card) card.addEventListener("animationend", run, { once: true }); setTimeout(run, 500);
+}
 function closeSignatureModal() { closeModal("signatureModal"); }
 
 function saveFullSignature() {
-  vibrate(20);
-  if (!hasDrawnFull) { showToast("Silakan gambar tanda tangan terlebih dahulu", true); return; }
-  const d = canvasFull.toDataURL("image/png");
-  signatureDataUrl = d;
-  const preview = $("signaturePreview");
-  preview.src = d;
-  preview.style.display = "block";
-  preview.classList.remove("pop");
-  void preview.offsetWidth;
-  preview.classList.add("pop");
-  $("signatureContent").style.display = "none";
-  $("clearSignBtn").style.display = "flex";
-  $("prevTtd").src = d;
-  $("prevTtd").style.display = "block";
-  $("signatureBox").classList.remove("upload-error");
-  saveDraft();
-  closeSignatureModal();
-  showToast("Tanda tangan berhasil disimpan");
+  vibrate(20); if (!hasDrawnFull) { showToast("Silakan gambar tanda tangan terlebih dahulu", true); return; }
+  const d = canvasFull.toDataURL("image/png"); signatureDataUrl = d;
+  const preview = $("signaturePreview"); preview.src = d; preview.style.display = "block"; preview.classList.remove("pop"); void preview.offsetWidth; preview.classList.add("pop");
+  $("signatureContent").style.display = "none"; $("clearSignBtn").style.display = "flex"; $("prevTtd").src = d; $("prevTtd").style.display = "block"; $("signatureBox").classList.remove("upload-error");
+  updateFormState(); saveDraft(); closeSignatureModal(); showToast("Tanda tangan berhasil disimpan");
 }
 
 /* ===== 13. RENDER CANVAS & API ===== */
 async function renderSuratCanvas(scale = 2) {
-  updatePreview();
-  if (document.fonts && document.fonts.ready) await document.fonts.ready;
-
-  const originalLogo = $("suratContainer").querySelector(".letter-logo");
-  let logoDataUrl = originalLogo.src;
+  updatePreview(); if (document.fonts && document.fonts.ready) await document.fonts.ready;
+  const originalLogo = $("suratContainer").querySelector(".letter-logo"); let logoDataUrl = originalLogo.src;
   if (logoDataUrl && !logoDataUrl.startsWith("data:")) {
     try {
-      const tmp = new Image();
-      tmp.crossOrigin = "anonymous";
-      tmp.src = logoDataUrl;
+      const tmp = new Image(); tmp.crossOrigin = "anonymous"; tmp.src = logoDataUrl;
       await new Promise((res, rej) => { tmp.onload = res; tmp.onerror = rej; });
-      const cv = document.createElement("canvas");
-      cv.width = tmp.naturalWidth; cv.height = tmp.naturalHeight;
-      cv.getContext("2d").drawImage(tmp, 0, 0);
-      logoDataUrl = cv.toDataURL("image/png");
+      const cv = document.createElement("canvas"); cv.width = tmp.naturalWidth; cv.height = tmp.naturalHeight;
+      cv.getContext("2d").drawImage(tmp, 0, 0); logoDataUrl = cv.toDataURL("image/png");
     } catch (e) { console.warn("Gagal konversi logo:", e); }
   }
-
-  const wrap = document.createElement("div");
-  wrap.style.cssText = "position:absolute;top:-9999px;left:-9999px;width:794px;background:#fff;z-index:-1;";
-  const clone = $("suratContainer").cloneNode(true);
-  clone.querySelector(".letter-logo").src = logoDataUrl;
+  const wrap = document.createElement("div"); wrap.style.cssText = "position:absolute;top:-9999px;left:-9999px;width:794px;background:#fff;z-index:-1;";
+  const clone = $("suratContainer").cloneNode(true); clone.querySelector(".letter-logo").src = logoDataUrl;
   const cloneTtd = clone.querySelector("#prevTtd");
   if (signatureDataUrl) { cloneTtd.src = signatureDataUrl; cloneTtd.style.display = "block"; }
   if (ktpDataUrl) {
-    const img = document.createElement("img");
-    img.src = ktpDataUrl; img.className = "ktp-output";
-    clone.querySelector("#containerKtp").replaceChildren(img);
+    const img = document.createElement("img"); img.src = ktpDataUrl; img.className = "ktp-output"; clone.querySelector("#containerKtp").replaceChildren(img);
   }
-  clone.removeAttribute("id");
-  wrap.appendChild(clone);
-  document.body.appendChild(wrap);
-  await new Promise(r => setTimeout(r, 180));
-
-  clone.querySelectorAll('p,span,div,strong,b,li').forEach(el => {
-    el.style.fontFamily = "'Tinos','Times New Roman',serif";
-    el.style.color = "#000";
-    el.style.letterSpacing = "normal";
-    el.style.wordSpacing = "normal";
-  });
-  clone.style.fontFamily = "'Tinos','Times New Roman',serif";
-  clone.style.color = "#000";
-
+  clone.removeAttribute("id"); wrap.appendChild(clone); document.body.appendChild(wrap); await new Promise(r => setTimeout(r, 180));
+  clone.querySelectorAll('p,span,div,strong,b,li').forEach(el => { el.style.fontFamily = "'Tinos','Times New Roman',serif"; el.style.color = "#000"; el.style.letterSpacing = "normal"; el.style.wordSpacing = "normal"; });
+  clone.style.fontFamily = "'Tinos','Times New Roman',serif"; clone.style.color = "#000";
   try {
-    const canvas = await html2canvas(clone, {
-      scale, useCORS: true, allowTaint: true, backgroundColor: "#ffffff", logging: false,
-      windowWidth: 794, windowHeight: clone.offsetHeight
-    });
-    document.body.removeChild(wrap);
-    return canvas;
-  } catch (e) {
-    document.body.removeChild(wrap);
-    throw e;
-  }
+    const canvas = await html2canvas(clone, { scale, useCORS: true, allowTaint: true, backgroundColor: "#ffffff", logging: false, windowWidth: 794, windowHeight: clone.offsetHeight });
+    document.body.removeChild(wrap); return canvas;
+  } catch (e) { document.body.removeChild(wrap); throw e; }
 }
 
 async function compressDataUrl(dataUrl, maxW, quality) {
@@ -1801,15 +1535,11 @@ async function compressDataUrl(dataUrl, maxW, quality) {
   return new Promise((res, rej) => {
     const img = new Image();
     img.onload = () => {
-      let w = img.width, h = img.height;
-      if (w > maxW) { h = Math.round(h * maxW / w); w = maxW; }
-      const cv = document.createElement("canvas");
-      cv.width = w; cv.height = h;
-      cv.getContext("2d").drawImage(img, 0, 0, w, h);
-      res(cv.toDataURL("image/jpeg", quality));
+      let w = img.width, h = img.height; if (w > maxW) { h = Math.round(h * maxW / w); w = maxW; }
+      const cv = document.createElement("canvas"); cv.width = w; cv.height = h;
+      cv.getContext("2d").drawImage(img, 0, 0, w, h); res(cv.toDataURL("image/jpeg", quality));
     };
-    img.onerror = rej;
-    img.src = dataUrl;
+    img.onerror = rej; img.src = dataUrl;
   });
 }
 
@@ -1817,204 +1547,129 @@ async function kirimKeDrive(payload, maxRetry = 2) {
   let lastErr;
   for (let i = 0; i <= maxRetry; i++) {
     try {
-      const resp = await fetch(APPS_SCRIPT_URL, {
-        method: "POST",
-        headers: { "Content-Type": "text/plain;charset=utf-8" },
-        body: JSON.stringify(payload),
-        redirect: "follow"
-      });
+      const resp = await fetch(APPS_SCRIPT_URL, { method: "POST", headers: { "Content-Type": "text/plain;charset=utf-8" }, body: JSON.stringify(payload), redirect: "follow" });
       if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
-      const txt = await resp.text();
-      let result;
+      const txt = await resp.text(); let result;
       try { result = JSON.parse(txt); } catch (e) { throw new Error("Respons server tidak valid"); }
       if (!result.success) throw new Error(result.error || "Gagal menyimpan ke Drive");
       return result;
-    } catch (e) {
-      lastErr = e;
-      if (i < maxRetry) await new Promise(r => setTimeout(r, 600 * (i + 1)));
-    }
+    } catch (e) { lastErr = e; if (i < maxRetry) await new Promise(r => setTimeout(r, 600 * (i + 1))); }
   }
   throw lastErr;
 }
 
 /* ===== 14. CONFETTI ===== */
 function tembakConfetti() {
-  const box = $('confettiBox');
-  if (!box) return;
-  box.innerHTML = '';
+  const box = $('confettiBox'); if (!box) return; box.innerHTML = '';
   const colors = ['#10b981', '#38bdf8', '#f59e0b', '#ef4444', '#8b5cf6', '#ec4899'];
   for (let i = 0; i < 40; i++) {
-    const conf = document.createElement('div');
-    conf.classList.add('confetti');
-    conf.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
-    conf.style.left = Math.random() * 100 + '%';
-    conf.style.animationDelay = Math.random() * 0.5 + 's';
-    if (Math.random() > 0.5) conf.style.borderRadius = '50%';
-    box.appendChild(conf);
+    const conf = document.createElement('div'); conf.classList.add('confetti');
+    conf.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)]; conf.style.left = Math.random() * 100 + '%'; conf.style.animationDelay = Math.random() * 0.5 + 's';
+    if (Math.random() > 0.5) conf.style.borderRadius = '50%'; box.appendChild(conf);
   }
   setTimeout(() => { box.innerHTML = ''; }, 3000);
 }
 
-/* ===== 15. KIRIM FILE ===== */
+/* ===== 15. LOCK FORM SETELAH SUKSES ===== */
+function lockFormAfterSuccess() {
+  ['inputNama','inputAlamat','inputKtp','inputTelp','inputNamaPln','inputAlamatPln','inputIdPel','inputPetugas','inputPengawas'].forEach(id => {
+    const el = $(id); if (el) { el.readOnly = true; el.style.opacity = '0.65'; }
+  });
+  document.querySelectorAll('#tariffGrid .tariff, #uploadBox, #signatureBox').forEach(el => { el.style.pointerEvents = 'none'; el.style.opacity = '0.6'; });
+  document.querySelectorAll('.clear-input').forEach(el => el.classList.remove('visible')); document.querySelectorAll('.corner-clear').forEach(el => el.style.display = 'none');
+  const db = $("downloadBtn"); if (db) { db.disabled = true; db.style.opacity = '0.6'; }
+}
+
+function selesaiDanReset() { vibrate(10); closeModal('successModal'); location.reload(); }
+
+/* ===== 16. KIRIM FILE ===== */
 async function downloadImage() {
   vibrate(20);
   if (window.innerWidth < 1024 && pagePreview.classList.contains("active") && !$("inputNama").value.trim()) {
-    pindahKeFormTanpaScroll();
-    appContainer.scrollTo({ top: 0, behavior: 'auto' });
-    await new Promise(r => setTimeout(r, 200));
+    pindahKeFormTanpaScroll(); appContainer.scrollTo({ top: 0, behavior: 'auto' }); await new Promise(r => setTimeout(r, 200));
   }
   if (!validasiSebelumSimpan()) return;
+  
+  $("confirmNama").textContent = ($("inputNamaPln").value.trim() || $("inputNama").value.trim()).toLocaleUpperCase("id-ID") || "-";
+  $("confirmAlamat").textContent = $("inputAlamatPln").value.trim().toLocaleUpperCase("id-ID") || "-";
+  $("confirmIdPel").textContent = stripDigits($("inputIdPel").value) || "-"; 
+  $("confirmTarif").textContent = $("inputTarif").value.trim() || "-";
+  
+  openModal("confirmModal");
+}
 
-  const btn = $("downloadBtn");
-  if (btn.disabled) return;
-  const btnText = btn.querySelector(".btn-text");
-  const origText = btnText.textContent;
-  btn.disabled = true;
-  btn.classList.add("loading");
-  btnText.textContent = "Menyiapkan...";
-  $("loadingOverlay").style.display = "flex";
-
+async function lanjutKirim() {
+  closeModal("confirmModal"); const btn = $("downloadBtn"); if (btn.disabled) return;
+  const btnText = btn.querySelector(".btn-text"); const origText = btnText.textContent;
+  btn.disabled = true; btn.classList.add("loading"); btnText.textContent = "Menyiapkan..."; $("loadingOverlay").style.display = "flex";
   try {
-    const canvas = await renderSuratCanvas(2);
-    const suratDataUrl = canvas.toDataURL("image/jpeg", 0.88);
-
-    const [suratJpeg, ktpJpeg] = await Promise.all([
-      compressDataUrl(suratDataUrl, 1600, 0.85),
-      ktpDataUrl ? compressDataUrl(ktpDataUrl, 1200, 0.92) : Promise.resolve("")
-    ]);
-
-    const blob = await new Promise((res, rej) => {
-      canvas.toBlob(b => b ? res(b) : rej(new Error("Gagal membuat file gambar.")), "image/jpeg", 0.9);
-    });
-
-    const idPel = stripDigits($("inputIdPel").value) || "TANPA_IDPEL";
-    const namaPln = $("inputNamaPln").value.trim().toUpperCase().replace(/\s+/g, "_") || "TANPA_NAMA";
+    const canvas = await renderSuratCanvas(2); const suratDataUrl = canvas.toDataURL("image/jpeg", 0.88);
+    const [suratJpeg, ktpJpeg] = await Promise.all([compressDataUrl(suratDataUrl, 1600, 0.85), ktpDataUrl ? compressDataUrl(ktpDataUrl, 1200, 0.92) : Promise.resolve("")]);
+    const blob = await new Promise((res, rej) => { canvas.toBlob(b => b ? res(b) : rej(new Error("Gagal membuat file gambar.")), "image/jpeg", 0.9); });
+    const idPel = stripDigits($("inputIdPel").value) || "TANPA_IDPEL"; const namaPln = $("inputNamaPln").value.trim().toUpperCase().replace(/\s+/g, "_") || "TANPA_NAMA";
     const safeName = `${idPel}_${namaPln}`.replace(/[<>:"/\\|?*\x00-\x1F]/g, "_");
-
-    lastSuratBlob = blob;
-    lastSuratFileName = `SURAT_${safeName}.jpg`;
-
-    btnText.textContent = "Mengirim ke Drive...";
-
-    const payload = {
-      petugas: $("inputPetugas").value.trim().toUpperCase(),
-      pengawas: $("inputPengawas").value.trim().toUpperCase(),
-      nama: $("inputNama").value.trim().toUpperCase(),
-      alamat: $("inputAlamat").value.trim().toUpperCase(),
-      ktp: stripDigits($("inputKtp").value),
-      telp: stripDigits($("inputTelp").value),
-      namaPln: $("inputNamaPln").value.trim().toUpperCase(),
-      alamatPln: $("inputAlamatPln").value.trim().toUpperCase(),
-      idPel,
-      tarif: $("inputTarif").value.trim().toUpperCase(),
-      ktpImage: ktpJpeg,
-      suratImage: suratJpeg,
-      fileName: safeName,
-      ktpFileName: `KTP_${safeName}`,
-      suratFileName: `SURAT_${safeName}`
-    };
-
-    await kirimKeDrive(payload);
-    clearDraft();
-
+    lastSuratBlob = blob; lastSuratFileName = `SURAT_${safeName}.jpg`; btnText.textContent = "Mengirim ke Drive...";
+    const payload = { petugas: $("inputPetugas").value.trim().toUpperCase(), pengawas: $("inputPengawas").value.trim().toUpperCase(), nama: $("inputNama").value.trim().toUpperCase(), alamat: $("inputAlamat").value.trim().toUpperCase(), ktp: stripDigits($("inputKtp").value), telp: stripDigits($("inputTelp").value), namaPln: $("inputNamaPln").value.trim().toUpperCase(), alamatPln: $("inputAlamatPln").value.trim().toUpperCase(), idPel, tarif: $("inputTarif").value.trim().toUpperCase(), ktpImage: ktpJpeg, suratImage: suratJpeg, fileName: safeName, ktpFileName: `KTP_${safeName}`, suratFileName: `SURAT_${safeName}` };
+    await kirimKeDrive(payload); clearDraft(); isFormSubmitted = true;
     $("successNama").textContent = $("inputNamaPln").value.trim().toLocaleUpperCase("id-ID") || $("inputNama").value.trim().toLocaleUpperCase("id-ID") || "-";
-    $("successIdPel").textContent = idPel || "-";
-    $("successWaktu").textContent = new Intl.DateTimeFormat("id-ID", { dateStyle: "medium", timeStyle: "short", timeZone: "Asia/Jakarta" }).format(new Date());
-
-    openModal("successModal");
-    showToast("Berhasil disimpan ke Drive");
-    tembakConfetti();
-
+    $("successIdPel").textContent = idPel || "-"; $("successWaktu").textContent = new Intl.DateTimeFormat("id-ID", { dateStyle: "medium", timeStyle: "short", timeZone: "Asia/Jakarta" }).format(new Date());
+    lockFormAfterSuccess(); openModal("successModal"); showToast("Berhasil disimpan ke Drive"); tembakConfetti();
   } catch (error) {
-    console.error("Error simpan:", error);
-    let msg = "Gagal mengirim ke Drive.";
-    if (error.message && error.message.includes("Failed to fetch")) msg = "Tidak bisa terhubung ke server. Periksa koneksi internet.";
+    console.error("Error simpan:", error); let msg = "Gagal mengirim ke Drive.";
+    if (!navigator.onLine) msg = "Tidak ada koneksi internet. Periksa jaringan lalu coba lagi.";
+    else if (error.message && error.message.includes("Failed to fetch")) msg = "Tidak bisa terhubung ke server. Periksa koneksi internet.";
     else if (error.message) msg = "Gagal: " + error.message;
-    showToast(msg, true);
-    const leftover = document.querySelector('div[style*="-9999px"]');
-    if (leftover) leftover.remove();
+    showToast(msg, true); const leftover = document.querySelector('div[style*="-9999px"]'); if (leftover) leftover.remove();
   } finally {
-    btn.disabled = false;
-    btn.classList.remove("loading");
-    btnText.textContent = origText;
+    btn.classList.remove("loading"); btnText.textContent = origText;
+    if (!isFormSubmitted) { btn.disabled = false; } else { btn.disabled = true; }
     $("loadingOverlay").style.display = "none";
   }
 }
 
-/* ===== 16. SHARE ===== */
+/* ===== 17. SHARE ===== */
 async function shareSurat() {
-  vibrate(20);
-  if (!lastSuratBlob) {
-    showToast("File surat belum siap. Silakan kirim ulang.", true);
-    return;
-  }
-  const idpel = stripDigits($("inputIdPel").value) || "-";
-  const namaPln = $("inputNamaPln").value.trim().toUpperCase() || "-";
-  const petugas = $("inputPetugas").value.trim().toUpperCase() || "-";
-  const pengawas = $("inputPengawas").value.trim().toUpperCase() || "-";
+  vibrate(20); if (!lastSuratBlob) { showToast("File surat belum siap. Silakan kirim ulang.", true); return; }
+  const idpel = stripDigits($("inputIdPel").value) || "-"; const namaPln = $("inputNamaPln").value.trim().toUpperCase() || "-";
+  const petugas = $("inputPetugas").value.trim().toUpperCase() || "-"; const pengawas = $("inputPengawas").value.trim().toUpperCase() || "-";
   const tgl = new Intl.DateTimeFormat("id-ID", { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' }).format(new Date());
   const shareText = `*BA TERTIB BAYAR*\n${tgl}\n\n*IDPEL* : ${idpel}\n*NAMA* : ${namaPln}\n\n*Petugas* : ${petugas}\n*Pengawas* : ${pengawas}`;
   const file = new File([lastSuratBlob], lastSuratFileName, { type: "image/jpeg" });
-
   if (navigator.canShare && navigator.canShare({ files: [file] })) {
-    try {
-      await navigator.share({ files: [file], title: "BA Tertib Bayar", text: shareText });
-    } catch (err) {
-      if (err.name !== "AbortError") {
-        console.warn("Share gagal:", err);
-        showToast("Gagal membagikan file", true);
-      }
-    }
-  } else {
-    showToast("HP ini tidak mendukung share file langsung. Coba lewat Chrome/Safari terbaru.", true);
-  }
+    try { await navigator.share({ files: [file], title: "BA Tertib Bayar", text: shareText }); }
+    catch (err) { if (err.name !== "AbortError") { console.warn("Share gagal:", err); showToast("Gagal membagikan file", true); } }
+  } else { showToast("HP ini tidak mendukung share file langsung. Coba lewat Chrome/Safari terbaru.", true); }
 }
 
-/* ===== 17. INIT ===== */
-window.addEventListener("resize", () => {
-  clearTimeout(resizeTimer);
-  resizeTimer = setTimeout(fitMobilePaper, 120);
-});
-window.addEventListener("orientationchange", () => {
-  setTimeout(() => {
-    fitMobilePaper();
-    if ($("signatureModal").classList.contains("open")) initFullSignaturePad(true);
-  }, 300);
+/* ===== 18. INIT ===== */
+window.addEventListener("resize", () => { clearTimeout(resizeTimer); resizeTimer = setTimeout(fitMobilePaper, 120); });
+window.addEventListener("orientationchange", () => { setTimeout(() => { fitMobilePaper(); if ($("signatureModal").classList.contains("open")) initFullSignaturePad(true); }, 300); });
+
+document.addEventListener('focusin', (e) => {
+  if (e.target.tagName === 'INPUT' && !progressShown) {
+    progressShown = true;
+    updateFormState();
+  }
 });
 
-initTheme();
-setAutomaticDate();
-updatePreview();
-initHintText("hintKtp", 16);
-initHintText("hintIdPel", 12);
+setAutomaticDate(); updatePreview(); updateFormState();
 
-const savedPetugas = localStorage.getItem('petugasTerakhir');
-if (savedPetugas) $("inputPetugas").value = savedPetugas;
-const savedPengawas = localStorage.getItem('pengawasTerakhir');
-if (savedPengawas) $("inputPengawas").value = savedPengawas;
+const savedPetugas = localStorage.getItem('petugasTerakhir'); if (savedPetugas) $("inputPetugas").value = savedPetugas;
+const savedPengawas = localStorage.getItem('pengawasTerakhir'); if (savedPengawas) $("inputPengawas").value = savedPengawas;
 
 try {
   const existing = sessionStorage.getItem(DRAFT_STORAGE_KEY);
-  if (existing && hasDraftContent(JSON.parse(existing))) {
-    $("draftRecovery").classList.add("show");
-    restoreDraft(false);
-  }
+  if (existing && hasDraftContent(JSON.parse(existing))) { $("draftRecovery").classList.add("show"); restoreDraft(false); }
 } catch (e) { console.warn("Draft sesi tidak dapat dibaca:", e); }
 
-$("inputPetugas").addEventListener("input", () => {
-  localStorage.setItem('petugasTerakhir', $("inputPetugas").value.trim());
-  saveDraft();
-});
-$("inputPengawas").addEventListener("input", () => {
-  localStorage.setItem('pengawasTerakhir', $("inputPengawas").value.trim());
-  saveDraft();
-});
+$("inputPetugas").addEventListener("input", () => { localStorage.setItem('petugasTerakhir', $("inputPetugas").value.trim()); saveDraft(); });
+$("inputPengawas").addEventListener("input", () => { localStorage.setItem('pengawasTerakhir', $("inputPengawas").value.trim()); saveDraft(); });
 
-if (document.readyState === 'complete') fitMobilePaper();
-else window.addEventListener('load', fitMobilePaper, { once: true });
+if (document.readyState === 'complete') fitMobilePaper(); else window.addEventListener('load', fitMobilePaper, { once: true });
 if (document.fonts && document.fonts.ready) document.fonts.ready.then(() => setTimeout(fitMobilePaper, 100));
 
 window.addEventListener("pagehide", () => {
+  if (isFormSubmitted) return;
   try { sessionStorage.setItem(DRAFT_STORAGE_KEY, JSON.stringify(getDraftPayload())); } catch (e) {}
 });
 </script>
