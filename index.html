@@ -3594,13 +3594,21 @@
     <div class="toast" id="toast" role="status" aria-live="polite"></div>
     <script>
       "use strict";
+      
+      // --- PERBAIKAN LANGKAH 1: Service Worker Register ---
       if ('serviceWorker' in navigator) {
-        navigator.serviceWorker.getRegistrations().then(function(registrations) {
-          for (let registration of registrations) {
-            registration.unregister();
-          }
+        window.addEventListener('load', () => {
+          navigator.serviceWorker.register('sw.js')
+            .then(registration => {
+              console.log('Service Worker berhasil didaftarkan:', registration.scope);
+            })
+            .catch(error => {
+              console.log('Service Worker gagal didaftarkan:', error);
+            });
         });
       }
+      // ----------------------------------------------------
+
       const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyaSbeKt7Yfo11QUmYYzg0qbO6ezrLWTVJt3OcGyGCV3nZ7xma8cpNDbyfu_Nz-hupRAQ/exec";
       const DRAFT_STORAGE_KEY = "baTertibBayarDraft_v5_session";
       const $ = id => document.getElementById(id);
