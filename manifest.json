@@ -1,8 +1,8 @@
 {
-  "id": "/BA-tertib-bayar/",
   "name": "BA Tertib Bayar - ULP Lemah Abang",
   "short_name": "BA Tertib",
-  "start_url": "/BA-tertib-bayar/index.html",
+  "description": "Aplikasi input Berita Acara Tertib Bayar PLN ULP Lemah Abang",
+  "start_url": "./",
   "display": "standalone",
   "orientation": "portrait",
   "background_color": "#f5f7fa",
