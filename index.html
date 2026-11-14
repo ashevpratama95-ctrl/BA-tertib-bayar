@@ -3613,62 +3613,44 @@
     <div class="toast" id="toast" role="status" aria-live="polite"></div>
     <script>
       "use strict";
-      
+
       // ============================================================
-      // PWA SETUP — INLINE MANIFEST & ICON (HURUF "BA")
+      // PWA SETUP — INLINE MANIFEST (PNG ICON UNTUK APP DRAWER ANDROID)
       // ============================================================
       (function initPWA() {
-        if (location.protocol === 'file:') return; 
+        if (location.protocol === 'file:') return;
 
-        // Ikon PWA SVG Inline (Huruf "BA" dengan Tema PLN)
-        const ICON_SVG = `
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
-          <defs>
-            <linearGradient id="bgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-              <stop offset="0%" stop-color="#0D5DA6"/>
-              <stop offset="100%" stop-color="#073b68"/>
-            </linearGradient>
-            <linearGradient id="textGrad" x1="0%" y1="0%" x2="0%" y2="100%">
-              <stop offset="0%" stop-color="#FFFFFF"/>
-              <stop offset="100%" stop-color="#E2E8F0"/>
-            </linearGradient>
-            <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%">
-              <feDropShadow dx="0" dy="8" stdDeviation="10" flood-color="#000000" flood-opacity="0.3"/>
-            </filter>
-          </defs>
-          <rect width="512" height="512" rx="112" fill="url(#bgGrad)"/>
-          <text x="50%" y="52%" font-family="Arial, Helvetica, sans-serif" font-weight="900" font-size="240" text-anchor="middle" dominant-baseline="central" fill="url(#textGrad)" letter-spacing="-8" filter="url(#shadow)">BA</text>
-          <rect x="156" y="370" width="200" height="12" rx="6" fill="#FFD100"/>
-        </svg>`;
-        
-        let ICON_DATA_URI = '';
-        try {
-          ICON_DATA_URI = 'data:image/svg+xml;base64,' + btoa(unescape(encodeURIComponent(ICON_SVG)));
-        } catch (e) {
-          ICON_DATA_URI = 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(ICON_SVG);
-        }
+        // Ikon PNG utama (wajib PNG untuk App Drawer Android)
+        const ICON_URL = 'https://i.postimg.cc/5ytqLNDB/1794643314446.png';
 
-        // Inject Manifest
+        // Manifest Inline — TIDAK butuh file manifest.json terpisah
         const pwaManifest = {
           name: 'BA Tertib Bayar',
           short_name: 'BA Tertib',
           description: 'Aplikasi Surat Pernyataan BA Tertib Bayar - ULP Lemah Abang',
           lang: 'id',
+          dir: 'ltr',
           start_url: location.pathname + location.search,
           scope: new URL('.', location.href).pathname,
           display: 'standalone',
+          display_override: ['standalone', 'minimal-ui', 'browser'],
+          orientation: 'portrait',
           background_color: '#0D5DA6',
           theme_color: '#0D5DA6',
           categories: ['utilities', 'productivity'],
           icons: [
-            { src: ICON_DATA_URI, sizes: '192x192', type: 'image/svg+xml', purpose: 'any' },
-            { src: ICON_DATA_URI, sizes: '512x512', type: 'image/svg+xml', purpose: 'any' },
-            { src: ICON_DATA_URI, sizes: '512x512', type: 'image/svg+xml', purpose: 'maskable' }
+            { src: ICON_URL, sizes: '192x192', type: 'image/png', purpose: 'any' },
+            { src: ICON_URL, sizes: '512x512', type: 'image/png', purpose: 'any' },
+            { src: ICON_URL, sizes: '192x192', type: 'image/png', purpose: 'maskable' },
+            { src: ICON_URL, sizes: '512x512', type: 'image/png', purpose: 'maskable' },
+            { src: ICON_URL, sizes: 'any',     type: 'image/png' }
           ]
         };
 
+        // Inject manifest sebagai data: URI (inline, tanpa file .json)
         try {
-          const manifestUrl = 'data:application/manifest+json;charset=utf-8,' + encodeURIComponent(JSON.stringify(pwaManifest));
+          const manifestUrl = 'data:application/manifest+json;charset=utf-8,' +
+                              encodeURIComponent(JSON.stringify(pwaManifest));
           let link = document.querySelector('link[rel="manifest"]');
           if (!link) {
             link = document.createElement('link');
@@ -3678,63 +3660,82 @@
           link.href = manifestUrl;
         } catch (e) { console.warn('[PWA] manifest inject failed:', e); }
 
-        // Inject Favicon & Apple Icon
+        // Favicon (PNG)
         let fav = document.querySelector('link[rel="icon"]');
         if (!fav) {
           fav = document.createElement('link');
           fav.rel = 'icon';
           document.head.appendChild(fav);
         }
-        fav.href = ICON_DATA_URI;
-        fav.type = 'image/svg+xml';
+        fav.href = ICON_URL;
+        fav.type = 'image/png';
+        fav.sizes = 'any';
 
+        // Apple Touch Icon (iOS)
         let appleIcon = document.querySelector('link[rel="apple-touch-icon"]');
         if (!appleIcon) {
           appleIcon = document.createElement('link');
           appleIcon.rel = 'apple-touch-icon';
           document.head.appendChild(appleIcon);
         }
-        appleIcon.href = ICON_DATA_URI;
+        appleIcon.href = ICON_URL;
+        appleIcon.sizes = '192x192';
 
-        // Register Service Worker (jika ada)
+        // Meta iOS standalone
+        const addMeta = (name, content) => {
+          if (!document.querySelector(`meta[name="${name}"]`)) {
+            const m = document.createElement('meta');
+            m.name = name;
+            m.content = content;
+            document.head.appendChild(m);
+          }
+        };
+        addMeta('apple-mobile-web-app-capable', 'yes');
+        addMeta('apple-mobile-web-app-status-bar-style', 'default');
+        addMeta('apple-mobile-web-app-title', 'BA Tertib');
+
+        // Service Worker opsional (kalau ada sw.js, didaftarkan; kalau tidak, diabaikan)
         if ('serviceWorker' in navigator) {
-          window.addEventListener('load', function() {
-            navigator.serviceWorker.register('sw.js').catch(function() {
-              // sw.js opsional, tidak error kalau tidak ada
+          window.addEventListener('load', function () {
+            navigator.serviceWorker.register('sw.js').catch(function () {
+              // sw.js tidak wajib ada — diabaikan
             });
           });
         }
 
-        // Handle Install Button
+        // Deteksi environment
         const installBtn = document.getElementById('pwaInstallBtn');
-        const isStandalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true;
-        const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+        const isStandalone =
+          window.matchMedia('(display-mode: standalone)').matches ||
+          window.navigator.standalone === true;
+        const isIOS =
+          /iPad|iPhone|iPod/.test(navigator.userAgent) ||
+          (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
         const isSafari = /^((?!chrome|android|crios|fxios).)*safari/i.test(navigator.userAgent);
 
         let deferredPrompt = null;
-        
-        window.addEventListener('beforeinstallprompt', function(e) {
+
+        window.addEventListener('beforeinstallprompt', function (e) {
           e.preventDefault();
           deferredPrompt = e;
           if (installBtn) installBtn.classList.add('show');
         });
 
-        // iOS & Safari desktop tidak support beforeinstallprompt
         if (!isStandalone && (isIOS || isSafari)) {
           if (installBtn) installBtn.classList.add('show');
         }
 
-        window.addEventListener('appinstalled', function() {
+        window.addEventListener('appinstalled', function () {
           deferredPrompt = null;
           if (installBtn) installBtn.classList.remove('show');
           if (typeof showToast === 'function') showToast('Aplikasi berhasil terinstal!', false);
         });
 
-        window.installPWA = function() {
-          vibrate(10);
+        window.installPWA = function () {
+          if (typeof vibrate === 'function') vibrate(10);
           if (deferredPrompt) {
             deferredPrompt.prompt();
-            deferredPrompt.userChoice.then(function(choice) {
+            deferredPrompt.userChoice.then(function (choice) {
               if (choice.outcome === 'accepted') {
                 if (typeof showToast === 'function') showToast('Terima kasih! Aplikasi segera terpasang.', false);
               } else {
@@ -3742,12 +3743,11 @@
               }
               deferredPrompt = null;
               if (installBtn) installBtn.classList.remove('show');
-            }).catch(function() { deferredPrompt = null; });
+            }).catch(function () { deferredPrompt = null; });
             return;
           }
-          // Fallback instruksi manual
           if (isIOS) {
-            if (typeof showToast === 'function') showToast('iOS: ketuk tombol Share (⤴) di Safari → "Tambah ke Layar Utama"', true);
+            if (typeof showToast === 'function') showToast('iOS: ketuk Share (⤴) di Safari → "Tambah ke Layar Utama"', true);
           } else if (isSafari) {
             if (typeof showToast === 'function') showToast('Safari: menu File → "Add to Dock"', true);
           } else {
@@ -3756,7 +3756,7 @@
         };
       })();
       // ============================================================
-      
+
       const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyaSbeKt7Yfo11QUmYYzg0qbO6ezrLWTVJt3OcGyGCV3nZ7xma8cpNDbyfu_Nz-hupRAQ/exec";
       const DRAFT_STORAGE_KEY = "baTertibBayarDraft_v5_session";
       const $ = id => document.getElementById(id);
