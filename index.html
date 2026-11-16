@@ -1437,6 +1437,7 @@
       }
 
       .paper-scaler {
+        position: relative;
         transform-origin: top center;
         transition: transform .25s ease-out;
         opacity: 0;
@@ -1471,12 +1472,38 @@
         border-radius: 3px
       }
 
+
+      .preview-watermark {
+        position: absolute;
+        inset: 0;
+        z-index: 3;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-around;
+        overflow: hidden;
+        pointer-events: none;
+        user-select: none;
+        color: rgba(28, 61, 88, .14);
+        font-family: Arial, sans-serif;
+        font-style: italic;
+        font-size: 21px;
+        font-weight: 700;
+        letter-spacing: .5px;
+        line-height: 1.2;
+        text-align: center;
+      }
+
+      .preview-watermark > div {
+        white-space: nowrap;
+        transform: rotate(-23deg) scale(1.08);
+      }
+
       .letter-head {
         display: flex;
         align-items: center;
         gap: 15px;
         padding-bottom: 12px;
-        border-bottom: 2px solid #000
+        border-bottom: 0.8px solid #333
       }
 
       .letter-logo {
@@ -1542,12 +1569,14 @@
       .signature-grid {
         display: grid;
         grid-template-columns: 1fr 1fr;
-        gap: 20px;
+        gap: 28px;
         margin-top: 30px
       }
 
       .ktp-col {
-        width: 100%
+        width: 100%;
+        padding-top: 21px;
+        box-sizing: border-box
       }
 
       .ktp-output {
@@ -1560,7 +1589,9 @@
 
       .sign-col {
         text-align: center;
-        font-size: 14px
+        font-size: 14px;
+        padding-left: 8px;
+        box-sizing: border-box
       }
 
       .paper-ttd {
@@ -1614,6 +1645,28 @@
       .modal.open {
         display: flex;
         animation: modalBackdropIn .22s ease-out both
+      }
+
+      #staffModal {
+        align-items: flex-end;
+        padding: 0 10px 10px;
+        animation: none !important;
+      }
+
+      #staffModal.modal.open {
+        animation: none !important;
+      }
+
+      #staffModal .modal-card {
+        animation: staffModalRise .38s cubic-bezier(.22, .72, .24, 1) both !important;
+        transform-origin: bottom center;
+        border-radius: 18px;
+        margin: 0 auto;
+      }
+
+      @keyframes staffModalRise {
+        from { opacity: .92; transform: translateY(42px); }
+        to { opacity: 1; transform: translateY(0); }
       }
 
       .modal-card {
@@ -2125,6 +2178,111 @@
         overflow-wrap: anywhere
       }
 
+      .confirm-modal-icon {
+        width: 42px;
+        height: 42px;
+        flex: 0 0 42px;
+        display: grid;
+        place-items: center;
+        border-radius: 12px;
+        background: linear-gradient(135deg, #e0f2fe, #ede9fe);
+        border: 1px solid #dbeafe;
+      }
+
+      .confirm-modal-icon svg {
+        width: 34px;
+        height: 34px;
+        display: block;
+      }
+
+      .confirm-description {
+        margin: 12px 0 4px;
+        color: #60758a;
+        font-size: 13px;
+        line-height: 1.5;
+      }
+
+      .confirm-details {
+        margin-top: 12px;
+        opacity: 1 !important;
+        animation: none !important;
+        transform: none !important;
+        visibility: visible !important;
+      }
+
+      /* Data konfirmasi langsung terlihat tanpa animasi bertahap */
+      .confirm-details .success-detail-row {
+        opacity: 1;
+        animation: none !important;
+        transform: none;
+      }
+
+      /* Modal konfirmasi langsung tampil; animasi modal lain tetap */
+      #sendConfirmModal .modal-card {
+        animation: none !important;
+      }
+
+      .confirm-details .success-detail-row {
+        align-items: flex-start;
+      }
+
+      .confirm-details .success-detail-row strong {
+        max-width: 62%;
+        text-align: right;
+        overflow-wrap: anywhere;
+      }
+
+      .confirm-actions {
+        display: flex;
+        gap: 9px;
+        margin-top: 16px;
+      }
+
+      .confirm-actions > button {
+        flex: 1;
+        min-height: 43px;
+      }
+
+      .success-actions-row {
+        display: flex;
+        gap: 9px;
+        margin-top: 16px;
+      }
+
+      .success-actions-row > button {
+        flex: 1;
+        min-width: 0;
+        min-height: 44px;
+      }
+
+      .btn-download-success,
+      .btn-selesai-success {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        border-radius: 11px;
+        padding: 12px 14px;
+        font-size: 13px;
+        font-weight: 800;
+        cursor: pointer;
+      }
+
+      .btn-download-success {
+        color: #1456a0;
+        background: rgba(13, 93, 166, .09);
+        border: 1px solid rgba(13, 93, 166, .22);
+      }
+
+      .btn-selesai-success {
+        width: 100%;
+        min-height: 44px;
+        margin-top: 9px;
+        color: #fff;
+        background: #0D5DA6;
+        border: 1px solid #0D5DA6;
+      }
+
       .success-actions {
         display: flex;
         flex-direction: row;
@@ -2155,10 +2313,10 @@
       }
 
       .success-actions .btn-bagikan {
-        background: linear-gradient(135deg, #10b981, #059669);
-        border: none;
-        color: #fff;
-        box-shadow: 0 4px 12px rgba(16, 185, 129, .3)
+        background: rgba(22, 163, 74, .10);
+        border: 1px solid rgba(22, 163, 74, .24);
+        color: #167342;
+        box-shadow: none
       }
 
       #staffModal.modal {
@@ -2176,7 +2334,7 @@
         max-height: 85dvh;
         margin-bottom: 0;
         padding-bottom: calc(18px + env(safe-area-inset-bottom));
-        animation: modalSlideUp .34s cubic-bezier(.2, .85, .25, 1.12) both;
+        animation: staffModalRise .38s cubic-bezier(.22, .72, .24, 1) both;
         transition: transform .2s ease-out;
         overflow: hidden
       }
@@ -2265,29 +2423,33 @@
       }
 
       .staff-item.selected {
-        background: #e6f2ff;
-        color: #07599f;
-        border-color: transparent
+        background: rgba(22, 163, 74, .12);
+        color: #167342;
+        border-color: transparent;
       }
 
-      .staff-item.selected::after {
-        content: '✓';
-        font-size: 16px;
-        font-weight: 900;
-        color: #0878c9;
-        animation: popCheck .2s ease
+      .staff-item .staff-name {
+        flex: 1;
+        min-width: 0;
       }
 
-      @keyframes popCheck {
-        0% {
-          transform: scale(.5);
-          opacity: 0
-        }
+      .staff-item .staff-check {
+        width: 19px;
+        height: 19px;
+        flex: 0 0 19px;
+        color: #16834b;
+        opacity: 0;
+        transform: scale(.55);
+      }
 
-        100% {
-          transform: scale(1);
-          opacity: 1
-        }
+      .staff-item.selected .staff-check {
+        animation: staffCheckIn .2s cubic-bezier(.2, .8, .2, 1) both;
+      }
+
+      @keyframes staffCheckIn {
+        0% { opacity: 0; transform: scale(.55); }
+        70% { opacity: 1; transform: scale(1.12); }
+        100% { opacity: 1; transform: scale(1); }
       }
 
       .staff-empty {
@@ -2809,6 +2971,55 @@
           display: none !important
         }
       }
+    
+      /* ===== PENYESUAIAN TOMBOL MODAL BERHASIL DIKIRIM ===== */
+      .success-actions-row {
+        display: flex !important;
+        align-items: stretch !important;
+        gap: 10px !important;
+      }
+
+      .success-actions-row > button,
+      .success-actions-row .btn-download-success,
+      .success-actions-row .btn-bagikan {
+        box-sizing: border-box !important;
+        display: flex !important;
+        flex: 1 1 0 !important;
+        width: 0 !important;
+        min-width: 0 !important;
+        height: 46px !important;
+        min-height: 46px !important;
+        max-height: 46px !important;
+        margin: 0 !important;
+        padding: 0 12px !important;
+        align-items: center !important;
+        justify-content: center !important;
+        border-radius: 11px !important;
+        font-size: 13px !important;
+        font-weight: 800 !important;
+        line-height: 1 !important;
+      }
+
+      .success-actions-row .btn-download-success {
+        color: #075985 !important;
+        background: rgba(56, 189, 248, .20) !important;
+        border: 1px solid rgba(14, 165, 233, .42) !important;
+      }
+
+      .success-actions-row .btn-bagikan {
+        color: #166534 !important;
+        background: rgba(74, 222, 128, .22) !important;
+        border: 1px solid rgba(34, 197, 94, .42) !important;
+        box-shadow: none !important;
+      }
+
+      .btn-selesai-success {
+        color: #fff !important;
+        background: linear-gradient(112deg, #0878c9 0%, #219bd0 100%) !important;
+        border: none !important;
+        box-shadow: none !important;
+      }
+
     </style>
   </head>
   <body>
@@ -3340,6 +3551,13 @@
                       </div>
                     </div>
                   </article>
+                  <div class="preview-watermark" aria-hidden="true">
+                    <div>Dokumen sementara • silahkan kirim file • Dokumen sementara • silahkan kirim file</div>
+                    <div>Dokumen sementara • silahkan kirim file • Dokumen sementara • silahkan kirim file</div>
+                    <div>Dokumen sementara • silahkan kirim file • Dokumen sementara • silahkan kirim file</div>
+                    <div>Dokumen sementara • silahkan kirim file • Dokumen sementara • silahkan kirim file</div>
+                    <div>Dokumen sementara • silahkan kirim file • Dokumen sementara • silahkan kirim file</div>
+                  </div>
                 </div>
               </div>
               <div class="preview-actions">
@@ -3577,6 +3795,37 @@
         <div class="progress-text" id="loadingProgressText">0%</div>
       </div>
     </div>
+    <div class="modal" id="sendConfirmModal" role="dialog" aria-modal="true" aria-labelledby="sendConfirmTitle">
+      <div class="modal-card">
+        <div class="modal-heading">
+          <span class="confirm-modal-icon" aria-hidden="true">
+            <svg viewBox="0 0 48 48" fill="none">
+              <defs>
+                <linearGradient id="confirmIconGradient" x1="5" y1="4" x2="43" y2="44" gradientUnits="userSpaceOnUse">
+                  <stop stop-color="#38BDF8"/><stop offset=".52" stop-color="#3B82F6"/><stop offset="1" stop-color="#8B5CF6"/>
+                </linearGradient>
+              </defs>
+              <rect x="5" y="5" width="38" height="38" rx="12" fill="url(#confirmIconGradient)"/>
+              <path d="M16 16h16M16 23h16M16 30h8" stroke="#fff" stroke-width="2.5" stroke-linecap="round"/>
+              <circle cx="33" cy="32" r="7" fill="#22C55E" stroke="#fff" stroke-width="2"/>
+              <path d="m30 32 2 2 4-4" stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </span>
+          <span class="modal-heading-copy"><h3 id="sendConfirmTitle">Konfirmasi Kirim</h3></span>
+        </div>
+        <p class="confirm-description">Periksa kembali data pelanggan PLN sebelum dokumen dikirim.</p>
+        <div class="success-details confirm-details">
+          <div class="success-detail-row"><span>Nama Pelanggan</span><strong id="confirmNamaPln">-</strong></div>
+          <div class="success-detail-row"><span>IDPEL</span><strong id="confirmIdPel">-</strong></div>
+          <div class="success-detail-row"><span>Alamat Pelanggan</span><strong id="confirmAlamatPln">-</strong></div>
+          <div class="success-detail-row"><span>Tarif/Daya</span><strong id="confirmTarif">-</strong></div>
+        </div>
+        <div class="modal-tariff-actions confirm-actions">
+          <button type="button" class="btn-batal-tarif" onclick='closeModal("sendConfirmModal")'>Kembali</button>
+          <button type="button" class="btn-simpan-tarif" id="confirmSendBtn" onclick="konfirmasiKirim()">Konfirmasi Kirim</button>
+        </div>
+      </div>
+    </div>
     <div class="modal" id="successModal" role="dialog" aria-modal="true" aria-labelledby="successTitle">
       <div class="modal-card success-modal-card">
         <div class="success-mark" aria-hidden="true">
@@ -3588,26 +3837,27 @@
         <p class="success-sub">Data dan berkas berhasil dikirim ke Google Drive.</p>
         <div class="success-details">
           <div class="success-detail-row">
-            <span>Nama pelanggan</span>
-            <strong id="successNama">-</strong>
-          </div>
-          <div class="success-detail-row">
-            <span>IDPEL</span>
-            <strong id="successIdPel">-</strong>
-          </div>
-          <div class="success-detail-row">
-            <span>Waktu simpan</span>
+            <span>Tanggal/Waktu</span>
             <strong id="successWaktu">-</strong>
+          </div>
+          <div class="success-detail-row">
+            <span>Petugas Input</span>
+            <strong id="successPetugas">-</strong>
+          </div>
+          <div class="success-detail-row">
+            <span>Pengawas</span>
+            <strong id="successPengawas">-</strong>
           </div>
           <div class="success-detail-row">
             <span>Status Drive</span>
             <strong style="color:#059669">Tersimpan</strong>
           </div>
         </div>
-        <div class="success-actions">
-          <button type="button" class="btn-kembali" onclick="tutupSuccessModal()">Kembali</button>
+        <div class="success-actions success-actions-row">
+          <button type="button" class="btn-download-success" onclick="downloadSuccessSurat()">Download</button>
           <button type="button" class="btn-bagikan" onclick="shareSurat()">Bagikan</button>
         </div>
+        <button type="button" class="btn-selesai-success" onclick="tutupSuccessModal()">Selesai</button>
       </div>
     </div>
     <div class="toast" id="toast" role="status" aria-live="polite"></div>
@@ -3766,6 +4016,7 @@
       const pagePreview = $("page-preview");
       const mobileNav = $("mobileNav");
       let cropper = null;
+      let originalCropImageUrl = "";
       let ktpDataUrl = "";
       let signatureDataUrl = "";
       let toastTimer;
@@ -4128,7 +4379,8 @@
         filtered.forEach(name => {
           const div = document.createElement("div");
           div.className = "staff-item";
-          div.textContent = name;
+          div.innerHTML = `<span class="staff-name"></span><svg class="staff-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m5 12 4 4L19 6"/></svg>`;
+          div.querySelector(".staff-name").textContent = name;
           if (currentStaffTarget === "inputPetugas") {
             if (selectedPetugas.has(name)) div.classList.add("selected");
             div.onclick = () => {
@@ -5005,6 +5257,46 @@
             const {id, buffer, width, height} = ev.data;
             try {
               const d = new Uint8ClampedArray(buffer);
+
+              // Mode khusus foto KTP yang sudah memenuhi hampir seluruh frame
+              // (misalnya hasil scan/fotokopi dengan pola hologram kuat).
+              // Jika tepi foto sendiri didominasi warna dasar KTP dan rasio
+              // gambar mendekati rasio kartu, gunakan seluruh frame sebagai kartu.
+              const frameRatio = width / height;
+              if (frameRatio >= 1.44 && frameRatio <= 1.76) {
+                const band = Math.max(3, Math.round(Math.min(width,height) * 0.012));
+                let topBlue=0, bottomBlue=0, leftBlue=0, rightBlue=0;
+                let topN=0, bottomN=0, leftN=0, rightN=0;
+                const isBlue = (i) => {
+                  const r=d[i], g=d[i+1], b=d[i+2];
+                  return b>=65 && g>=65 && b>=r*1.10 && g>=r*1.015 && (b-g)>=-25;
+                };
+                for(let y=0;y<band;y++) for(let x=0;x<width;x++) {
+                  const i=(y*width+x)*4;
+                  if(isBlue(i)) topBlue++; topN++;
+                  const j=((height-1-y)*width+x)*4;
+                  if(isBlue(j)) bottomBlue++; bottomN++;
+                }
+                for(let x=0;x<band;x++) for(let y=0;y<height;y++) {
+                  const i=(y*width+x)*4;
+                  if(isBlue(i)) leftBlue++; leftN++;
+                  const j=(y*width+(width-1-x))*4;
+                  if(isBlue(j)) rightBlue++; rightN++;
+                }
+                const edgeScore=(topBlue/topN + bottomBlue/bottomN +
+                  leftBlue/leftN + rightBlue/rightN) / 4;
+                if(topBlue/topN>0.72 && bottomBlue/bottomN>0.48 &&
+                   leftBlue/leftN>0.42 && rightBlue/rightN>0.42 && edgeScore>0.58) {
+                  self.postMessage({
+                    id, ok:true,
+                    corners:[{x:0,y:0},{x:width-1,y:0},
+                      {x:width-1,y:height-1},{x:0,y:height-1}],
+                    width,height, mode:"full-frame"
+                  });
+                  return;
+                }
+              }
+
               let minSum=Infinity, maxDiff=-Infinity, maxSum=-Infinity, minDiff=Infinity;
               let tl=null, tr=null, br=null, bl=null, count=0;
               let minX=width, minY=height, maxX=0, maxY=0;
@@ -5171,6 +5463,7 @@
         reader.onload = () => {
           const imageEl = $("imageToCrop");
           const originalUrl = reader.result;
+          originalCropImageUrl = originalUrl;
           openModal("cropModal");
           if (cropper) { cropper.destroy(); cropper = null; }
           imageEl.onload = () => {
@@ -5223,7 +5516,28 @@
       }
 
       function resetCrop() {
-        if (cropper) cropper.reset();
+        if (!originalCropImageUrl) return;
+        // Batalkan callback deteksi otomatis yang mungkin masih berjalan.
+        const session = ++ktpDetectSessionId;
+        if (cropper) {
+          cropper.destroy();
+          cropper = null;
+        }
+        const imageEl = $("imageToCrop");
+        imageEl.onload = () => {
+          if (session !== ktpDetectSessionId || !$("cropModal").classList.contains("open")) return;
+          cropper = new Cropper(imageEl, {
+            aspectRatio: KTP_RATIO,
+            viewMode: 1,
+            autoCropArea: 0.9,
+            responsive: true,
+            background: false,
+            movable: true,
+            zoomable: true
+          });
+          showToast("Foto asli dipulihkan. Silakan atur crop secara manual.");
+        };
+        imageEl.src = originalCropImageUrl;
       }
 
       function performCrop() {
@@ -5258,6 +5572,8 @@
         closeModal("cropModal");
         cropper.destroy();
         cropper = null;
+        originalCropImageUrl = "";
+        ++ktpDetectSessionId;
         $("inputKamera").value = "";
         $("inputGaleri").value = "";
         updateFormState();
@@ -5265,11 +5581,13 @@
       }
 
       function cancelCrop() {
+        ++ktpDetectSessionId;
         closeModal("cropModal");
         if (cropper) {
           cropper.destroy();
           cropper = null;
         }
+        originalCropImageUrl = "";
         $("inputKamera").value = "";
         $("inputGaleri").value = "";
       }
@@ -5629,7 +5947,8 @@
       function tutupSuccessModal() {
         vibrate(10);
         closeModal('successModal');
-        showToast("Data sudah tersimpan. Klik tombol reset di panel 4 untuk input baru.");
+        resetFormData();
+        showToast("Selesai. Silakan input data baru.");
       }
 
       function konfirmasiReset() {
@@ -5662,8 +5981,23 @@
           return;
         }
         if (!validasiSebelumSimpan()) return;
+        tampilkanKonfirmasiKirim();
+      }
+
+      function tampilkanKonfirmasiKirim() {
+        $("confirmNamaPln").textContent = $("inputNamaPln").value.trim().toLocaleUpperCase("id-ID") || "-";
+        $("confirmIdPel").textContent = stripDigits($("inputIdPel").value) || "-";
+        $("confirmAlamatPln").textContent = $("inputAlamatPln").value.trim().toLocaleUpperCase("id-ID") || "-";
+        $("confirmTarif").textContent = $("inputTarif").value.trim().toLocaleUpperCase("id-ID") || "-";
+        openModal("sendConfirmModal");
+      }
+
+      function konfirmasiKirim() {
+        if ($("downloadBtn").disabled) return;
+        closeModal("sendConfirmModal");
         lanjutKirim();
       }
+
       async function lanjutKirim() {
         const btn = $("downloadBtn");
         if (btn.disabled) return;
@@ -5710,13 +6044,13 @@
           updateLoadingProgress(95, "Menyelesaikan...");
           clearDraft();
           isFormSubmitted = true;
-          $("successNama").textContent = $("inputNamaPln").value.trim().toLocaleUpperCase("id-ID") || $("inputNama").value.trim().toLocaleUpperCase("id-ID") || "-";
-          $("successIdPel").textContent = idPel || "-";
           $("successWaktu").textContent = new Intl.DateTimeFormat("id-ID", {
             dateStyle: "medium",
             timeStyle: "short",
             timeZone: "Asia/Jakarta"
           }).format(new Date());
+          $("successPetugas").textContent = $("inputPetugas").value.trim().toLocaleUpperCase("id-ID") || "-";
+          $("successPengawas").textContent = $("inputPengawas").value.trim().toLocaleUpperCase("id-ID") || "-";
           updateLoadingProgress(100, "Selesai!");
           setTimeout(() => {
             hideLoading();
@@ -5749,6 +6083,22 @@
           }
         }
       }
+      function downloadSuccessSurat() {
+        vibrate(20);
+        if (!lastSuratBlob) {
+          showToast("File surat belum siap diunduh.", true);
+          return;
+        }
+        const url = URL.createObjectURL(lastSuratBlob);
+        const link = document.createElement("a");
+        link.href = url;
+        link.download = lastSuratFileName || "BA_Tertib_Bayar.jpg";
+        document.body.appendChild(link);
+        link.click();
+        link.remove();
+        setTimeout(() => URL.revokeObjectURL(url), 1500);
+      }
+
       async function shareSurat() {
         vibrate(20);
         if (!lastSuratBlob) {
