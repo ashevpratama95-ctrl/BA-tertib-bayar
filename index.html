@@ -1471,6 +1471,55 @@
         border-radius: 3px
       }
 
+      /* Watermark pratinjau: penanda visual, bukan pengunci screenshot */
+      .paper {
+        position: relative;
+        isolation: isolate;
+      }
+
+      .paper::after {
+        content: "DOKUMEN INTERNAL - BA TERTIB BAYAR";
+        position: absolute;
+        inset: 0;
+        z-index: 8;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 30px;
+        color: rgba(15, 55, 85, .105) !important;
+        font-family: Arial, sans-serif !important;
+        font-size: 34px;
+        font-weight: 900;
+        letter-spacing: 2px !important;
+        text-align: center;
+        line-height: 1.5;
+        transform: rotate(-32deg);
+        pointer-events: none;
+        user-select: none;
+        -webkit-user-select: none;
+      }
+
+      #page-preview.privacy-shield {
+        position: relative;
+      }
+
+      #page-preview.privacy-shield::after {
+        content: "Pratinjau surat disembunyikan saat aplikasi tidak aktif";
+        position: absolute;
+        inset: 0;
+        z-index: 1000;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 28px;
+        text-align: center;
+        font: 700 14px/1.6 Arial, sans-serif;
+        color: #173b5e;
+        background: rgba(242, 247, 251, .94);
+        -webkit-backdrop-filter: blur(18px);
+        backdrop-filter: blur(18px);
+      }
+
       .letter-head {
         display: flex;
         align-items: center;
@@ -3482,7 +3531,7 @@
             <h3>Sesuaikan foto KTP</h3>
           </span>
         </div>
-        <p>Silahkan atur posisi foto sampai seluruh bagian <br>KTP terlihat jelas. </p>
+        <p>Sistem akan mencoba mendeteksi batas KTP otomatis. Periksa hasilnya dan sesuaikan jika perlu.</p>
         <div class="crop-frame">
           <img id="imageToCrop" alt="Foto untuk dipotong">
         </div>
@@ -4987,6 +5036,292 @@
       $("inputKamera").addEventListener("change", initCrop);
       $("inputGaleri").addEventListener("change", initCrop);
 
+      let openCvPromise = null;
+      let cropSessionId = 0;
+
+      function loadOpenCv() {
+        if (window.cv && window.cv.Mat) return Promise.resolve(window.cv);
+        if (openCvPromise) return openCvPromise;
+        openCvPromise = new Promise((resolve, reject) => {
+          let script = document.querySelector('script[data-opencv-loader="1"]');
+          if (!script) {
+            script = document.createElement('script');
+            script.src = 'https://docs.opencv.org/4.x/opencv.js';
+            script.async = true;
+            script.dataset.opencvLoader = '1';
+            document.head.appendChild(script);
+          }
+          const timeout = setTimeout(() => reject(new Error('Pemuatan deteksi otomatis melewati batas waktu.')), 18000);
+          const finish = () => {
+            if (window.cv && window.cv.Mat) {
+              clearTimeout(timeout);
+              resolve(window.cv);
+            }
+          };
+          script.addEventListener('error', () => {
+            clearTimeout(timeout);
+            reject(new Error('Modul deteksi otomatis tidak dapat dimuat.'));
+          }, { once: true });
+          script.addEventListener('load', () => {
+            if (window.cv && window.cv.Mat) return finish();
+            if (window.cv) {
+              const previous = window.cv.onRuntimeInitialized;
+              window.cv.onRuntimeInitialized = () => {
+                try { if (typeof previous === 'function') previous(); } catch (_) {}
+                finish();
+              };
+              // OpenCV build tertentu mengekspos Promise sebagai cv.
+              if (typeof window.cv.then === 'function') window.cv.then(finish).catch(reject);
+            }
+          }, { once: true });
+          // Jika skrip sudah ada dan sedang dimuat, cek secara berkala tanpa timer berulang.
+          const started = Date.now();
+          const poll = () => {
+            if (window.cv && window.cv.Mat) return finish();
+            if (Date.now() - started < 18000) setTimeout(poll, 250);
+          };
+          poll();
+        }).catch(err => {
+          openCvPromise = null;
+          throw err;
+        });
+        return openCvPromise;
+      }
+
+      async function detectAndRectifyKtp(imageEl) {
+        const cv = await loadOpenCv();
+        let workCanvas = null, src = null, gray = null, blurred = null, edges = null;
+        let kernel = null, contours = null, hierarchy = null, transform = null, warped = null;
+        let srcPts = null, dstPts = null;
+        try {
+          // Kecilkan gambar SEBELUM diproses OpenCV agar foto kamera beresolusi tinggi
+          // tidak membuat Chrome Android kehabisan memori atau terasa macet.
+          const maxSide = 900;
+          const scale = Math.min(1, maxSide / Math.max(imageEl.naturalWidth || imageEl.width, imageEl.naturalHeight || imageEl.height));
+          workCanvas = document.createElement('canvas');
+          workCanvas.width = Math.max(1, Math.round((imageEl.naturalWidth || imageEl.width) * scale));
+          workCanvas.height = Math.max(1, Math.round((imageEl.naturalHeight || imageEl.height) * scale));
+          const ctx = workCanvas.getContext('2d', { willReadFrequently: true });
+          ctx.drawImage(imageEl, 0, 0, workCanvas.width, workCanvas.height);
+
+          src = cv.imread(workCanvas);
+          gray = new cv.Mat();
+          cv.cvtColor(src, gray, cv.COLOR_RGBA2GRAY);
+          blurred = new cv.Mat();
+          cv.GaussianBlur(gray, blurred, new cv.Size(5, 5), 0);
+          edges = new cv.Mat();
+          cv.Canny(blurred, edges, 60, 150);
+          kernel = cv.getStructuringElement(cv.MORPH_RECT, new cv.Size(5, 5));
+          cv.morphologyEx(edges, edges, cv.MORPH_CLOSE, kernel);
+          contours = new cv.MatVector();
+          hierarchy = new cv.Mat();
+          // RETR_EXTERNAL menghindari ribuan kontur huruf di dalam KTP.
+          cv.findContours(edges, contours, hierarchy, cv.RETR_EXTERNAL, cv.CHAIN_APPROX_SIMPLE);
+
+          let best = null;
+          let bestArea = 0;
+          const imageArea = src.cols * src.rows;
+          const total = Math.min(contours.size(), 120);
+          for (let i = 0; i < total; i++) {
+            const contour = contours.get(i);
+            try {
+              const area = cv.contourArea(contour);
+              if (area < imageArea * 0.10 || area <= bestArea) continue;
+              const peri = cv.arcLength(contour, true);
+              const candidate = new cv.Mat();
+              try {
+                cv.approxPolyDP(contour, candidate, 0.025 * peri, true);
+                if (candidate.rows !== 4 || !cv.isContourConvex(candidate)) continue;
+                const pts = [];
+                for (let j = 0; j < 4; j++) pts.push({ x: candidate.intAt(j, 0), y: candidate.intAt(j, 1) });
+                const sums = pts.map(q => q.x + q.y);
+                const diffs = pts.map(q => q.x - q.y);
+                const ordered = [
+                  pts[sums.indexOf(Math.min(...sums))],
+                  pts[diffs.indexOf(Math.max(...diffs))],
+                  pts[sums.indexOf(Math.max(...sums))],
+                  pts[diffs.indexOf(Math.min(...diffs))]
+                ];
+                const w = Math.max(
+                  Math.hypot(ordered[1].x - ordered[0].x, ordered[1].y - ordered[0].y),
+                  Math.hypot(ordered[2].x - ordered[3].x, ordered[2].y - ordered[3].y)
+                );
+                const h = Math.max(
+                  Math.hypot(ordered[3].x - ordered[0].x, ordered[3].y - ordered[0].y),
+                  Math.hypot(ordered[2].x - ordered[1].x, ordered[2].y - ordered[1].y)
+                );
+                const ratio = w / Math.max(1, h);
+                if (ratio >= 1.35 && ratio <= 1.9) {
+                  best = { points: ordered };
+                  bestArea = area;
+                }
+              } finally {
+                candidate.delete();
+              }
+            } finally {
+              contour.delete();
+            }
+          }
+          if (!best) return null;
+
+          const outW = 1000;
+          const outH = Math.round(outW / 1.585);
+          srcPts = cv.matFromArray(4, 1, cv.CV_32FC2, best.points.flatMap(q => [q.x, q.y]));
+          dstPts = cv.matFromArray(4, 1, cv.CV_32FC2, [0, 0, outW - 1, 0, outW - 1, outH - 1, 0, outH - 1]);
+          transform = cv.getPerspectiveTransform(srcPts, dstPts);
+          warped = new cv.Mat();
+          cv.warpPerspective(src, warped, transform, new cv.Size(outW, outH), cv.INTER_LINEAR, cv.BORDER_REPLICATE);
+          const outputCanvas = document.createElement('canvas');
+          cv.imshow(outputCanvas, warped);
+          return outputCanvas.toDataURL('image/jpeg', 0.92);
+        } finally {
+          [src, gray, blurred, edges, kernel, contours, hierarchy, transform, warped, srcPts, dstPts].forEach(m => {
+            if (m && typeof m.delete === 'function') m.delete();
+          });
+          if (workCanvas) { workCanvas.width = 1; workCanvas.height = 1; }
+        }
+      }
+
+
+      // Deteksi KTP di Web Worker agar OpenCV tidak membekukan UI Chrome Android.
+      let ktpWorker = null;
+      let ktpWorkerUrl = null;
+
+      function detectKtpInWorker(imageEl) {
+        return new Promise(async (resolve, reject) => {
+          try {
+            if (!("Worker" in window) || !("OffscreenCanvas" in window) || !("createImageBitmap" in window)) {
+              reject(new Error("Browser tidak mendukung pemrosesan gambar di worker."));
+              return;
+            }
+            if (!ktpWorker) {
+              const workerSource = `
+                let cvReady = null;
+                function loadCv() {
+                  if (cvReady) return cvReady;
+                  cvReady = new Promise((resolve, reject) => {
+                    try {
+                      importScripts("https://docs.opencv.org/4.x/opencv.js");
+                      if (self.cv && self.cv.Mat) { resolve(self.cv); return; }
+                      if (self.cv) {
+                        const old = self.cv.onRuntimeInitialized;
+                        self.cv.onRuntimeInitialized = () => {
+                          try { if (typeof old === "function") old(); } catch(e) {}
+                          resolve(self.cv);
+                        };
+                        if (typeof self.cv.then === "function") self.cv.then(resolve).catch(reject);
+                      } else reject(new Error("OpenCV tidak tersedia di worker."));
+                      setTimeout(() => reject(new Error("OpenCV worker timeout.")), 20000);
+                    } catch (e) { reject(e); }
+                  });
+                  return cvReady;
+                }
+                self.onmessage = async (event) => {
+                  const { id, bitmap } = event.data;
+                  let mats = [];
+                  try {
+                    const cv = await loadCv();
+                    const maxSide = 900;
+                    const scale = Math.min(1, maxSide / Math.max(bitmap.width, bitmap.height));
+                    const w = Math.max(1, Math.round(bitmap.width * scale));
+                    const h = Math.max(1, Math.round(bitmap.height * scale));
+                    const canvas = new OffscreenCanvas(w, h);
+                    const ctx = canvas.getContext("2d", { willReadFrequently: true });
+                    ctx.drawImage(bitmap, 0, 0, w, h);
+                    bitmap.close && bitmap.close();
+                    const src = cv.imread(canvas); mats.push(src);
+                    const gray = new cv.Mat(); mats.push(gray);
+                    cv.cvtColor(src, gray, cv.COLOR_RGBA2GRAY);
+                    const blur = new cv.Mat(); mats.push(blur);
+                    cv.GaussianBlur(gray, blur, new cv.Size(5,5), 0);
+                    const edges = new cv.Mat(); mats.push(edges);
+                    cv.Canny(blur, edges, 60, 150);
+                    const kernel = cv.getStructuringElement(cv.MORPH_RECT, new cv.Size(5,5)); mats.push(kernel);
+                    cv.morphologyEx(edges, edges, cv.MORPH_CLOSE, kernel);
+                    const contours = new cv.MatVector(); mats.push(contours);
+                    const hierarchy = new cv.Mat(); mats.push(hierarchy);
+                    cv.findContours(edges, contours, hierarchy, cv.RETR_EXTERNAL, cv.CHAIN_APPROX_SIMPLE);
+                    let best = null, bestArea = 0;
+                    const imageArea = src.cols * src.rows;
+                    for (let i = 0; i < Math.min(contours.size(), 120); i++) {
+                      const contour = contours.get(i);
+                      try {
+                        const area = cv.contourArea(contour);
+                        if (area < imageArea * 0.10 || area <= bestArea) continue;
+                        const peri = cv.arcLength(contour, true);
+                        const candidate = new cv.Mat(); mats.push(candidate);
+                        cv.approxPolyDP(contour, candidate, 0.025 * peri, true);
+                        if (candidate.rows !== 4 || !cv.isContourConvex(candidate)) continue;
+                        const pts = [];
+                        for (let j=0;j<4;j++) pts.push({x:candidate.intAt(j,0), y:candidate.intAt(j,1)});
+                        const sums = pts.map(q=>q.x+q.y), diffs = pts.map(q=>q.x-q.y);
+                        const ordered = [
+                          pts[sums.indexOf(Math.min(...sums))],
+                          pts[diffs.indexOf(Math.max(...diffs))],
+                          pts[sums.indexOf(Math.max(...sums))],
+                          pts[diffs.indexOf(Math.min(...diffs))]
+                        ];
+                        const ww = Math.max(Math.hypot(ordered[1].x-ordered[0].x,ordered[1].y-ordered[0].y),Math.hypot(ordered[2].x-ordered[3].x,ordered[2].y-ordered[3].y));
+                        const hh = Math.max(Math.hypot(ordered[3].x-ordered[0].x,ordered[3].y-ordered[0].y),Math.hypot(ordered[2].x-ordered[1].x,ordered[2].y-ordered[1].y));
+                        const ratio = ww / Math.max(1,hh);
+                        if (ratio >= 1.35 && ratio <= 1.9) { best={points:ordered}; bestArea=area; }
+                      } finally { contour.delete(); }
+                    }
+                    if (!best) { self.postMessage({id, ok:false, reason:"not-found"}); return; }
+                    const outW=1000, outH=Math.round(outW/1.585);
+                    const srcPts=cv.matFromArray(4,1,cv.CV_32FC2,best.points.flatMap(q=>[q.x,q.y])); mats.push(srcPts);
+                    const dstPts=cv.matFromArray(4,1,cv.CV_32FC2,[0,0,outW-1,0,outW-1,outH-1,0,outH-1]); mats.push(dstPts);
+                    const transform=cv.getPerspectiveTransform(srcPts,dstPts); mats.push(transform);
+                    const warped=new cv.Mat(); mats.push(warped);
+                    cv.warpPerspective(src,warped,transform,new cv.Size(outW,outH),cv.INTER_LINEAR,cv.BORDER_REPLICATE);
+                    const outCanvas=new OffscreenCanvas(outW,outH);
+                    cv.imshow(outCanvas,warped);
+                    const blob=await outCanvas.convertToBlob({type:"image/jpeg",quality:0.92});
+                    self.postMessage({id,ok:true,blob});
+                  } catch(err) {
+                    self.postMessage({id,ok:false,reason:String(err && err.message || err)});
+                  } finally {
+                    mats.forEach(m=>{try{m.delete()}catch(e){}});
+                    try{bitmap.close && bitmap.close()}catch(e){}
+                  }
+                };
+              `;
+              ktpWorkerUrl = URL.createObjectURL(new Blob([workerSource], { type: "text/javascript" }));
+              ktpWorker = new Worker(ktpWorkerUrl);
+            }
+            const bitmap = await createImageBitmap(imageEl);
+            const id = Date.now() + Math.random();
+            const onMessage = (event) => {
+              if (!event.data || event.data.id !== id) return;
+              ktpWorker.removeEventListener("message", onMessage);
+              if (event.data.ok && event.data.blob) {
+                const url = URL.createObjectURL(event.data.blob);
+                resolve(url);
+              } else reject(new Error(event.data.reason || "KTP tidak terdeteksi."));
+            };
+            ktpWorker.addEventListener("message", onMessage);
+            ktpWorker.postMessage({ id, bitmap }, [bitmap]);
+            setTimeout(() => {
+              ktpWorker.removeEventListener("message", onMessage);
+              reject(new Error("Deteksi otomatis melewati batas waktu."));
+            }, 25000);
+          } catch (err) { reject(err); }
+        });
+      }
+
+      function createKtpCropper() {
+        if (cropper) { cropper.destroy(); cropper = null; }
+        cropper = new Cropper($("imageToCrop"), {
+          aspectRatio: 1.585,
+          viewMode: 1,
+          autoCropArea: 0.96,
+          responsive: true,
+          background: false,
+          movable: true,
+          zoomable: true
+        });
+      }
+
       function initCrop(e) {
         const file = e.target.files && e.target.files[0];
         if (!file) return;
@@ -5003,23 +5338,42 @@
         closeModal("sourceModal");
         const reader = new FileReader();
         reader.onload = () => {
-          $("imageToCrop").src = reader.result;
+          const sessionId = ++cropSessionId;
+          const imageEl = $("imageToCrop");
           openModal("cropModal");
-          if (cropper) {
-            cropper.destroy();
-            cropper = null;
-          }
-          $("imageToCrop").onload = () => {
-            cropper = new Cropper($("imageToCrop"), {
-              aspectRatio: 1.585,
-              viewMode: 1,
-              autoCropArea: 0.9,
-              responsive: true,
-              background: false,
-              movable: true,
-              zoomable: true
-            });
+          imageEl.onload = () => {
+            if (sessionId !== cropSessionId) return;
+            // Cropper langsung aktif supaya pengguna tetap bisa mengatur atau menyimpan
+            // foto meskipun modul deteksi otomatis lambat/gagal dimuat.
+            createKtpCropper();
+
+            // Jalankan deteksi di Web Worker khusus Android Chrome agar UI tetap responsif.
+            const isAndroidChrome = /Android/i.test(navigator.userAgent) &&
+              /Chrome\//i.test(navigator.userAgent);
+            showToast("Mendeteksi batas KTP otomatis. Crop manual tetap bisa digunakan...");
+            setTimeout(() => (isAndroidChrome ? detectKtpInWorker(imageEl) : detectAndRectifyKtp(imageEl)).then(autoImage => {
+              if (!autoImage || sessionId !== cropSessionId || !cropper || !$('cropModal').classList.contains('open')) {
+                if (sessionId === cropSessionId && !autoImage) showToast("Batas KTP belum terdeteksi. Silakan atur crop secara manual.");
+                return;
+              }
+              cropper.destroy();
+              cropper = null;
+              imageEl.onload = () => {
+                if (sessionId === cropSessionId && $('cropModal').classList.contains('open')) {
+                  createKtpCropper();
+                  showToast("KTP terdeteksi dan diluruskan otomatis. Periksa sebelum disimpan.");
+                  if (autoImage.startsWith("blob:")) setTimeout(() => URL.revokeObjectURL(autoImage), 60000);
+                }
+              };
+              imageEl.src = autoImage;
+            }).catch(err => {
+              console.warn('[KTP] Deteksi otomatis tidak tersedia:', err);
+              if (sessionId === cropSessionId && cropper && $('cropModal').classList.contains('open')) {
+                showToast("Deteksi otomatis gagal dimuat. Crop manual tetap bisa digunakan.", true);
+              }
+            }), 80);
           };
+          imageEl.src = reader.result;
         };
         reader.onerror = () => showToast("Foto tidak bisa dibaca.", true);
         reader.readAsDataURL(file);
@@ -5035,6 +5389,7 @@
 
       function performCrop() {
         vibrate(15);
+        cropSessionId++;
         if (!cropper) return;
         const c = cropper.getCroppedCanvas({
           width: 1000,
@@ -5072,6 +5427,7 @@
       }
 
       function cancelCrop() {
+        cropSessionId++;
         closeModal("cropModal");
         if (cropper) {
           cropper.destroy();
@@ -5626,6 +5982,26 @@
         once: true
       });
       if (document.fonts && document.fonts.ready) document.fonts.ready.then(() => setTimeout(fitMobilePaper, 100));
+      // Perlindungan privasi pratinjau saat tab/aplikasi kehilangan fokus.
+      // Browser tidak menyediakan API web untuk memblokir screenshot secara langsung.
+      const setPreviewShield = (enabled) => {
+        if (pagePreview) pagePreview.classList.toggle('privacy-shield', !!enabled && pagePreview.classList.contains('active'));
+      };
+      document.addEventListener('visibilitychange', () => {
+        setPreviewShield(document.hidden);
+      });
+      window.addEventListener('blur', () => setPreviewShield(true));
+      window.addEventListener('focus', () => setPreviewShield(false));
+      const originalSwitchTab = switchTab;
+      switchTab = function(i) {
+        originalSwitchTab(i);
+        if (i !== 1) setPreviewShield(false);
+        else if (document.hidden) setPreviewShield(true);
+      };
+      document.addEventListener('contextmenu', (e) => {
+        if (pagePreview && pagePreview.classList.contains('active')) e.preventDefault();
+      });
+
       window.addEventListener("pagehide", () => {
         if (isFormSubmitted) return;
         try {
