@@ -4992,7 +4992,10 @@
       // di Web Worker agar antarmuka crop tetap responsif di Chrome Android.
       let ktpDetectWorker = null;
       let ktpDetectWorkerUrl = null;
-      let ktpDetectSeq = 0;
+      // Pisahkan token sesi UI dari ID permintaan Worker.
+      // Counter lama dipakai untuk keduanya sehingga hasil deteksi bisa dibuang.
+      let ktpDetectRequestId = 0;
+      let ktpDetectSessionId = 0;
       const KTP_RATIO = 1.585;
 
       function getKtpDetectWorker() {
@@ -5130,7 +5133,7 @@
         const ctx=canvas.getContext("2d",{willReadFrequently:true});
         ctx.drawImage(imageEl,0,0,w,h);
         const imageData=ctx.getImageData(0,0,w,h);
-        const id=++ktpDetectSeq;
+        const id=++ktpDetectRequestId;
         const result=await new Promise((resolve,reject)=>{
           const timer=setTimeout(()=>{worker.removeEventListener("message",handler);reject(new Error("Deteksi otomatis melewati batas waktu."));},12000);
           function handler(ev){
@@ -5205,14 +5208,14 @@
               zoomable: true
             });
             showToast("Foto KTP siap. Sistem mencoba mendeteksi batas KTP otomatis...");
-            const session = ++ktpDetectSeq;
+            const session = ++ktpDetectSessionId;
             setTimeout(async () => {
               try {
                 const corrected = await autoDetectKtp(imageEl);
-                if (session !== ktpDetectSeq || !cropper || !$("cropModal").classList.contains("open")) return;
+                if (session !== ktpDetectSessionId || !cropper || !$("cropModal").classList.contains("open")) return;
                 cropper.destroy(); cropper = null;
                 imageEl.onload = () => {
-                  if (session !== ktpDetectSeq || !$("cropModal").classList.contains("open")) return;
+                  if (session !== ktpDetectSessionId || !$("cropModal").classList.contains("open")) return;
                   cropper = new Cropper(imageEl, {
                     aspectRatio: KTP_RATIO,
                     viewMode: 1,
@@ -5227,7 +5230,7 @@
                 imageEl.src = corrected;
               } catch (err) {
                 console.warn("[KTP] Deteksi otomatis:", err);
-                if (session === ktpDetectSeq && cropper && $("cropModal").classList.contains("open")) {
+                if (session === ktpDetectSessionId && cropper && $("cropModal").classList.contains("open")) {
                   showToast("KTP belum terdeteksi otomatis. Silakan atur crop manual.", true);
                 }
               }
