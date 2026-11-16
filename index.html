@@ -5200,19 +5200,31 @@
                 function loadCv() {
                   if (cvReady) return cvReady;
                   cvReady = new Promise((resolve, reject) => {
+                    let settled = false;
+                    const finish = (err) => {
+                      if (settled) return;
+                      settled = true;
+                      clearTimeout(timer);
+                      if (err) reject(err);
+                      else if (self.cv && self.cv.Mat) resolve(self.cv);
+                      else reject(new Error("OpenCV selesai dimuat tetapi API belum siap."));
+                    };
+                    const timer = setTimeout(() => finish(new Error("Waktu pemuatan OpenCV habis.")), 25000);
                     try {
+                      // Worker dibuat dari Blob URL; tentukan URL WASM absolut agar
+                      // OpenCV tidak mencoba mengambil .wasm dari origin blob:.
+                      self.Module = {
+                        locateFile: (path) => "https://docs.opencv.org/4.x/" + path,
+                        onRuntimeInitialized: () => finish(null)
+                      };
                       importScripts("https://docs.opencv.org/4.x/opencv.js");
-                      if (self.cv && self.cv.Mat) { resolve(self.cv); return; }
-                      if (self.cv) {
-                        const old = self.cv.onRuntimeInitialized;
-                        self.cv.onRuntimeInitialized = () => {
-                          try { if (typeof old === "function") old(); } catch(e) {}
-                          resolve(self.cv);
-                        };
-                        if (typeof self.cv.then === "function") self.cv.then(resolve).catch(reject);
-                      } else reject(new Error("OpenCV tidak tersedia di worker."));
-                      setTimeout(() => reject(new Error("OpenCV worker timeout.")), 20000);
-                    } catch (e) { reject(e); }
+                      if (self.cv && self.cv.Mat) finish(null);
+                      else if (self.cv && typeof self.cv.then === "function") {
+                        self.cv.then(() => finish(null)).catch(finish);
+                      }
+                    } catch (e) {
+                      finish(new Error("Gagal memuat OpenCV di worker: " + (e && e.message || e)));
+                    }
                   });
                   return cvReady;
                 }
@@ -5221,21 +5233,21 @@
                   let mats = [];
                   try {
                     const cv = await loadCv();
-                    const maxSide = 900;
+                    const maxSide = 720;
                     const scale = Math.min(1, maxSide / Math.max(bitmap.width, bitmap.height));
                     const w = Math.max(1, Math.round(bitmap.width * scale));
                     const h = Math.max(1, Math.round(bitmap.height * scale));
                     const canvas = new OffscreenCanvas(w, h);
                     const ctx = canvas.getContext("2d", { willReadFrequently: true });
                     ctx.drawImage(bitmap, 0, 0, w, h);
-                    bitmap.close && bitmap.close();
-                    const src = cv.imread(canvas); mats.push(src);
+                    const pixels = ctx.getImageData(0, 0, w, h);
+                    const src = cv.matFromImageData(pixels); mats.push(src);
                     const gray = new cv.Mat(); mats.push(gray);
                     cv.cvtColor(src, gray, cv.COLOR_RGBA2GRAY);
                     const blur = new cv.Mat(); mats.push(blur);
                     cv.GaussianBlur(gray, blur, new cv.Size(5,5), 0);
                     const edges = new cv.Mat(); mats.push(edges);
-                    cv.Canny(blur, edges, 60, 150);
+                    cv.Canny(blur, edges, 55, 140);
                     const kernel = cv.getStructuringElement(cv.MORPH_RECT, new cv.Size(5,5)); mats.push(kernel);
                     cv.morphologyEx(edges, edges, cv.MORPH_CLOSE, kernel);
                     const contours = new cv.MatVector(); mats.push(contours);
@@ -5243,11 +5255,11 @@
                     cv.findContours(edges, contours, hierarchy, cv.RETR_EXTERNAL, cv.CHAIN_APPROX_SIMPLE);
                     let best = null, bestArea = 0;
                     const imageArea = src.cols * src.rows;
-                    for (let i = 0; i < Math.min(contours.size(), 120); i++) {
+                    for (let i = 0; i < Math.min(contours.size(), 160); i++) {
                       const contour = contours.get(i);
                       try {
                         const area = cv.contourArea(contour);
-                        if (area < imageArea * 0.10 || area <= bestArea) continue;
+                        if (area < imageArea * 0.08 || area <= bestArea) continue;
                         const peri = cv.arcLength(contour, true);
                         const candidate = new cv.Mat(); mats.push(candidate);
                         cv.approxPolyDP(contour, candidate, 0.025 * peri, true);
@@ -5264,10 +5276,10 @@
                         const ww = Math.max(Math.hypot(ordered[1].x-ordered[0].x,ordered[1].y-ordered[0].y),Math.hypot(ordered[2].x-ordered[3].x,ordered[2].y-ordered[3].y));
                         const hh = Math.max(Math.hypot(ordered[3].x-ordered[0].x,ordered[3].y-ordered[0].y),Math.hypot(ordered[2].x-ordered[1].x,ordered[2].y-ordered[1].y));
                         const ratio = ww / Math.max(1,hh);
-                        if (ratio >= 1.35 && ratio <= 1.9) { best={points:ordered}; bestArea=area; }
+                        if (ratio >= 1.30 && ratio <= 1.95) { best={points:ordered}; bestArea=area; }
                       } finally { contour.delete(); }
                     }
-                    if (!best) { self.postMessage({id, ok:false, reason:"not-found"}); return; }
+                    if (!best) { self.postMessage({id, ok:false, reason:"Sudut KTP tidak ditemukan. Coba foto dengan KTP lebih kontras dan tidak terpotong."}); return; }
                     const outW=1000, outH=Math.round(outW/1.585);
                     const srcPts=cv.matFromArray(4,1,cv.CV_32FC2,best.points.flatMap(q=>[q.x,q.y])); mats.push(srcPts);
                     const dstPts=cv.matFromArray(4,1,cv.CV_32FC2,[0,0,outW-1,0,outW-1,outH-1,0,outH-1]); mats.push(dstPts);
@@ -5369,7 +5381,9 @@
             }).catch(err => {
               console.warn('[KTP] Deteksi otomatis tidak tersedia:', err);
               if (sessionId === cropSessionId && cropper && $('cropModal').classList.contains('open')) {
-                showToast("Deteksi otomatis gagal dimuat. Crop manual tetap bisa digunakan.", true);
+                const detail = String(err && err.message || "Kesalahan tidak diketahui");
+                console.warn("[KTP] Detail kegagalan deteksi:", detail);
+                showToast("Deteksi otomatis gagal: " + detail + ". Crop manual tetap bisa digunakan.", true);
               }
             }), 80);
           };
